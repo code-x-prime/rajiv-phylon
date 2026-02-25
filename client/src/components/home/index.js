@@ -1,0 +1,9 @@
+export { CompanyStats } from "./CompanyStats";
+export { AboutSection } from "./AboutSection";
+export { WhyChooseUs } from "./WhyChooseUs";
+export { InfrastructureSection } from "./InfrastructureSection";
+export { GlobalPresenceSection } from "./GlobalPresenceSection";
+export { IndustriesWeServe } from "./IndustriesWeServe";
+export { ExportCountries } from "./ExportCountries";
+export { ClientLogos } from "./ClientLogos";
+export { HomeCta } from "./HomeCta";

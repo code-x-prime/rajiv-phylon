@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Rajiv Phylon – Premium B2B Industrial Design System */
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    /* Rich Yellow – primary / CTA */
+    --primary: #F5B400;
+    --primary-hover: #e0a300;
+    --primary-foreground: #ffffff;
+    /* Deep Charcoal */
+    --charcoal: #111111;
+    --charcoal-light: #1A1A1A;
+    /* Section & UI */
+    --section-bg: #F9FAFB;
+    --border: #E5E7EB;
+    --muted: #6b7280;
+    --muted-foreground: #6b7280;
+    /* Radius */
+    --radius: 0.75rem;
+    --radius-xl: 1rem;
+    /* Transitions */
+    --transition: 0.3s ease;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    overflow-x: hidden;
+  }
+  body {
+    font-family: var(--font-body), system-ui, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), system-ui, sans-serif;
+    font-weight: 600;
+  }
+  /* Body text uses Manrope for clear hierarchy with headings */
+  p, li {
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .transition-premium {
+    transition: var(--transition);
+  }
+}
