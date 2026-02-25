@@ -9,12 +9,13 @@ import { Label } from "@/components/ui/label";
 import { ImageUploadZone } from "@/components/ImageUploadZone";
 import { toast } from "sonner";
 import { getApiError } from "@/lib/axios";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Plus, Trash2, Wand2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+/* ── Jodit config ─────────────────────────────────────── */
 const JODIT_CONFIG = {
-  height: 400,
-  minHeight: 400,
+  height: 450,
+  minHeight: 350,
   width: "100%",
   toolbar: true,
   toolbarButtonSize: "middle" as const,
@@ -24,51 +25,81 @@ const JODIT_CONFIG = {
   showXPathInStatusbar: false,
   allowResizeX: false,
   allowResizeY: true,
-  resizeMinHeight: 400,
+  resizeMinHeight: 350,
   buttons: [
     "source", "|",
     "bold", "italic", "underline", "strikethrough", "|",
+    "superscript", "subscript", "|",
     "ul", "ol", "|",
     "font", "fontsize", "brush", "|",
-    "align", "|",
-    "link", "image", "table", "|",
+    "align", "indent", "outdent", "|",
+    "link", "image", "table", "hr", "|",
     "undo", "redo", "|",
-    "hr", "eraser", "copyformat", "|",
+    "eraser", "copyformat", "|",
     "paragraph", "lineHeight",
   ],
-  buttonsMD: ["bold", "italic", "underline", "ul", "ol", "link", "image"],
-  buttonsSM: ["bold", "italic", "ul", "link"],
   pasteFromWordRemoveFontStyles: true,
   pasteFromWordRemoveStyles: true,
   uploader: { insertImageAsBase64URI: true },
-  style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "16px", lineHeight: 1.6 },
+  style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "15px", lineHeight: 1.7 },
 };
 
+/* ── MOQ presets ──────────────────────────────────────── */
+const MOQ_PRESETS = [
+  "100 Pieces", "500 Pieces", "1000 Pieces", "2000 Pieces", "5000 Pieces", "10000 Pieces",
+  "100 Pairs", "500 Pairs", "1000 Pairs", "2000 Pairs", "5000 Pairs",
+  "50 Kg", "100 Kg", "500 Kg", "1000 Kg",
+  "1 Box", "10 Boxes", "50 Boxes", "100 Boxes",
+  "1 Container", "Custom...",
+];
+
+/* ── Spec templates ───────────────────────────────────── */
+const SPEC_TEMPLATES = [
+  { label: "Footwear / Shoes", rows: ["Material", "Technique", "Color", "Size", "Brand", "Packaging Type", "Country of Origin"] },
+  { label: "Textile / Fabric", rows: ["Material", "Color", "Pattern", "Width", "Weight (GSM)", "Finish", "Country of Origin"] },
+  { label: "Plastic / Rubber", rows: ["Material", "Color", "Grade", "Hardness", "Thickness", "Application"] },
+  { label: "Metal / Hardware", rows: ["Material", "Finish", "Size", "Weight", "Grade", "Surface Treatment"] },
+  { label: "General Product", rows: ["Material", "Color", "Size", "Brand", "Model Number", "Weight", "Packaging Type", "Country of Origin"] },
+];
+
+const TRADE_DEFAULTS = [
+  "Payment Terms", "Supply Ability", "Delivery Time",
+  "Sample Available", "Sample Policy", "Main Export Market(s)", "Main Domestic Market",
+];
+
+/* ── Helpers ──────────────────────────────────────────── */
 function stripHtml(html: string): string {
   if (!html) return "";
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
-
 const VALID_TAGS = ["NEW_ARRIVAL", "TRENDING", "BEST_SELLER"] as const;
 type ValidTag = typeof VALID_TAGS[number];
-
 function normalizeTag(val: unknown): ProductFeatureTag {
   if (!val) return null;
   const up = String(val).toUpperCase() as ValidTag;
   return VALID_TAGS.includes(up) ? up : null;
 }
+type KVPair = { key: string; value: string };
+function objToKVPairs(obj: Record<string, string> | null | undefined): KVPair[] {
+  if (!obj) return [];
+  return Object.entries(obj).map(([key, value]) => ({ key, value: String(value) }));
+}
+function kvPairsToObj(pairs: KVPair[]): Record<string, string> {
+  const obj: Record<string, string> = {};
+  for (const { key, value } of pairs) {
+    if (key.trim()) obj[key.trim()] = value;
+  }
+  return obj;
+}
 
+/* ── CheckboxRow ──────────────────────────────────────── */
 function CheckboxRow({ label, checked, onChange, description }: {
   label: string; checked: boolean; onChange: (v: boolean) => void; description?: string;
 }) {
   return (
     <label className="flex items-start gap-3 cursor-pointer group">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 rounded border-border accent-primary cursor-pointer"
-      />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-border accent-primary cursor-pointer" />
       <div>
         <span className="text-sm font-medium group-hover:text-primary transition-colors">{label}</span>
         {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
@@ -77,15 +108,154 @@ function CheckboxRow({ label, checked, onChange, description }: {
   );
 }
 
+/* ── KV Editor ────────────────────────────────────────── */
+function KVEditor({ label, description, pairs, onChange, templates }: {
+  label: string; description?: string; pairs: KVPair[]; onChange: (pairs: KVPair[]) => void;
+  templates?: { label: string; rows: string[] }[];
+}) {
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const addRow = () => onChange([...pairs, { key: "", value: "" }]);
+  const removeRow = (i: number) => onChange(pairs.filter((_, idx) => idx !== i));
+  const updateRow = (i: number, field: "key" | "value", val: string) => {
+    const next = [...pairs];
+    next[i] = { ...next[i], [field]: val };
+    onChange(next);
+  };
+  const applyTemplate = (rows: string[]) => {
+    const existingKeys = new Set(pairs.map((p) => p.key));
+    const newRows = rows.filter((r) => !existingKeys.has(r)).map((r) => ({ key: r, value: "" }));
+    onChange([...pairs, ...newRows]);
+    setTemplateOpen(false);
+  };
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center gap-2 justify-between mb-2">
+        <div>
+          <Label>{label}</Label>
+          {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+        </div>
+        <div className="flex gap-2">
+          {templates && (
+            <div className="relative">
+              <Button type="button" variant="outline" size="sm" onClick={() => setTemplateOpen((o) => !o)} className="gap-1.5 text-xs">
+                <Wand2 className="h-3.5 w-3.5" /> Templates
+              </Button>
+              {templateOpen && (
+                <div className="absolute left-0 top-full mt-1 z-50 bg-popover border border-border bg-white rounded-lg shadow-xl w-64 py-1">
+                  <p className="px-3 pt-1 pb-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b border-border mb-1">Choose a template</p>
+                  {templates.map((t) => (
+                    <button key={t.label} type="button" onClick={() => applyTemplate(t.rows)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          <Button type="button" variant="outline" size="sm" onClick={addRow} className="gap-1.5 text-xs">
+            <Plus className="h-3.5 w-3.5" /> Add Row
+          </Button>
+        </div>
+      </div>
+      {pairs.length === 0 ? (
+        <div className="border border-dashed border-border rounded p-4 text-center text-sm text-muted-foreground">
+          No rows yet. Click &quot;Add Row&quot; or choose a template.
+        </div>
+      ) : (
+        <div className="border border-border rounded overflow-hidden">
+          <div className="grid grid-cols-[1fr_1fr_auto] text-xs font-medium bg-muted/50 px-3 py-2 border-b border-border">
+            <span>Property / Label</span><span>Value</span><span />
+          </div>
+          <div className="divide-y divide-border">
+            {pairs.map((row, i) => (
+              <div key={i} className="grid grid-cols-[1fr_1fr_auto] items-center">
+                <input type="text" value={row.key} onChange={(e) => updateRow(i, "key", e.target.value)}
+                  placeholder="e.g. Material"
+                  className="px-3 py-2 text-sm bg-transparent border-r border-border outline-none focus:bg-primary/5" />
+                <input type="text" value={row.value} onChange={(e) => updateRow(i, "value", e.target.value)}
+                  placeholder="e.g. TPR"
+                  className="px-3 py-2 text-sm bg-transparent border-r border-border outline-none focus:bg-primary/5" />
+                <button type="button" onClick={() => removeRow(i)}
+                  className="px-3 py-2 text-muted-foreground hover:text-destructive transition-colors">
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── MOQ Input ────────────────────────────────────────── */
+function MoqInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const isPreset = MOQ_PRESETS.slice(0, -1).includes(value);
+  const [showCustom, setShowCustom] = useState(!isPreset && value !== "");
+
+  const handleSelect = (v: string) => {
+    if (v === "Custom...") {
+      setShowCustom(true);
+      onChange("");
+    } else if (v === "__none__") {
+      setShowCustom(false);
+      onChange("");
+    } else {
+      setShowCustom(false);
+      onChange(v);
+    }
+  };
+
+  const selectValue = showCustom ? "Custom..." : (value || "__none__");
+
+  return (
+    <div className="space-y-2">
+      <Select value={selectValue} onValueChange={handleSelect}>
+        <SelectTrigger className="border-border w-full">
+          <SelectValue placeholder="Select MOQ or choose Custom..." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="__none__">— No MOQ set —</SelectItem>
+          {MOQ_PRESETS.map((p) => (
+            <SelectItem key={p} value={p}>{p}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {showCustom && (
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Type custom MOQ e.g. 1200-2400 Pairs"
+          className="border-border"
+          autoFocus
+        />
+      )}
+      {!showCustom && value && (
+        <p className="text-xs text-muted-foreground">Selected: <span className="font-medium text-foreground">{value}</span></p>
+      )}
+    </div>
+  );
+}
+
+/* ── Form state helper ────────────────────────────────── */
 function getInitialFormState(product: Product) {
   const tag = normalizeTag(product.featureTag);
   const auto = product.seoAutoGenerated ?? {};
+  const existingTradePairs = objToKVPairs(product.tradeInfo);
   return {
     name: product.name,
+    moq: product.moq ?? "",
     description: product.description || "",
     categoryIds: product.categories?.map((c) => c.id) ?? [],
     subCategoryIds: product.subCategories?.map((s) => s.id) ?? [],
     existingImages: product.images || [],
+    specPairs: objToKVPairs(product.specifications),
+    tradePairs: existingTradePairs.length
+      ? existingTradePairs
+      : TRADE_DEFAULTS.map((k) => ({ key: k, value: "" })),
     featureTag: tag,
     isNewArrival: tag === "NEW_ARRIVAL" ? true : (product.isNewArrival ?? false),
     isFeatured: tag === "BEST_SELLER" ? true : (product.isFeatured ?? false),
@@ -102,17 +272,21 @@ function getInitialFormState(product: Product) {
   };
 }
 
+/* ── ProductEditForm ──────────────────────────────────── */
 function ProductEditForm({ product, id }: { product: Product; id: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const initial = getInitialFormState(product);
 
   const [name, setName] = useState(initial.name);
+  const [moq, setMoq] = useState(initial.moq);
   const [description, setDescription] = useState(initial.description);
   const [categoryIds, setCategoryIds] = useState<string[]>(initial.categoryIds);
   const [subCategoryIds, setSubCategoryIds] = useState<string[]>(initial.subCategoryIds);
   const [existingImages, setExistingImages] = useState<ProductImage[]>(initial.existingImages);
   const [newImages, setNewImages] = useState<File[]>([]);
+  const [specPairs, setSpecPairs] = useState<KVPair[]>(initial.specPairs);
+  const [tradePairs, setTradePairs] = useState<KVPair[]>(initial.tradePairs);
   const [featureTag, setFeatureTag] = useState<ProductFeatureTag>(initial.featureTag);
   const [isFeatured, setIsFeatured] = useState(initial.isFeatured);
   const [isNewArrival, setIsNewArrival] = useState(initial.isNewArrival);
@@ -125,11 +299,7 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
   const [metaKeywords, setMetaKeywords] = useState(initial.metaKeywords);
   const [seoAuto, setSeoAuto] = useState(initial.seoAuto);
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => categoriesApi.getAll(),
-  });
-
+  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: () => categoriesApi.getAll() });
   const { data: subCategories = [] } = useQuery({
     queryKey: ["subcategories", categoryIds],
     queryFn: () => subCategoriesApi.getByCategories(categoryIds),
@@ -146,7 +316,8 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
 
   const removeImageMutation = useMutation({
     mutationFn: (imageId: string) => productsApi.deleteImage(id!, imageId),
-    onSuccess: () => {
+    onSuccess: (_data, imageId) => {
+      setExistingImages((prev) => prev.filter((i) => i.id !== imageId));
       queryClient.invalidateQueries({ queryKey: ["product", id] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Image removed");
@@ -154,50 +325,43 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
     onError: (e) => toast.error(getApiError(e)),
   });
 
-  const removeExistingImage = (img: ProductImage) => {
-    if (!img.id) return;
-    removeImageMutation.mutate(img.id, {
-      onSuccess: () => setExistingImages((prev) => prev.filter((i) => i.id !== img.id)),
-    });
-  };
-
   const handleCategoryToggle = (catId: string) => {
     setCategoryIds((prev) => prev.includes(catId) ? prev.filter((c) => c !== catId) : [...prev, catId]);
     setSubCategoryIds((prev) =>
       prev.filter((sid) => { const sub = subCategories.find((s) => s.id === sid); return !sub || sub.categoryId !== catId; })
     );
   };
-
-  const handleSubCategoryToggle = (subId: string) => {
+  const handleSubCategoryToggle = (subId: string) =>
     setSubCategoryIds((prev) => prev.includes(subId) ? prev.filter((s) => s !== subId) : [...prev, subId]);
-  };
 
   const updateMutation = useMutation({
-    mutationFn: () =>
-      productsApi.update(
+    mutationFn: () => {
+      const specsObj = kvPairsToObj(specPairs);
+      const tradeObj = kvPairsToObj(tradePairs);
+      return productsApi.update(
         id!,
         {
           name: name.trim(),
           description: description || "",
+          moq: moq.trim() || "",
+          specifications: Object.keys(specsObj).length ? specsObj : undefined,
+          tradeInfo: Object.keys(tradeObj).length ? tradeObj : undefined,
           categoryIds,
           subCategoryIds,
           featureTag,
-          isFeatured,
-          isNewArrival,
-          isHighDemand,
-          showOnHome,
-          isActive,
+          isFeatured, isNewArrival, isHighDemand, showOnHome, isActive,
           metaTitle: metaTitle.trim() || "",
           metaDescription: metaDescription.trim() || "",
           metaKeywords: metaKeywords.trim() || "",
           images: existingImages.map((img, idx) => ({ id: img.id, url: img.url, position: idx })),
         },
         newImages.length ? newImages : undefined
-      ),
+      );
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["product", id] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast.success("Product updated");
+      toast.success("Product updated successfully");
       navigate("/products");
     },
     onError: (e) => toast.error(getApiError(e)),
@@ -210,183 +374,185 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
     updateMutation.mutate();
   };
 
+  const slotsLeft = Math.max(0, 4 - existingImages.length);
+
   return (
-    <div className="max-w-3xl space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6 border border-border bg-card p-6 rounded-lg">
-        {/* Name */}
-        <div>
-          <Label>Name *</Label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Product name" required className="mt-1 border-border" />
-        </div>
+    <div className="max-w-4xl space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
 
-        {/* Categories */}
-        <div className="w-full">
-          <Label>Categories * (select at least one)</Label>
-          <div className="mt-2 w-full border border-border rounded p-3 max-h-48 overflow-y-auto space-y-2">
-            {categories.length === 0
-              ? <p className="text-sm text-muted-foreground">No categories found.</p>
-              : categories.map((c) => (
-                <label key={c.id} className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={categoryIds.includes(c.id)} onChange={() => handleCategoryToggle(c.id)} className="rounded border-border h-4 w-4" />
-                  <span className="text-sm">{c.name}</span>
-                </label>
-              ))
-            }
+        {/* ── Basic Info ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-5">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Basic Information</h2>
+          <div>
+            <Label>Product Name *</Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Product name" required className="mt-1" />
           </div>
-        </div>
-
-        {/* SubCategories */}
-        <div className="w-full">
-          <Label>SubCategories (optional)</Label>
-          <div className="mt-2 w-full border border-border rounded p-3 max-h-48 overflow-y-auto space-y-2">
-            {categoryIds.length === 0
-              ? <p className="text-sm text-muted-foreground">Select a category first.</p>
-              : subCategories.length === 0
-                ? <p className="text-sm text-muted-foreground">No subcategories for selected categories.</p>
-                : subCategories.map((s) => (
-                  <label key={s.id} className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={subCategoryIds.includes(s.id)} onChange={() => handleSubCategoryToggle(s.id)} className="rounded border-border h-4 w-4" />
-                    <span className="text-sm">{s.name}</span>
-                  </label>
-                ))
-            }
+          <div>
+            <Label>Minimum Order Quantity (MOQ)</Label>
+            <p className="text-xs text-muted-foreground mb-2">Choose a preset or type a custom value — shown as a badge on the product page</p>
+            <MoqInput value={moq} onChange={setMoq} />
           </div>
-        </div>
-
-        {/* Feature Tag */}
-        <div>
-          <Label>Feature tag (home sections)</Label>
-          <p className="text-xs text-muted-foreground mb-2">Choosing a tag will auto-set the related flags below.</p>
-          <Select value={featureTag ?? "__none__"} onValueChange={handleFeatureTagChange}>
-            <SelectTrigger className="mt-1 border-border w-full max-w-xs">
-              <SelectValue placeholder="None" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__none__">None</SelectItem>
-              <SelectItem value="NEW_ARRIVAL">New Arrival</SelectItem>
-              <SelectItem value="TRENDING">Trending (High Demand)</SelectItem>
-              <SelectItem value="BEST_SELLER">Best Seller (Featured)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Boolean flags */}
-        <div className="border border-border rounded p-4 space-y-3 bg-muted/20">
-          <p className="text-sm font-medium mb-1">Product flags</p>
-          <CheckboxRow
-            label="New Arrival"
-            checked={isNewArrival}
-            onChange={(v) => { setIsNewArrival(v); if (v) { setFeatureTag("NEW_ARRIVAL"); setIsFeatured(false); setIsHighDemand(false); } else if (featureTag === "NEW_ARRIVAL") setFeatureTag(null); }}
-            description="Shows in New Arrivals section on home page"
-          />
-          <CheckboxRow
-            label="High Demand / Trending"
-            checked={isHighDemand}
-            onChange={(v) => { setIsHighDemand(v); if (v) { setFeatureTag("TRENDING"); setIsFeatured(false); setIsNewArrival(false); } else if (featureTag === "TRENDING") setFeatureTag(null); }}
-            description="Shows in High Demand section on home page"
-          />
-          <CheckboxRow
-            label="Featured / Best Seller"
-            checked={isFeatured}
-            onChange={(v) => { setIsFeatured(v); if (v) { setFeatureTag("BEST_SELLER"); setIsNewArrival(false); setIsHighDemand(false); } else if (featureTag === "BEST_SELLER") setFeatureTag(null); }}
-            description="Shows in Featured Products section on home page"
-          />
-          <CheckboxRow
-            label="Show on Home"
-            checked={showOnHome}
-            onChange={setShowOnHome}
-            description="Pinned to home page listing"
-          />
-          <CheckboxRow
-            label="Active"
-            checked={isActive}
-            onChange={setIsActive}
-            description="Inactive products are hidden from the website"
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <Label>Description</Label>
-          <div className="mt-1 w-full border border-border overflow-hidden rounded">
-            <JoditEditor
-              value={description}
-              onChange={(v) => setDescription(v)}
-              onBlur={(v) => setDescription(v)}
-              config={JODIT_CONFIG}
-            />
-          </div>
-        </div>
-
-        {/* SEO */}
-        <div className="border border-border rounded">
-          <button
-            type="button"
-            onClick={() => setSeoOpen((o) => !o)}
-            className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors"
-          >
-            <span className="font-medium text-sm">SEO Settings</span>
-            {seoOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </button>
-          {seoOpen && (
-            <div className="border-t border-border p-4 space-y-4 bg-muted/20">
-              <p className="text-xs text-muted-foreground">Leave empty to auto-generate from product name & description.</p>
-              <div className="space-y-3">
-                <div>
-                  <Label className="flex items-center gap-2 text-sm">
-                    Meta Title {seoAuto.metaTitle && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
-                  </Label>
-                  <Input value={metaTitle} onChange={(e) => { setMetaTitle(e.target.value); setSeoAuto((a) => ({ ...a, metaTitle: false })); }} placeholder="Auto from product name" className="mt-1 border-border" />
-                </div>
-                <div>
-                  <Label className="flex items-center gap-2 text-sm">
-                    Meta Description {seoAuto.metaDescription && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
-                  </Label>
-                  <Input value={metaDescription} onChange={(e) => { setMetaDescription(e.target.value); setSeoAuto((a) => ({ ...a, metaDescription: false })); }} placeholder="Auto from description" className="mt-1 border-border" />
-                </div>
-                <div>
-                  <Label className="flex items-center gap-2 text-sm">
-                    Meta Keywords {seoAuto.metaKeywords && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
-                  </Label>
-                  <Input value={metaKeywords} onChange={(e) => { setMetaKeywords(e.target.value); setSeoAuto((a) => ({ ...a, metaKeywords: false })); }} placeholder="Auto from name + categories" className="mt-1 border-border" />
-                </div>
+          <div className="grid md:grid-cols-2 gap-5">
+            <div>
+              <Label>Categories *</Label>
+              <div className="mt-2 border border-border rounded p-3 max-h-48 overflow-y-auto space-y-2">
+                {categories.length === 0
+                  ? <p className="text-sm text-muted-foreground">No categories found.</p>
+                  : categories.map((c) => (
+                    <label key={c.id} className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 rounded px-1">
+                      <input type="checkbox" checked={categoryIds.includes(c.id)} onChange={() => handleCategoryToggle(c.id)} className="rounded border-border h-4 w-4 accent-primary" />
+                      <span className="text-sm">{c.name}</span>
+                    </label>
+                  ))}
               </div>
             </div>
-          )}
-        </div>
+            <div>
+              <Label>SubCategories (optional)</Label>
+              <div className="mt-2 border border-border rounded p-3 max-h-48 overflow-y-auto space-y-2">
+                {categoryIds.length === 0
+                  ? <p className="text-sm text-muted-foreground">Select a category first.</p>
+                  : subCategories.length === 0
+                    ? <p className="text-sm text-muted-foreground">No subcategories for selected categories.</p>
+                    : subCategories.map((s) => (
+                      <label key={s.id} className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 rounded px-1">
+                        <input type="checkbox" checked={subCategoryIds.includes(s.id)} onChange={() => handleSubCategoryToggle(s.id)} className="rounded border-border h-4 w-4 accent-primary" />
+                        <span className="text-sm">{s.name}</span>
+                      </label>
+                    ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Existing images */}
-        <div>
-          <Label>Existing images</Label>
-          <p className="text-xs text-muted-foreground mb-2">Click Remove to permanently delete an image from storage and database.</p>
-          {existingImages.length === 0
-            ? <p className="text-sm text-muted-foreground">No images.</p>
-            : (
-              <div className="flex flex-wrap gap-3 mt-2">
+        {/* ── Description ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-3">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Product Description</h2>
+          <p className="text-xs text-muted-foreground">Full rich text editor — write about product features, uses, and benefits.</p>
+          <div className="w-full border border-border overflow-hidden rounded">
+            <JoditEditor value={description} onChange={(v) => setDescription(v)} onBlur={(v) => setDescription(v)} config={JODIT_CONFIG} />
+          </div>
+        </section>
+
+        {/* ── Specifications ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-3">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Product Specifications</h2>
+          <KVEditor
+            label="Specifications"
+            description="Key specs shown as a table on the product page. Use Templates to quickly populate common fields."
+            pairs={specPairs}
+            onChange={setSpecPairs}
+            templates={SPEC_TEMPLATES}
+          />
+        </section>
+
+        {/* ── Trade Info ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-3">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Trade Information</h2>
+          <KVEditor
+            label="Trade Details"
+            description="Business & export details. Pre-filled with common trade fields — just fill in the values."
+            pairs={tradePairs}
+            onChange={setTradePairs}
+          />
+        </section>
+
+        {/* ── Images ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-4">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Product Images</h2>
+          {existingImages.length > 0 && (
+            <div>
+              <Label>Current Images</Label>
+              <p className="text-xs text-muted-foreground mb-3">Click Remove to permanently delete an image.</p>
+              <div className="flex flex-wrap gap-3">
                 {existingImages.map((img, idx) => (
-                  <div key={img.id} className="border border-border rounded overflow-hidden">
-                    <img src={img.url} alt="" className="w-28 h-28 object-cover block" />
+                  <div key={img.id} className="border border-border rounded-lg overflow-hidden shadow-sm">
+                    <img src={img.url} alt="" className="w-28 h-28 object-contain bg-muted/10 block" />
                     <div className="bg-muted/30 px-1 py-0.5 text-center text-xs text-muted-foreground">#{idx + 1}</div>
-                    <Button type="button" variant="destructive" size="sm" className="w-full rounded-none" onClick={() => removeExistingImage(img)} disabled={removeImageMutation.isPending}>
+                    <Button type="button" variant="destructive" size="sm" className="w-full rounded-none text-xs"
+                      onClick={() => removeImageMutation.mutate(img.id)}
+                      disabled={removeImageMutation.isPending}>
                       Remove
                     </Button>
                   </div>
                 ))}
               </div>
-            )
-          }
-        </div>
+            </div>
+          )}
+          <div>
+            <Label>{existingImages.length > 0 ? `Upload More (${slotsLeft} slot${slotsLeft !== 1 ? "s" : ""} remaining)` : "Upload Images (max 4)"}</Label>
+            <p className="text-xs text-muted-foreground mb-2">Images uploaded in original HD quality — no compression applied.</p>
+            <ImageUploadZone value={newImages} onChange={setNewImages} max={slotsLeft} className="mt-1" disabled={slotsLeft <= 0} />
+          </div>
+        </section>
 
-        {/* New images */}
-        <div>
-          <Label>Upload new images (max {Math.max(0, 4 - existingImages.length)} more)</Label>
-          <ImageUploadZone value={newImages} onChange={setNewImages} max={Math.max(0, 4 - existingImages.length)} className="mt-2" disabled={existingImages.length >= 4} />
-        </div>
+        {/* ── Flags ── */}
+        <section className="border border-border bg-card p-6 rounded-lg space-y-5">
+          <h2 className="font-semibold text-base border-b border-border pb-3">Home Page & Visibility</h2>
+          <div>
+            <Label>Feature Tag (Home Sections)</Label>
+            <Select value={featureTag ?? "__none__"} onValueChange={handleFeatureTagChange}>
+              <SelectTrigger className="mt-2 border-border w-full max-w-xs">
+                <SelectValue placeholder="None" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">None</SelectItem>
+                <SelectItem value="NEW_ARRIVAL">New Arrival</SelectItem>
+                <SelectItem value="TRENDING">Trending (High Demand)</SelectItem>
+                <SelectItem value="BEST_SELLER">Best Seller (Featured)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <CheckboxRow label="New Arrival" checked={isNewArrival}
+              onChange={(v) => { setIsNewArrival(v); if (v) { setFeatureTag("NEW_ARRIVAL"); setIsFeatured(false); setIsHighDemand(false); } else if (featureTag === "NEW_ARRIVAL") setFeatureTag(null); }}
+              description="Shows in New Arrivals section on home" />
+            <CheckboxRow label="High Demand / Trending" checked={isHighDemand}
+              onChange={(v) => { setIsHighDemand(v); if (v) { setFeatureTag("TRENDING"); setIsFeatured(false); setIsNewArrival(false); } else if (featureTag === "TRENDING") setFeatureTag(null); }}
+              description="Shows in Trending section on home" />
+            <CheckboxRow label="Featured / Best Seller" checked={isFeatured}
+              onChange={(v) => { setIsFeatured(v); if (v) { setFeatureTag("BEST_SELLER"); setIsNewArrival(false); setIsHighDemand(false); } else if (featureTag === "BEST_SELLER") setFeatureTag(null); }}
+              description="Shows in Featured Products section" />
+            <CheckboxRow label="Show on Home" checked={showOnHome} onChange={setShowOnHome} description="Pinned to home page listing" />
+            <CheckboxRow label="Active" checked={isActive} onChange={setIsActive} description="Inactive products are hidden from the website" />
+          </div>
+        </section>
 
-        {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        {/* ── SEO ── */}
+        <section className="border border-border bg-card rounded-lg">
+          <button type="button" onClick={() => setSeoOpen((o) => !o)}
+            className="w-full flex items-center justify-between p-5 text-left hover:bg-muted/50 transition-colors rounded-lg">
+            <span className="font-semibold text-base">SEO Settings</span>
+            {seoOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </button>
+          {seoOpen && (
+            <div className="border-t border-border p-5 space-y-4 bg-muted/20">
+              <p className="text-xs text-muted-foreground">Leave empty to auto-generate.</p>
+              <div>
+                <Label className="flex items-center gap-2">
+                  Meta Title {seoAuto.metaTitle && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
+                </Label>
+                <Input value={metaTitle} onChange={(e) => { setMetaTitle(e.target.value); setSeoAuto((a) => ({ ...a, metaTitle: false })); }} className="mt-1" />
+              </div>
+              <div>
+                <Label className="flex items-center gap-2">
+                  Meta Description {seoAuto.metaDescription && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
+                </Label>
+                <Input value={metaDescription} onChange={(e) => { setMetaDescription(e.target.value); setSeoAuto((a) => ({ ...a, metaDescription: false })); }} className="mt-1" />
+              </div>
+              <div>
+                <Label className="flex items-center gap-2">
+                  Meta Keywords {seoAuto.metaKeywords && <span className="text-xs font-normal text-muted-foreground">(Auto)</span>}
+                </Label>
+                <Input value={metaKeywords} onChange={(e) => { setMetaKeywords(e.target.value); setSeoAuto((a) => ({ ...a, metaKeywords: false })); }} className="mt-1" />
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* ── Actions ── */}
+        <div className="flex gap-3 pt-2 pb-8">
           <Button type="button" variant="outline" onClick={() => navigate("/products")}>Cancel</Button>
-          <Button type="submit" disabled={updateMutation.isPending || !categoryIds.length} className="min-w-[100px]">
+          <Button type="submit" disabled={updateMutation.isPending || !categoryIds.length} className="min-w-[140px]">
             {updateMutation.isPending ? "Saving..." : "Update Product"}
           </Button>
         </div>
@@ -395,6 +561,7 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
   );
 }
 
+/* ── ProductEdit (outer wrapper) ──────────────────────── */
 export function ProductEdit() {
   const { id } = useParams<{ id: string }>();
   const { data: product, isLoading, isError, error, refetch } = useQuery({
@@ -407,7 +574,7 @@ export function ProductEdit() {
 
   if (isError) {
     return (
-      <div className="space-y-3 max-w-3xl">
+      <div className="space-y-3 max-w-4xl">
         <p className="text-destructive font-medium">Failed to load product.</p>
         <p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : "Check connection."}</p>
         <Button type="button" variant="outline" onClick={() => refetch()}>Retry</Button>
@@ -417,9 +584,14 @@ export function ProductEdit() {
 
   if (isLoading || !product) {
     return (
-      <div className="space-y-4 max-w-3xl">
-        <div className="h-10 bg-muted animate-pulse w-64 rounded" />
-        <div className="h-64 bg-muted animate-pulse w-full rounded" />
+      <div className="space-y-6 max-w-4xl">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="border border-border rounded-lg p-6 space-y-4">
+            <div className="h-5 bg-muted animate-pulse w-48 rounded" />
+            <div className="h-10 bg-muted animate-pulse w-full rounded" />
+            <div className="h-10 bg-muted animate-pulse w-2/3 rounded" />
+          </div>
+        ))}
       </div>
     );
   }

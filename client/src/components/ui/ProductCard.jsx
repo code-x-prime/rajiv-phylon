@@ -23,20 +23,20 @@ export function ProductCard({ product, showBadge = false, index = 0 }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group flex flex-col h-full rounded bg-white border border-gray-100 overflow-hidden hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] hover:-translate-y-0.5 transition-all duration-300"
+      className="group flex flex-col rounded-xl bg-white border border-gray-100 overflow-hidden hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-300"
       style={{ animationDelay: `${index * 55}ms` }}
     >
       {/* ── Image ─────────────────────────────── */}
       <div
-        className="relative overflow-hidden bg-gray-50 shrink-0"
-        style={{ aspectRatio: "4/5" }}
+        className="relative overflow-hidden bg-[#F8F8F8] shrink-0"
+        style={{ aspectRatio: "1/1" }}
       >
         <Image
           src={imageUrl || PLACEHOLDER_IMAGE}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+          className="object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
         />
 
         {/* Badge */}

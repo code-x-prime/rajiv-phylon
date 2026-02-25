@@ -35,6 +35,8 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const megaTimeout = useRef(null);
 
   useEffect(() => {
@@ -53,10 +55,24 @@ export function Navbar() {
   }, [megaOpen, categories]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > 8);
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down & past header
+        setIsVisible(false);
+      } else {
+        // Scrolling up or at top
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [lastScrollY]);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen || searchOpen ? "hidden" : "";
@@ -82,11 +98,11 @@ export function Navbar() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 h-[100px] bg-white/95 backdrop-blur-md border-b border-gray-100 transition-shadow duration-300 ${scrolled ? "shadow-[0_2px_20px_rgba(0,0,0,0.08)]" : ""
-          }`}
+        className={`fixed top-0 inset-x-0 z-50 h-[80px] bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300 ${scrolled ? "shadow-[0_2px_20px_rgba(0,0,0,0.08)]" : ""
+          } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center justify-between h-full gap-4">
+          <div className="flex items-center justify-between h-full gap-3">
 
             {/* Logo */}
             <Link href="/" className="shrink-0 flex items-center gap-0 group">
@@ -95,7 +111,7 @@ export function Navbar() {
                 alt="Rajiv Phylon"
                 width={150}
                 height={150}
-                className="w-32 h-32 object-contain"
+                className="w-auto h-auto object-contain"
               />
             </Link>
 

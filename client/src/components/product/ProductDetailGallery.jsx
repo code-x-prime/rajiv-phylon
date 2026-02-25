@@ -49,7 +49,7 @@ export function ProductDetailGallery({ images = [], productName }) {
           alt={productName || "Product"}
           fill
           sizes="(max-width: 768px) 100vw, 55vw"
-          className="object-cover"
+          className="object-contain"
         />
       </div>
     );
@@ -88,7 +88,7 @@ export function ProductDetailGallery({ images = [], productName }) {
         )}
 
         {/* Main image */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 group cursor-zoom-in"
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-white border border-gray-200 group cursor-zoom-in shadow-sm"
           style={{ aspectRatio: "1/1" }}
           onClick={() => setLightbox(true)}
         >
@@ -102,13 +102,13 @@ export function ProductDetailGallery({ images = [], productName }) {
               className="absolute inset-0"
             >
               <Image
-                src={mainImg.url}
-                alt={`${productName} — image ${selected + 1}`}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 55vw"
-                className="object-cover transition-transform duration-600 ease-out group-hover:scale-[1.04]"
-              />
+                  src={mainImg.url}
+                  alt={`${productName} — image ${selected + 1}`}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 55vw"
+                  className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                />
             </motion.div>
           </AnimatePresence>
 
@@ -179,7 +179,7 @@ export function ProductDetailGallery({ images = [], productName }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+            className="fixed inset-0 z-[100] bg-black/97 flex items-center justify-center"
             onClick={() => setLightbox(false)}
           >
             {/* Close */}
@@ -223,18 +223,18 @@ export function ProductDetailGallery({ images = [], productName }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
-              className="relative max-w-4xl max-h-[85vh] mx-14 w-full flex items-center justify-center"
+              className="relative mx-4 sm:mx-14 w-full max-w-4xl"
+              style={{ height: "75vh" }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full max-h-[85vh] min-h-[240px]">
-                <Image
-                  src={mainImg.url}
-                  alt={productName}
-                  fill
-                  className="object-contain rounded-xl shadow-2xl"
-                  sizes="(max-width: 1024px) 100vw, 896px"
-                />
-              </div>
+              <Image
+                src={mainImg.url}
+                alt={productName}
+                fill
+                className="object-contain rounded-xl"
+                sizes="(max-width: 1024px) 95vw, 896px"
+                priority
+              />
             </motion.div>
 
             {/* Dot strip */}

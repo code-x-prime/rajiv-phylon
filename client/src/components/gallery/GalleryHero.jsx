@@ -34,7 +34,7 @@ export function GalleryHero({ count = 0 }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 mb-6"
+          className="inline-flex items-center gap-2 mb-6 mt-16"
         >
           <div className="h-px w-8 bg-[#F5B400]" />
           <span className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.28em]">

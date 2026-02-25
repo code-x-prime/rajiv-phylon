@@ -2,6 +2,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { prisma } from "../config/db.js";
+import { sendEnquiryEmails } from "../utils/emailService.js";
 
 const VALID_STATUSES = ["PENDING", "CONTACTED", "IN_PROGRESS", "COMPLETED", "REJECTED"];
 
@@ -29,6 +30,19 @@ export const createInquiry = asyncHandler(async (req, res) => {
             email: email?.trim() || null,
         },
     });
+
+    // Fire-and-forget email notifications (never blocks the response)
+    sendEnquiryEmails({
+        name:        name.trim(),
+        phone:       phone.trim(),
+        email:       email?.trim() || null,
+        quantity:    quantity != null ? String(quantity).trim() : null,
+        unit:        unit?.trim() || null,
+        message:     message.trim(),
+        productName: productName?.trim() || null,
+        source:      source?.trim() || "contact-form",
+    }).catch((e) => console.error("[Email] sendEnquiryEmails error:", e.message));
+
     res.status(201).json(new ApiResponsive(201, inquiry, "Inquiry submitted successfully"));
 });
 

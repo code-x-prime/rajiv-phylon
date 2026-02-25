@@ -112,6 +112,9 @@ model Product {
   isHighDemand         Boolean               @default(false)
   showOnHome           Boolean               @default(false)
   isActive             Boolean               @default(true)
+  moq                  String?               // Minimum Order Quantity, e.g. "1200-2400 Pairs"
+  specifications       String?               @db.Text  // JSON string: { "Material": "TPR", "Color": "Brown" }
+  tradeInfo            String?               @db.Text  // JSON string: { "Payment Terms": "T/T", "Supply Ability": "100000 per day" }
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   images               ProductImage[]

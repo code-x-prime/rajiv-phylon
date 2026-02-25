@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Upload } from "lucide-react";
+import { Upload, X, ImageIcon } from "lucide-react";
 
 type ImageUploadZoneProps = {
   value: File[];
@@ -11,6 +11,8 @@ type ImageUploadZoneProps = {
 };
 
 export function ImageUploadZone({ value, onChange, max = 4, disabled, className }: ImageUploadZoneProps) {
+  const uid = useId();
+  const inputId = `image-zone-${uid}`;
   const [drag, setDrag] = useState(false);
 
   const addFiles = useCallback(
@@ -27,68 +29,93 @@ export function ImageUploadZone({ value, onChange, max = 4, disabled, className 
   );
 
   const remove = (index: number) => {
-    const next = value.filter((_, i) => i !== index);
-    onChange(next);
+    onChange(value.filter((_, i) => i !== index));
   };
 
+  const slotsLeft = max - value.length;
+
   return (
-    <div className={cn("space-y-2", className)}>
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDrag(true);
-        }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDrag(false);
-          addFiles(e.dataTransfer.files);
-        }}
-        onClick={() => !disabled && document.getElementById("image-zone-input")?.click()}
-        className={cn(
-          "border-2 border-dashed min-h-[160px] flex flex-col items-center justify-center gap-2 p-4 transition-colors cursor-pointer",
-          drag ? "border-primary bg-muted/50" : "border-border hover:border-primary/50 hover:bg-muted/30",
-          disabled && "opacity-50 cursor-not-allowed"
-        )}
-      >
-        <Upload className="h-10 w-10 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground text-center">
-          Drag & drop images here or click to upload (max {max})
-        </p>
-        <input
-          id="image-zone-input"
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={(e) => addFiles(e.target.files)}
-        />
-      </div>
+    <div className={cn("space-y-3", className)}>
+      {/* Drop zone — only show when slots available */}
+      {slotsLeft > 0 && !disabled && (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={(e) => { e.preventDefault(); setDrag(false); addFiles(e.dataTransfer.files); }}
+          onClick={() => document.getElementById(inputId)?.click()}
+          className={cn(
+            "border-2 border-dashed rounded-lg min-h-[120px] flex flex-col items-center justify-center gap-2 p-4 transition-all cursor-pointer select-none",
+            drag
+              ? "border-primary bg-primary/5 scale-[1.01]"
+              : "border-border hover:border-primary/50 hover:bg-muted/30",
+          )}
+        >
+          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+            <Upload className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-foreground">
+              Drop images here or <span className="text-primary underline">browse</span>
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              PNG, JPG, WEBP — original HD quality, no compression ({slotsLeft} slot{slotsLeft !== 1 ? "s" : ""} remaining)
+            </p>
+          </div>
+          <input
+            id={inputId}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => addFiles(e.target.files)}
+          />
+        </div>
+      )}
+
+      {/* Preview grid */}
       {value.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {value.map((file, i) => (
-            <div key={i} className="relative border border-border w-20 h-20">
+            <div
+              key={i}
+              className="relative group rounded-lg border border-border overflow-hidden bg-muted/20"
+              style={{ aspectRatio: "1/1" }}
+            >
               <img
                 src={URL.createObjectURL(file)}
-                alt=""
-                className="w-full h-full object-cover"
+                alt={`Preview ${i + 1}`}
+                className="w-full h-full object-contain"
               />
+              {/* File info overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1 flex items-center gap-1.5">
+                <ImageIcon className="h-2.5 w-2.5 text-white/70 shrink-0" />
+                <span className="text-[10px] text-white/80 truncate">{file.name.split(".")[0]}</span>
+                <span className="text-[10px] text-white/50 shrink-0 ml-auto">
+                  {(file.size / 1024 / 1024).toFixed(1)}MB
+                </span>
+              </div>
+              {/* Remove button */}
               {!disabled && (
                 <button
                   type="button"
-                  className="absolute top-0 right-0 bg-destructive text-primary-foreground text-xs w-5 h-5 flex items-center justify-center"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    remove(i);
-                  }}
+                  onClick={(e) => { e.stopPropagation(); remove(i); }}
+                  className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 hover:bg-destructive text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-150 z-10"
+                  aria-label="Remove image"
                 >
-                  ×
+                  <X className="h-3.5 w-3.5" />
                 </button>
               )}
-              <span className="absolute bottom-0 left-0 bg-black/60 text-white text-xs px-1">#{i + 1}</span>
+              {/* Position badge */}
+              <div className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-black/50 text-white text-[10px] font-bold flex items-center justify-center z-10">
+                {i + 1}
+              </div>
             </div>
           ))}
         </div>
+      )}
+
+      {value.length >= max && (
+        <p className="text-xs text-muted-foreground">Maximum {max} images reached. Remove one to add more.</p>
       )}
     </div>
   );

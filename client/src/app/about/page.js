@@ -71,12 +71,12 @@ export default function AboutPage() {
           aria-hidden
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-20">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-6"
+            className="inline-flex items-center gap-2 mb-6 mt-16"
           >
             <div className="h-px w-8 bg-[#F5B400]" />
             <span className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.28em]">
@@ -126,22 +126,6 @@ export default function AboutPage() {
             </Link>
           </motion.div>
 
-          {/* Inline stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.44 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/10 pt-10"
-          >
-            {STATS.map((s, i) => (
-              <div key={i} className="text-center md:text-left">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-white leading-none">
-                  {s.value}
-                </div>
-                <div className="text-[13px] text-white/40 font-body mt-1.5">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </div>
       </section>
 

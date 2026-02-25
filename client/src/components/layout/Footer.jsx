@@ -39,7 +39,7 @@ export async function Footer() {
                   alt="Rajiv Phylon"
                   width={150}
                   height={150}
-                  className="w-32 h-32 object-contain mb-5 bg-white rounded p-2"
+                  className="w-auto h-auto object-contain mb-5 bg-white rounded p-2"
                 />
               </Link>
               <p className="text-[14px] leading-relaxed text-gray-400 font-body mb-6 max-w-[220px]">

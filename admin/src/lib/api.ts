@@ -82,6 +82,9 @@ export type Product = {
   name: string;
   slug: string;
   description: string | null;
+  moq?: string | null;
+  specifications?: Record<string, string> | null;
+  tradeInfo?: Record<string, string> | null;
   featureTag?: ProductFeatureTag;
   isFeatured?: boolean;
   isNewArrival?: boolean;
@@ -106,6 +109,9 @@ export const productsApi = {
   create: (data: {
     name: string;
     description?: string;
+    moq?: string;
+    specifications?: Record<string, string>;
+    tradeInfo?: Record<string, string>;
     categoryIds: string[];
     subCategoryIds?: string[];
     metaTitle?: string;
@@ -121,23 +127,29 @@ export const productsApi = {
     const form = new FormData();
     form.append("name", data.name);
     form.append("description", data.description ?? "");
+    if (data.moq) form.append("moq", data.moq);
+    if (data.specifications) form.append("specifications", JSON.stringify(data.specifications));
+    if (data.tradeInfo) form.append("tradeInfo", JSON.stringify(data.tradeInfo));
     form.append("categoryIds", JSON.stringify(data.categoryIds));
     form.append("subCategoryIds", JSON.stringify(data.subCategoryIds ?? []));
     if (data.metaTitle) form.append("metaTitle", data.metaTitle ?? "");
     if (data.metaDescription) form.append("metaDescription", data.metaDescription ?? "");
     if (data.metaKeywords) form.append("metaKeywords", data.metaKeywords ?? "");
     if (data.featureTag !== undefined && data.featureTag !== null) form.append("featureTag", data.featureTag);
-    if (data.isFeatured !== undefined) form.append("isFeatured", String(data.isFeatured));
-    if (data.isNewArrival !== undefined) form.append("isNewArrival", String(data.isNewArrival));
-    if (data.isHighDemand !== undefined) form.append("isHighDemand", String(data.isHighDemand));
-    if (data.showOnHome !== undefined) form.append("showOnHome", String(data.showOnHome));
-    if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
+    form.append("isFeatured", String(data.isFeatured ?? false));
+    form.append("isNewArrival", String(data.isNewArrival ?? false));
+    form.append("isHighDemand", String(data.isHighDemand ?? false));
+    form.append("showOnHome", String(data.showOnHome ?? false));
+    form.append("isActive", String(data.isActive ?? true));
     images?.forEach((f) => form.append("images", f));
     return api.post<ApiResponse<Product>>("/products", form, { headers: { "Content-Type": undefined } }).then(unwrap);
   },
   update: (id: string, data: Partial<{
     name: string;
     description: string;
+    moq: string;
+    specifications: Record<string, string>;
+    tradeInfo: Record<string, string>;
     categoryIds: string[];
     subCategoryIds: string[];
     metaTitle: string;
@@ -154,6 +166,9 @@ export const productsApi = {
     const form = new FormData();
     form.append("name", data.name ?? "");
     form.append("description", data.description ?? "");
+    form.append("moq", data.moq ?? "");
+    form.append("specifications", data.specifications ? JSON.stringify(data.specifications) : "");
+    form.append("tradeInfo", data.tradeInfo ? JSON.stringify(data.tradeInfo) : "");
     form.append("categoryIds", JSON.stringify(data.categoryIds ?? []));
     form.append("subCategoryIds", JSON.stringify(data.subCategoryIds ?? []));
     form.append("metaTitle", data.metaTitle ?? "");

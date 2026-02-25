@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,6 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
-  Search,
   ImageIcon,
 } from "lucide-react";
 import {
@@ -21,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -53,6 +51,12 @@ export function AppLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const pathname = location.pathname;
   const pageTitle = getPageTitle(pathname);
@@ -149,13 +153,14 @@ export function AppLayout() {
           <h1 className="text-lg font-bold text-foreground truncate min-w-0">
             {pageTitle}
           </h1>
-          <div className="flex-1 flex justify-end lg:justify-center max-w-xs lg:max-w-sm">
-            <div className="relative w-full">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              <Input
-                placeholder="Search"
-                className="pl-8 h-9 bg-muted/50 border-border w-full"
-              />
+          <div className="flex-1 flex justify-end items-center gap-4 pr-4">
+            <div className="flex flex-col items-end">
+              <span className="text-xl font-bold tracking-tight text-primary">
+                {currentTime.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })}
+              </span>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                {currentTime.toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+              </span>
             </div>
           </div>
           <DropdownMenu>

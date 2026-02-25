@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
         description: category.description || `Browse ${category.name} products and subcategories.`,
       };
     }
-  } catch {}
+  } catch { }
   return { title: "Category | Rajiv Phylon" };
 }
 
@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }) {
       getSubCategoriesByCategory(category.id),
       getProducts(),
     ]);
-  } catch {}
+  } catch { }
 
   const categoryProducts = products.filter(
     (p) => p.categories?.some((c) => c.id === category.id)
@@ -74,7 +74,7 @@ export default async function CategoryPage({ params }) {
         {/* Yellow glow */}
         <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[#F5B400]/10 blur-[80px] pointer-events-none" aria-hidden />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 mt-16">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12px] font-body text-white/40 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-white/70 transition-colors">Home</Link>

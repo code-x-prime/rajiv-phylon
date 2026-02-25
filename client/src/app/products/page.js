@@ -38,7 +38,7 @@ export default async function ProductsPage() {
         <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#F5B400]/10 blur-[90px] pointer-events-none" aria-hidden />
         <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-[#F5B400]/8 blur-[80px] pointer-events-none" aria-hidden />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 mt-16">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12px] font-body text-white/40 mb-5" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-white/70 transition-colors">Home</Link>

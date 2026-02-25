@@ -17,6 +17,7 @@ export const bodyFont = Manrope({
 
 const Navbar = dynamic(() => import("@/components/layout/Navbar").then((m) => m.Navbar), { ssr: true });
 const Footer = dynamic(() => import("@/components/layout/Footer").then((m) => m.Footer), { ssr: true });
+const FloatingActions = dynamic(() => import("@/components/layout/FloatingActions").then((m) => m.FloatingActions), { ssr: false });
 
 export const metadata = {
   title: "Rajiv Phylon | High-Performance Polymer Footwear Soles",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FloatingActions />
         <Toaster richColors position="top-center" />
       </body>
     </html>

@@ -34,6 +34,23 @@ function buildAutoSeo(product, imageUrls) {
         ogImage: firstImageUrl,
     };
 }
+function parseJsonField(value) {
+    if (!value) return null;
+    if (typeof value === "object") {
+        const s = JSON.stringify(value);
+        return s === "{}" ? null : s;
+    }
+    if (typeof value === "string") {
+        if (!value.trim()) return null;
+        try {
+            const parsed = JSON.parse(value);
+            if (typeof parsed === "object" && !Array.isArray(parsed) && Object.keys(parsed).length === 0) return null;
+            return value;
+        } catch { return null; }
+    }
+    return null;
+}
+
 export const create = asyncHandler(async (req, res) => {
     const { name, description, metaTitle, metaDescription, metaKeywords, ogImage } = req.body;
     const categoryIds = parseIds(req.body.categoryIds);
@@ -68,6 +85,9 @@ export const create = asyncHandler(async (req, res) => {
             name: name.trim(),
             slug,
             description: description || null,
+            moq: req.body.moq?.trim() || null,
+            specifications: parseJsonField(req.body.specifications),
+            tradeInfo: parseJsonField(req.body.tradeInfo),
             featureTag,
             isFeatured: req.body.isFeatured === true || req.body.isFeatured === "true",
             isNewArrival: req.body.isNewArrival === true || req.body.isNewArrival === "true",
@@ -155,6 +175,9 @@ export const update = asyncHandler(async (req, res) => {
         data.slug = createSlug(name);
     }
     if (description !== undefined) data.description = description;
+    if (req.body.moq !== undefined) data.moq = req.body.moq?.trim() || null;
+    if (req.body.specifications !== undefined) data.specifications = parseJsonField(req.body.specifications);
+    if (req.body.tradeInfo !== undefined) data.tradeInfo = parseJsonField(req.body.tradeInfo);
     if (req.body.isFeatured !== undefined) data.isFeatured = req.body.isFeatured === true || req.body.isFeatured === "true";
     if (req.body.isNewArrival !== undefined) data.isNewArrival = req.body.isNewArrival === true || req.body.isNewArrival === "true";
     if (req.body.isHighDemand !== undefined) data.isHighDemand = req.body.isHighDemand === true || req.body.isHighDemand === "true";
@@ -392,11 +415,15 @@ function mapProductResponse(product) {
     const resolvedOgImage = product.ogImage
         ? (product.ogImage.startsWith("http") ? product.ogImage : getPublicUrl(product.ogImage) || product.ogImage)
         : (images[0] ? images[0].url : null);
+    const parseOrNull = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
     return {
         id: product.id,
         name: product.name,
         slug: product.slug,
         description: product.description,
+        moq: product.moq || null,
+        specifications: parseOrNull(product.specifications),
+        tradeInfo: parseOrNull(product.tradeInfo),
         featureTag: product.featureTag || null,
         isFeatured: product.isFeatured ?? false,
         isNewArrival: product.isNewArrival ?? false,

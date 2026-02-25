@@ -16,7 +16,7 @@ const imageFilter = (req, file, cb) => {
 /** Single image upload (field name: image or file) */
 export const uploadSingle = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB — HD images
     fileFilter: imageFilter,
 }).single("image");
 
@@ -24,21 +24,21 @@ export const uploadSingle = multer({
 export const uploadMultiple = (maxCount = 4) =>
     multer({
         storage,
-        limits: { fileSize: 10 * 1024 * 1024 },
+        limits: { fileSize: 20 * 1024 * 1024 }, // 20MB per file — no compression
         fileFilter: imageFilter,
     }).array("images", maxCount);
 
 /** Single file for gallery */
 export const uploadGallery = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 20 * 1024 * 1024 },
     fileFilter: imageFilter,
 }).single("image");
 
 /** Banner: desktopImage + mobileImage (each optional on update) */
 export const uploadBanner = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 20 * 1024 * 1024 },
     fileFilter: imageFilter,
 }).fields([
     { name: "desktopImage", maxCount: 1 },
