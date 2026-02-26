@@ -27,20 +27,30 @@ const allowedOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim().replace(/\/$/, ""))
     : ["http://localhost:3000", "http://localhost:5173"];
 
+// Startup pe verify — PM2 logs me dikhega
+if (process.env.NODE_ENV === "production") {
+    console.log("[CORS] Allowed origins:", allowedOrigins);
+}
+
 app.use(
     cors({
         origin: (origin, callback) => {
-            // Allow requests with no origin (like mobile apps or curl requests)
+            // Allow requests with no origin (e.g. Postman, curl)
             if (!origin) return callback(null, true);
 
-            if (
-                allowedOrigins.indexOf(origin) !== -1 ||
-                process.env.NODE_ENV === "development"
-            ) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
+            if (process.env.NODE_ENV === "development") return callback(null, true);
+
+            if (allowedOrigins.indexOf(origin) !== -1) return callback(null, true);
+
+            // Fallback: allow any origin from our domain (www, admin, non-www)
+            try {
+                const u = new URL(origin);
+                if (u.hostname === "testingkeliye.online" || u.hostname.endsWith(".testingkeliye.online")) {
+                    return callback(null, true);
+                }
+            } catch (_) {}
+
+            callback(new Error("Not allowed by CORS"));
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
