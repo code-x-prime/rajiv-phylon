@@ -15,7 +15,7 @@ export function HomeGallerySection({ images = [] }) {
   const list = images.slice(0, 8);
 
   return (
-    <section className="py-16 md:py-20 lg:py-24 border-t border-gray-100 bg-white">
+    <section className="py-10 md:py-16 border-t border-gray-100 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

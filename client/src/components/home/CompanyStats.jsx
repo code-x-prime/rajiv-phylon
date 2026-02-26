@@ -72,7 +72,7 @@ export function CompanyStats() {
   }, []);
 
   return (
-    <section ref={ref} className="py-12 md:py-16  bg-white border-b border-gray-100">
+    <section ref={ref} className="md:py-10 py-6   bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top label */}
         <motion.div

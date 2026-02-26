@@ -9,7 +9,7 @@ export function ProductSlider({ title, products, showNewBadge = false, viewAllHr
   if (!products?.length) return null;
 
   return (
-    <section className="py-16 md:py-20 lg:py-24 border-b border bg-section-bg">
+    <section className="py-10 md:py-16 border-b border bg-section-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-8 md:mb-10">
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground tracking-tight">

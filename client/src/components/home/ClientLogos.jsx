@@ -1,20 +1,62 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
-const BRANDS = [
-  "Bata", "Relaxo", "JQR Sports", "Action", "VKC Pride", "HRX",
-  "Welcome", "Today", "Lehar", "Cult Sport", "Calcetto", "Ajanta Shoes",
-  "Aqualite", "Bersache", "Bacca Bucci", "FCUK", "Odyssia", "Yoo Brands",
-  "Speed", "Sole Threads", "Fila", "Impakto", "Lakhani", "Nice",
-  "Aygo", "Staed", "Striker", "Paragon", "Khadim's", "Campus",
-  "Redtape", "Woodland", "Lee Cooper", "Neeman's", "Lancer", "Asian",
-  "Liberty", "Red Chief", "Sreeleathers", "Walkaroo",
-];
+/**
+ * Brand name → logo filename in public/logos (exact match).
+ * Jis brand ki yahan entry nahi hai ya file nahi hai, wo "image nahi hai" list me aata hai.
+ */
+const BRAND_LOGO_MAP = {
+  "Bata": "BATA.jpg",
+  "Relaxo": "RELAXO.jpg",
+  "JQR Sports": "JQR SPORTS.jpg",
+  "Action": "ACTION.jpg",
+  "VKC Pride": "VKC PRIDE.jpg",
+  "HRX": "HRX.jpg",
+  "Welcome": "WELCOME.jpg",
+  "Today": null,
+  "Lehar": "LEHAR.jpg",
+  "Cult Sport": "CULT SPORT.jpg",
+  "Calcetto": "CALCETTO.jpg",
+  "Ajanta Shoes": "AJANTA SHOES.jpg",
+  "Aqualite": "AQUALITE.jpg",
+  "Bersache": "BERSACHE.jpg",
+  "Bacca Bucci": "BACCA BUCCI.jpg",
+  "FCUK": "FCUK.jpg",
+  "Odyssia": "ODYSSIA.jpg",
+  "Yoo Brands": "YOO BRANDS.jpg",
+  "Speed": "SPEED.jpg",
+  "Sole Threads": "SOLE THREADS.jpg",
+  "Fila": "FILA.jpg",
+  "Impakto": "IMPAKTO.jpg",
+  "Lakhani": "LAKHANI.jpg",
+  "Nice": null,
+  "Aygo": "AYGO.jpg",
+  "Staed": "STAED.jpg",
+  "Striker": null,
+  "Paragon": "PARAGON.jpg",
+  "Khadim's": "KHADIM'S.jpg",
+  "Campus": "CAMPUS.jpg",
+  "Redtape": "REDTAPE.jpg",
+  "Woodland": "WOODLAND.jpg",
+  "Lee Cooper": "LEE COOPER.jpg",
+  "Neeman's": "NEEMAN'S.jpg",
+  "Lancer": "LANCER.jpg",
+  "Asian": "ASIAN.jpg",
+  "Liberty": "LIBERTY.jpg",
+  "Red Chief": "RED CHIEF.jpg",
+  "Sreeleathers": "SREELEATHERS.jpg",
+  "Walkaroo": "WALKAROO.jpg",
+};
+
+const BRANDS = Object.keys(BRAND_LOGO_MAP);
 
 /* Duplicate for two seamless rows scrolling in opposite directions */
 const ROW1 = [...BRANDS.slice(0, 20), ...BRANDS.slice(0, 20)];
-const ROW2 = [...BRANDS.slice(20),    ...BRANDS.slice(20)];
+const ROW2 = [...BRANDS.slice(20), ...BRANDS.slice(20)];
+
+const LOGOS_DIR = "/logos";
 
 function MarqueeRow({ items, reverse = false, duration = 35 }) {
   return (
@@ -24,16 +66,31 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
         transition={{ duration, repeat: Infinity, ease: "linear" }}
         className="flex shrink-0 gap-4"
       >
-        {items.map((name, i) => (
-          <div
-            key={i}
-            className="shrink-0 flex items-center justify-center h-12 px-6 rounded-full border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none"
-          >
-            <span className="font-heading font-semibold text-[13px] text-gray-600 hover:text-[#111111] whitespace-nowrap transition-colors duration-200">
-              {name}
-            </span>
-          </div>
-        ))}
+        {items.map((name, i) => {
+          const logoFile = BRAND_LOGO_MAP[name];
+          return (
+            <div
+              key={`${name}-${i}`}
+              className="shrink-0 flex items-center justify-center w-[120px] h-14 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none overflow-hidden p-2"
+            >
+              {logoFile ? (
+                <div className="relative w-full h-full">
+                  <Image
+                    src={`${LOGOS_DIR}/${logoFile}`}
+                    alt={name}
+                    fill
+                    className="object-contain"
+                    sizes="120px"
+                  />
+                </div>
+              ) : (
+                <span className="font-heading font-semibold text-[12px] text-gray-500 whitespace-nowrap">
+                  {name}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </motion.div>
     </div>
   );
@@ -41,7 +98,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
 
 export function ClientLogos() {
   return (
-    <section className="py-14 md:py-16 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
+    <section className="md:py-10 py-6 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
       {/* Heading */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
         <motion.p
@@ -100,3 +157,14 @@ export function ClientLogos() {
     </section>
   );
 }
+
+/**
+ * Jin brands ki logo image nahi hai (public/logos me file nahi):
+ * - Today
+ * - Nice
+ * - Striker
+ *
+ * Inke liye public/logos me file add karo, e.g. TODAY.jpg, NICE.jpg, STRIKER.jpg
+ * Phir BRAND_LOGO_MAP me entry add karo: "Today": "TODAY.jpg", etc.
+ */
+export const BRANDS_WITHOUT_LOGO = ["Today", "Nice", "Striker"];
