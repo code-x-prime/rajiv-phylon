@@ -8,6 +8,9 @@ export const metadata = {
   description: "Our infrastructure, manufacturing, and product gallery. Export-grade manufacturing showcase.",
 };
 
+// Build time par API call na ho (VPS par API often unavailable during build).
+export const dynamic = "force-dynamic";
+
 export default async function GalleryPage() {
   let items = [];
   try {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 
 const POINTS = [
   {
@@ -56,8 +56,9 @@ function ImageGrid({ images }) {
         className={`group relative overflow-hidden rounded-2xl bg-[#F0F0F0] border border-gray-200 ${className}`}
       >
         {hasImage && src ? (
-          <div className="relative w-full h-full">
-            <Image
+          <div className="relative w-full h-full select-none" onContextMenu={(e) => e.preventDefault()}>
+            <ProtectedImage
+              wrapperClassName="relative w-full h-full"
               src={src}
               alt={alt}
               fill

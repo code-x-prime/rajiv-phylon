@@ -8,5 +8,6 @@ export { SkeletonCard } from "./SkeletonCard";
 export { BannerSkeleton } from "./BannerSkeleton";
 export { ProductSliderSkeleton } from "./ProductSliderSkeleton";
 export { EmptyState } from "./EmptyState";
+export { ProtectedImage } from "./ProtectedImage";
 export { PrimaryButton } from "./PrimaryButton";
 export { SecondaryButton } from "./SecondaryButton";

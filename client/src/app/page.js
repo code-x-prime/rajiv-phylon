@@ -19,6 +19,9 @@ import {
   GalleryFetcher,
 } from "@/components/home/HomeFetchComponents";
 
+// Force dynamic so build does not call API (VPS build often has no API available).
+export const dynamic = "force-dynamic";
+
 // Not async — page renders immediately.
 // Each dynamic section fetches its own data; only that section shows a skeleton.
 // Static sections (CompanyStats, WhyChooseUs, etc.) render with zero delay.

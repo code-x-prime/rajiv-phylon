@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -55,10 +55,12 @@ export function HomeGallerySection({ images = [] }) {
           {list.map((item, i) => (
             <div
               key={item.id || i}
-              className="shrink-0 w-[240px] snap-start rounded-2xl overflow-hidden border border-gray-100 shadow-sm"
+              className="shrink-0 w-[240px] snap-start rounded-2xl overflow-hidden border border-gray-100 shadow-sm select-none"
+              onContextMenu={(e) => e.preventDefault()}
             >
               <div className="relative aspect-[4/3] bg-gray-100">
-                <Image
+                <ProtectedImage
+                  wrapperClassName="relative w-full h-full"
                   src={item.imageUrl || item.image}
                   alt={item.title || `Gallery ${i + 1}`}
                   fill
@@ -92,8 +94,9 @@ export function HomeGallerySection({ images = [] }) {
 
 function GalleryItem({ item, className = "" }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gray-100 border border-gray-100 shadow-sm group ${className}`}>
-      <Image
+    <div className={`relative overflow-hidden rounded-2xl bg-gray-100 border border-gray-100 shadow-sm group select-none ${className}`} onContextMenu={(e) => e.preventDefault()}>
+      <ProtectedImage
+        wrapperClassName="relative w-full h-full"
         src={item.imageUrl || item.image}
         alt={item.title || "Factory gallery"}
         fill

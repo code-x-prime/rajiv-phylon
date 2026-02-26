@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { notFound } from "next/navigation";
 import { ChevronRight, Package } from "lucide-react";
 import { getSubcategoryBySlug, getProducts, getCategories, getSubCategoriesByCategory } from "@/lib/api";
@@ -57,7 +57,7 @@ export default async function SubCategoryPage({ params }) {
       <section className="relative bg-[#0A0A0A] overflow-hidden py-20 md:py-28">
         {/* Background image */}
         <div className="absolute inset-0">
-          <Image src={imageUrl} alt="" fill className="object-cover opacity-[0.12] saturate-0" sizes="100vw" />
+          <ProtectedImage wrapperClassName="absolute inset-0" src={imageUrl} alt="" fill className="object-cover opacity-[0.12] saturate-0" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-[#0A0A0A]/50" />
         </div>
 

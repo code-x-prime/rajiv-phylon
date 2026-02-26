@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 
 export function ProductGallery({ images, productName }) {
   const [selected, setSelected] = useState(0);
@@ -17,8 +17,9 @@ export function ProductGallery({ images, productName }) {
 
   return (
     <div className="space-y-4">
-      <div className="aspect-square relative bg-[#f8fafc] border border-[#e5e7eb] overflow-hidden">
-        <Image
+      <div className="aspect-square relative bg-[#f8fafc] border border-[#e5e7eb] overflow-hidden select-none" onContextMenu={(e) => e.preventDefault()}>
+        <ProtectedImage
+          wrapperClassName="relative w-full h-full"
           src={list[selected]?.url}
           alt={productName}
           fill
@@ -34,9 +35,10 @@ export function ProductGallery({ images, productName }) {
               key={i}
               type="button"
               onClick={() => setSelected(i)}
-              className={`aspect-square relative bg-[#f8fafc] border overflow-hidden ${selected === i ? "border-[hsl(var(--accent))]" : "border-[#e5e7eb]"}`}
+              className={`aspect-square relative bg-[#f8fafc] border overflow-hidden select-none ${selected === i ? "border-[hsl(var(--accent))]" : "border-[#e5e7eb]"}`}
+              onContextMenu={(e) => e.preventDefault()}
             >
-              <Image src={img.url} alt={`${productName} ${i + 1}`} fill className="object-cover" sizes="120px" />
+              <ProtectedImage wrapperClassName="relative w-full h-full" src={img.url} alt={`${productName} ${i + 1}`} fill className="object-cover" sizes="120px" />
             </button>
           ))}
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { ArrowUpRight } from "lucide-react";
 
 const PLACEHOLDER_IMAGE = "/placeholder.png";
@@ -32,7 +32,8 @@ export function ProductCard({ product, showBadge = false, index = 0, compactOnMo
         className="relative overflow-hidden bg-[#F8F8F8] shrink-0"
         style={{ aspectRatio: "1/1" }}
       >
-        <Image
+        <ProtectedImage
+          wrapperClassName="relative w-full h-full"
           src={imageUrl || PLACEHOLDER_IMAGE}
           alt={product.name}
           fill

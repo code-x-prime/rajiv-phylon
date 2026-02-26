@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Check, ZoomIn, X, ChevronLeft, ChevronRight, Award } from "lucide-react";
 
 const PLACEHOLDER_IMAGE = "/placeholder.png";
 
 export function ProductDetailGallery({ images = [], productName }) {
-  const [selected, setSelected]   = useState(0);
-  const [copied, setCopied]       = useState(false);
-  const [lightbox, setLightbox]   = useState(false);
+  const [selected, setSelected] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [lightbox, setLightbox] = useState(false);
 
-  const list    = Array.isArray(images) ? images : [];
+  const list = Array.isArray(images) ? images : [];
   const mainImg = list[selected];
 
   /* Share */
@@ -32,9 +32,9 @@ export function ProductDetailGallery({ images = [], productName }) {
   useEffect(() => {
     if (!lightbox) return;
     const handler = (e) => {
-      if (e.key === "Escape")      setLightbox(false);
-      if (e.key === "ArrowLeft")   setSelected((s) => Math.max(0, s - 1));
-      if (e.key === "ArrowRight")  setSelected((s) => Math.min(list.length - 1, s + 1));
+      if (e.key === "Escape") setLightbox(false);
+      if (e.key === "ArrowLeft") setSelected((s) => Math.max(0, s - 1));
+      if (e.key === "ArrowRight") setSelected((s) => Math.min(list.length - 1, s + 1));
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -43,8 +43,9 @@ export function ProductDetailGallery({ images = [], productName }) {
   /* No images — show placeholder */
   if (list.length === 0) {
     return (
-      <div className="relative rounded-2xl overflow-hidden bg-gray-50 border border-gray-200" style={{ aspectRatio: "1/1" }}>
-        <Image
+      <div className="relative rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 select-none" style={{ aspectRatio: "1/1" }} onContextMenu={(e) => e.preventDefault()}>
+        <ProtectedImage
+          wrapperClassName="relative w-full h-full"
           src={PLACEHOLDER_IMAGE}
           alt={productName || "Product"}
           fill
@@ -58,24 +59,24 @@ export function ProductDetailGallery({ images = [], productName }) {
   return (
     <>
       {/* ── Gallery layout ───────────────────────── */}
-      <div className="flex flex-col-reverse md:flex-row gap-3 lg:gap-4">
+      <div className="flex flex-col-reverse  gap-3 lg:gap-4">
 
         {/* Vertical thumbnails (left on desktop, bottom on mobile) */}
         {list.length > 1 && (
-          <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden pb-1 md:pb-0 md:max-h-[540px] scrollbar-hide shrink-0">
+          <div className="flex  gap-2 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden pb-1 md:pb-0 md:max-h-[540px] scrollbar-hide shrink-0">
             {list.map((img, i) => (
               <button
                 key={img.id ?? i}
                 type="button"
                 onClick={() => setSelected(i)}
                 aria-label={`View image ${i + 1}`}
-                className={`relative shrink-0 w-16 h-16 md:w-[78px] md:h-[78px] rounded-xl overflow-hidden border-2 transition-all duration-200 ${
-                  selected === i
-                    ? "border-[#F5B400] shadow-[0_0_0_3px_rgba(245,180,0,0.2)]"
-                    : "border-gray-200 hover:border-gray-400 opacity-60 hover:opacity-100"
-                }`}
+                className={`relative shrink-0 w-16 h-16 md:w-[78px] md:h-[78px] rounded-xl overflow-hidden border-2 transition-all duration-200 ${selected === i
+                  ? "border-[#F5B400] shadow-[0_0_0_3px_rgba(245,180,0,0.2)]"
+                  : "border-gray-200 hover:border-gray-400 opacity-60 hover:opacity-100"
+                  }`}
               >
-                <Image
+                <ProtectedImage
+                  wrapperClassName="relative w-full h-full"
                   src={img.url}
                   alt={`${productName} ${i + 1}`}
                   fill
@@ -88,9 +89,10 @@ export function ProductDetailGallery({ images = [], productName }) {
         )}
 
         {/* Main image */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-white border border-gray-200 group cursor-zoom-in shadow-sm"
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-white border border-gray-200 group cursor-zoom-in shadow-sm select-none"
           style={{ aspectRatio: "1/1" }}
           onClick={() => setLightbox(true)}
+          onContextMenu={(e) => e.preventDefault()}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -101,14 +103,15 @@ export function ProductDetailGallery({ images = [], productName }) {
               transition={{ duration: 0.2 }}
               className="absolute inset-0"
             >
-              <Image
-                  src={mainImg.url}
-                  alt={`${productName} — image ${selected + 1}`}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 55vw"
-                  className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                />
+              <ProtectedImage
+                wrapperClassName="relative w-full h-full"
+                src={mainImg.url}
+                alt={`${productName} — image ${selected + 1}`}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 55vw"
+                className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              />
             </motion.div>
           </AnimatePresence>
 
@@ -223,11 +226,13 @@ export function ProductDetailGallery({ images = [], productName }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
-              className="relative mx-4 sm:mx-14 w-full max-w-4xl"
+              className="relative mx-4 sm:mx-14 w-full max-w-4xl select-none"
               style={{ height: "75vh" }}
               onClick={(e) => e.stopPropagation()}
+              onContextMenu={(e) => e.preventDefault()}
             >
-              <Image
+              <ProtectedImage
+                wrapperClassName="relative w-full h-full"
                 src={mainImg.url}
                 alt={productName}
                 fill

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 
 export function GalleryGrid({ items }) {
@@ -41,8 +41,9 @@ export function GalleryGrid({ items }) {
             className="block w-full break-inside-avoid rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 hover:border-[#F5B400]/40 hover:shadow-xl transition-all duration-400 text-left group cursor-zoom-in"
             onClick={() => openLightbox(i)}
           >
-            <div className="relative overflow-hidden bg-gray-100" style={{ aspectRatio: i % 5 === 0 ? "3/4" : i % 3 === 0 ? "16/9" : "4/3" }}>
-              <Image
+            <div className="relative overflow-hidden bg-gray-100 select-none" style={{ aspectRatio: i % 5 === 0 ? "3/4" : i % 3 === 0 ? "16/9" : "4/3" }} onContextMenu={(e) => e.preventDefault()}>
+              <ProtectedImage
+                wrapperClassName="relative w-full h-full"
                 src={item.imageUrl || item.image}
                 alt={item.title || "Gallery"}
                 fill
@@ -128,8 +129,9 @@ export function GalleryGrid({ items }) {
               className="relative max-w-5xl w-full mx-4 sm:mx-8 md:mx-16 flex flex-col items-center px-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full h-[75vh] min-h-[320px] max-h-[85vh]">
-                <Image
+              <div className="relative w-full h-[75vh] min-h-[320px] max-h-[85vh] select-none" onContextMenu={(e) => e.preventDefault()}>
+                <ProtectedImage
+                  wrapperClassName="relative w-full h-full"
                   src={items[lightboxIndex]?.imageUrl || items[lightboxIndex]?.image}
                   alt={items[lightboxIndex]?.title || "Gallery"}
                   fill

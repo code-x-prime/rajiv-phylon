@@ -5,13 +5,28 @@ const defaultOptions = {
 };
 
 export async function fetchApi(path, options = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...defaultOptions,
-    ...options,
-    headers: { "Content-Type": "application/json", ...options.headers },
-  });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...defaultOptions,
+      ...options,
+      headers: { "Content-Type": "application/json", ...options.headers },
+    });
+  } catch (err) {
+    // Build / VPS: API unreachable during static generation — return empty so build completes.
+    if (typeof process !== "undefined" && process.env.NEXT_PHASE === "phase-production-build") {
+      return { data: [] };
+    }
+    throw err;
+  }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.message || res.statusText);
+  if (!res.ok) {
+    // Build time par 404/5xx par throw mat karo — empty data do taaki build pass ho.
+    if (typeof process !== "undefined" && process.env.NEXT_PHASE === "phase-production-build") {
+      return { data: [] };
+    }
+    throw new Error(data?.message || res.statusText);
+  }
   return data;
 }
 

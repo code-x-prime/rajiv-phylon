@@ -92,7 +92,8 @@ function BannerSlider({ banners }) {
           initial="enter"
           animate="center"
           exit="exit"
-          className="absolute inset-0 will-change-transform"
+          className="absolute inset-0 will-change-transform select-none"
+          onContextMenu={(e) => e.preventDefault()}
         >
           <picture>
             <source media="(max-width: 768px)" srcSet={mobileSrc || FB_MOBILE} />
@@ -103,6 +104,8 @@ function BannerSlider({ banners }) {
               priority
               sizes="100vw"
               className="object-cover object-center"
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
             />
           </picture>
           {/* Dark gradient overlay */}
