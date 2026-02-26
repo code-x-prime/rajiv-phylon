@@ -64,26 +64,24 @@ export function WhyChooseUs() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-3"
+            className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-4 flex items-center gap-3"
           >
+            <span className="h-px w-8 bg-[#F5B400]/60" aria-hidden />
             Why work with us
           </motion.p>
           <motion.h2
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight leading-tight"
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight"
           >
-            Why Choose<br />
-            <span className="relative">
-              Rajiv Phylon
-              <motion.span
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#F5B400] rounded-full origin-left block"
+            <span className="block leading-tight">Why Choose</span>
+            <span className="relative mt-1 inline-block">
+              <span className="relative z-10 text-[#F5B400]">Rajiv Phylon</span>
+              <span
+                className="absolute -bottom-0.5 left-0 h-1 w-full max-w-[180px] bg-[#F5B400] rounded-full"
+                aria-hidden
               />
             </span>
           </motion.h2>
@@ -95,7 +93,7 @@ export function WhyChooseUs() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden shadow-sm"
+          className="grid  grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden shadow-sm"
         >
           {ITEMS.map((item, i) => {
             const num = String(i + 1).padStart(2, "0");
@@ -104,31 +102,31 @@ export function WhyChooseUs() {
                 key={i}
                 variants={cardVariants}
                 whileHover={{ backgroundColor: "#FAFAFA" }}
-                className="group bg-white p-8 sm:p-9 lg:p-10 xl:p-12 relative transition-colors duration-300 min-h-[220px] sm:min-h-[240px]"
+                className="group bg-white p-5 sm:p-9 lg:p-10 xl:p-12 relative transition-colors duration-300 min-h-[200px] sm:min-h-[240px]"
               >
                 {/* Number — even bigger */}
-                <span className="absolute top-6 right-6 font-heading text-5xl sm:text-6xl md:text-7xl font-light text-gray-100 group-hover:text-[#F5B400]/30 transition-colors duration-300 select-none tracking-tight">
+                <span className="absolute top-6 right-6 font-heading text-4xl sm:text-6xl md:text-7xl font-light text-gray-100 group-hover:text-[#F5B400]/30 transition-colors duration-300 select-none tracking-tight">
                   {num}
                 </span>
 
                 {/* Icon — SVG a bit bigger */}
-                <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#F5B400]/10 border border-[#F5B400]/20 flex items-center justify-center mb-6 group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-300 overflow-hidden">
+                <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-[#F5B400]/10 border border-[#F5B400]/20 flex items-center justify-center mb-6 group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-300 overflow-hidden">
                   <Image
                     src={item.svg}
                     alt=""
                     width={40}
                     height={40}
-                    className="object-contain w-9 h-9 sm:w-10 sm:h-10 text-[#F5B400] group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                    className="object-contain w-8 h-8 sm:w-10 sm:h-10 text-[#F5B400] group-hover:brightness-0 group-hover:invert transition-all duration-300"
                   />
                 </div>
 
                 {/* Left yellow accent bar */}
                 <div className="absolute left-0 top-10 bottom-10 w-[3px] bg-[#F5B400] rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
 
-                <h3 className="font-heading font-bold text-[18px] sm:text-[19px] text-[#111111] mb-3 group-hover:text-[#111111]">
+                <h3 className="font-heading font-bold text-[15px] sm:text-[19px] text-[#111111] mb-3 group-hover:text-[#111111]">
                   {item.title}
                 </h3>
-                <p className="text-[14px] sm:text-[15px] text-gray-500 font-body leading-relaxed">
+                <p className="text-[10px] sm:text-[15px] text-gray-500 font-body leading-relaxed">
                   {item.description}
                 </p>
               </motion.div>

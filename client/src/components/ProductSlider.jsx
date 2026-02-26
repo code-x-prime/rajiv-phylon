@@ -29,9 +29,9 @@ export function ProductSlider({ title, products, showNewBadge = false, viewAllHr
           {products.map((p, i) => (
             <div
               key={p.id}
-              className="flex-shrink-0 w-[220px] sm:w-[260px] snap-start"
+              className="flex-shrink-0 w-[calc(50vw-22px)] min-w-[140px] sm:w-[260px] snap-start"
             >
-              <ProductCard product={p} showBadge index={i} />
+              <ProductCard product={p} showBadge index={i} compactOnMobile />
             </div>
           ))}
         </div>

@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 const allowedOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+    ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim().replace(/\/$/, ""))
     : ["http://localhost:3000", "http://localhost:5173"];
 
 app.use(

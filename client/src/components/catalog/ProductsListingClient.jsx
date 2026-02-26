@@ -181,10 +181,10 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
             />
           ) : (
             <>
-              {/* Product grid — 2 col mobile, 3 col tablet, 4 col desktop */}
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+              {/* Product grid — 2 col mobile (compact), 3 col tablet, 4 col desktop */}
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 lg:gap-5">
                 {paginated.map((p, i) => (
-                  <ProductCard key={p.id} product={p} showBadge index={i} />
+                  <ProductCard key={p.id} product={p} showBadge index={i} compactOnMobile />
                 ))}
               </div>
 

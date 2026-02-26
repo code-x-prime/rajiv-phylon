@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 
 const COUNTRIES = [
-  { name: "USA",          flag: "🇺🇸" },
+  { name: "USA", flag: "🇺🇸" },
   { name: "United Kingdom", flag: "🇬🇧" },
-  { name: "Germany",      flag: "🇩🇪" },
-  { name: "UAE",          flag: "🇦🇪" },
-  { name: "Singapore",    flag: "🇸🇬" },
-  { name: "Australia",    flag: "🇦🇺" },
-  { name: "Japan",        flag: "🇯🇵" },
+  { name: "Germany", flag: "🇩🇪" },
+  { name: "UAE", flag: "🇦🇪" },
+  { name: "Singapore", flag: "🇸🇬" },
+  { name: "Australia", flag: "🇦🇺" },
+  { name: "Japan", flag: "🇯🇵" },
   { name: "South Africa", flag: "🇿🇦" },
 ];
 
@@ -21,14 +21,15 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.85, y: 16 },
-  show:   { opacity: 1, scale: 1,    y: 0,
+  show: {
+    opacity: 1, scale: 1, y: 0,
     transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
   },
 };
 
 export function ExportCountries() {
   return (
-    <section className="py-16 md:py-20 bg-[#F9FAFB] border-b border-gray-100">
+    <section className="py-10 md:py-16 bg-[#F9FAFB] border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

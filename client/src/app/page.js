@@ -1,74 +1,73 @@
-import { getHomePageData } from "@/lib/home-data";
-import { BannerSection } from "@/components/BannerSection";
-import { ProductSlider } from "@/components/ProductSlider";
-import { TopCategoriesSection } from "@/components/TopCategoriesSection";
+import { Suspense } from "react";
+import { BannerSkeleton, ProductSliderSkeleton } from "@/components/ui";
+import { TopCategoriesSkeleton } from "@/components/TopCategoriesSection";
 import {
   CompanyStats,
   AboutSection,
   WhyChooseUs,
-  InfrastructureSection,
   GlobalPresenceSection,
   ExportCountries,
   ClientLogos,
   HomeCta,
 } from "@/components/home";
-import { HomeGallerySection } from "@/components/home/HomeGallerySection";
+import {
+  BannersFetcher,
+  CategoriesFetcher,
+  FeaturedProductsFetcher,
+  NewArrivalsFetcher,
+  HighDemandFetcher,
+  GalleryFetcher,
+} from "@/components/home/HomeFetchComponents";
 
-export default async function HomePage() {
-  const data = await getHomePageData();
-  const {
-    banners,
-    homeCategories,
-    featuredProducts,
-    newArrivals,
-    highDemandProducts,
-    galleryInfrastructure,
-  } = data;
-
+// Not async — page renders immediately.
+// Each dynamic section fetches its own data; only that section shows a skeleton.
+// Static sections (CompanyStats, WhyChooseUs, etc.) render with zero delay.
+export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* 1. Hero Banner – API se aaye to image only; nahi to fallback (desk/mobile banner) */}
-      <BannerSection banners={banners || []} />
+      {/* 1. Hero Banner – shows BannerSkeleton only while banners load */}
+      <Suspense fallback={<BannerSkeleton />}>
+        <BannersFetcher />
+      </Suspense>
 
-      {/* 2. Company Stats – static */}
+      {/* 2. Company Stats – static, renders immediately */}
       <CompanyStats />
 
-      {/* 3. Top Categories with subcategories – dynamic, hide if empty */}
-      {homeCategories?.length > 0 ? (
-        <TopCategoriesSection categoriesWithSubs={homeCategories} />
-      ) : null}
+      {/* 3. Top Categories – shows TopCategoriesSkeleton only while loading */}
+      <Suspense fallback={<TopCategoriesSkeleton />}>
+        <CategoriesFetcher />
+      </Suspense>
 
-      {/* 4. Featured Products – dynamic, hide if empty */}
-      {featuredProducts?.length > 0 ? (
-        <ProductSlider title="Featured Products" products={featuredProducts} />
-      ) : null}
+      {/* 4. Featured Products – shows ProductSliderSkeleton only while loading */}
+      <Suspense fallback={<ProductSliderSkeleton />}>
+        <FeaturedProductsFetcher />
+      </Suspense>
 
-      {/* 5. New Arrivals – dynamic, hide if empty */}
-      {newArrivals?.length > 0 ? (
-        <ProductSlider title="New Arrivals" products={newArrivals} showNewBadge />
-      ) : null}
+      {/* 5. New Arrivals – shows ProductSliderSkeleton only while loading */}
+      <Suspense fallback={<ProductSliderSkeleton />}>
+        <NewArrivalsFetcher />
+      </Suspense>
 
-      {/* 6. High Demand Products – dynamic, hide if empty */}
-      {highDemandProducts?.length > 0 ? (
-        <ProductSlider title="High Demand Products" products={highDemandProducts} />
-      ) : null}
+      {/* 6. High Demand Products – shows ProductSliderSkeleton only while loading */}
+      <Suspense fallback={<ProductSliderSkeleton />}>
+        <HighDemandFetcher />
+      </Suspense>
 
-      {/* 7. About – premium B2B corporate section */}
+      {/* 7. About – static */}
       <AboutSection />
 
       {/* 8. Why Choose Us – static */}
       <WhyChooseUs />
 
-      {/* 9. Advanced Manufacturing Infrastructure – text left, image grid right */}
-      <InfrastructureSection galleryImages={galleryInfrastructure || []} />
-
-      {/* 10. Factory Gallery – bento grid desktop, horizontal scroll mobile */}
-      <HomeGallerySection images={galleryInfrastructure || []} />
+      {/* 9 & 10. Infrastructure + Gallery – shares gallery API data */}
+      <Suspense fallback={<div className="py-16 bg-white" />}>
+        <GalleryFetcher />
+      </Suspense>
 
       {/* 11. Client Logos – static */}
       <ClientLogos />
 
-      {/* 12. Global Presence – headline, paragraph, stats */}
+      {/* 12. Global Presence – static */}
       <GlobalPresenceSection />
 
       {/* 13. Export Countries – static */}
@@ -76,7 +75,6 @@ export default async function HomePage() {
 
       {/* 14. Global Enquiry CTA – static */}
       <HomeCta />
-
     </div>
   );
 }
