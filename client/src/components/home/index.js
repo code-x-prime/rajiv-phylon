@@ -5,5 +5,6 @@ export { InfrastructureSection } from "./InfrastructureSection";
 export { GlobalPresenceSection } from "./GlobalPresenceSection";
 export { IndustriesWeServe } from "./IndustriesWeServe";
 export { ExportCountries } from "./ExportCountries";
+export { MakeInIndiaSection } from "./MakeInIndiaSection";
 export { ClientLogos } from "./ClientLogos";
 export { HomeCta } from "./HomeCta";

@@ -3,21 +3,11 @@
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 
+// Current export markets – keep this list honest & focused.
 const COUNTRIES = [
-  { name: "USA", flag: "🇺🇸" },
-  { name: "United Kingdom", flag: "🇬🇧" },
-  { name: "Germany", flag: "🇩🇪" },
-  { name: "UAE", flag: "🇦🇪" },
-  { name: "Singapore", flag: "🇸🇬" },
-  { name: "Australia", flag: "🇦🇺" },
-  { name: "Japan", flag: "🇯🇵" },
-  { name: "South Africa", flag: "🇿🇦" },
+  { name: "Bangladesh", flag: "🇧🇩" },
+  { name: "Sri Lanka", flag: "🇱🇰" },
 ];
-
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07 } },
-};
 
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.85, y: 16 },
@@ -29,7 +19,7 @@ const itemVariants = {
 
 export function ExportCountries() {
   return (
-    <section className="py-10 md:py-16 bg-[#F9FAFB] border-b border-gray-100">
+    <section className="py-10  bg-[#F9FAFB] border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -54,28 +44,34 @@ export function ExportCountries() {
           </motion.h2>
         </div>
 
-        {/* Country badges */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
-          className="flex flex-wrap justify-center gap-3 md:gap-4"
-        >
-          {COUNTRIES.map((c) => (
-            <motion.div
-              key={c.name}
-              variants={itemVariants}
-              whileHover={{ y: -3, scale: 1.04 }}
-              className="group flex items-center gap-2.5 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm hover:border-[#F5B400]/50 hover:shadow-md transition-all duration-200 cursor-default"
-            >
-              <span className="text-xl leading-none">{c.flag}</span>
-              <span className="font-heading font-semibold text-[14px] text-[#111111] whitespace-nowrap group-hover:text-[#F5B400] transition-colors duration-200">
-                {c.name}
-              </span>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Country cards — only 2, so make them large and prominent */}
+        <div className="max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {COUNTRIES.map((c) => (
+              <motion.div
+                key={c.name}
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-40px" }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                className="group flex items-center gap-3 md:gap-4 bg-white border border-gray-200 rounded-3xl px-5 py-4 md:px-7 md:py-5 shadow-sm hover:border-[#F5B400]/60 hover:shadow-lg transition-all duration-200 cursor-default"
+              >
+                <div className="flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-[#FFF7E0] text-2xl">
+                  <span className="leading-none">{c.flag}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-heading font-semibold text-[15px] md:text-[17px] text-[#111111] group-hover:text-[#F5B400] transition-colors duration-200">
+                    {c.name}
+                  </span>
+                  <span className="text-[11px] md:text-[12px] text-gray-500 font-body">
+                    Current export market
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
 
         {/* Bottom note */}
         <motion.p
@@ -86,7 +82,7 @@ export function ExportCountries() {
           className="text-center mt-8 text-sm text-gray-400 font-body flex items-center justify-center gap-1.5"
         >
           <MapPin className="h-3.5 w-3.5 text-[#F5B400]" />
-          And many more countries across 6 continents
+          Actively partnering with brands in Bangladesh and Sri Lanka
         </motion.p>
 
       </div>

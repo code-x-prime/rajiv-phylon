@@ -104,14 +104,15 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full gap-3">
 
-            {/* Logo */}
+            {/* Logo (primary only on left) */}
             <Link href="/" className="shrink-0 flex items-center gap-0 group">
               <Image
                 src="/logo.png"
                 alt="Rajiv Phylon"
                 width={150}
                 height={150}
-                className="w-auto h-auto object-contain"
+                className="w-auto h-9 md:h-10 object-contain"
+                priority
               />
             </Link>
 
@@ -200,8 +201,8 @@ export function Navbar() {
               </div>
             </nav>
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:block shrink-0">
+            {/* Desktop CTA + secondary logo on the right */}
+            <div className="hidden lg:flex items-center gap-4 shrink-0">
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F5B400] text-white px-5 py-2.5 font-heading font-semibold text-[13px] shadow-sm hover:bg-[#e0a300] hover:shadow-[0_4px_16px_rgba(245,180,0,0.35)] hover:scale-[1.02] transition-all duration-300"
@@ -209,10 +210,27 @@ export function Navbar() {
                 <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 Enquiry
               </Link>
+
+              {/* Secondary logo – enquiry ke right side, small and clean */}
+              <Image
+                src="/sec-logo.png"
+                alt="Rajiv Phylon secondary mark"
+                width={150}
+                height={150}
+                className="h-14 w-auto object-contain"
+              />
             </div>
 
-            {/* Mobile icons */}
+            {/* Mobile: secondary logo + icons */}
             <div className="flex items-center gap-1 lg:hidden">
+              {/* Small secondary logo on mobile, to the left of icons */}
+              <Image
+                src="/sec-logo.png"
+                alt="Rajiv Phylon"
+                width={100}
+                height={100}
+                className="h-12 w-auto object-contain"
+              />
               <button
                 type="button"
                 className="p-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
@@ -258,9 +276,23 @@ export function Navbar() {
             >
               {/* Drawer header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <Link href="/" onClick={closeMobile} className="flex items-center">
-                  <span className="font-heading text-[18px] font-bold text-[#111111]">Rajiv</span>
-                  <span className="font-heading text-[18px] font-bold text-[#F5B400] ml-1">Phylon</span>
+                <Link href="/" onClick={closeMobile} className="flex items-center justify-between w-full">
+                  <Image
+                    src="/logo.png"
+                    alt="Rajiv Phylon"
+                    width={100}
+                    height={100}
+                    className="h-12 w-auto object-contain"
+                  />
+                  <span className="hidden sm:inline-block h-6 w-px bg-gray-200" aria-hidden />
+                  <Image
+                    src="/sec-logo.png"
+                    alt="Rajiv Phylon"
+                    width={100}
+                    height={100}
+                    className="h-12 w-auto object-contain"
+                  />
+                  <span className="hidden sm:inline-block h-6 w-px bg-gray-200" aria-hidden />
                 </Link>
                 <button
                   type="button"

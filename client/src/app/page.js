@@ -7,6 +7,7 @@ import {
   WhyChooseUs,
   GlobalPresenceSection,
   ExportCountries,
+  MakeInIndiaSection,
   ClientLogos,
   HomeCta,
 } from "@/components/home";
@@ -73,10 +74,14 @@ export default function HomePage() {
       {/* 12. Global Presence – static */}
       <GlobalPresenceSection />
 
+      {/* 14. Make in India – static */}
+      <MakeInIndiaSection />
+
       {/* 13. Export Countries – static */}
       <ExportCountries />
 
-      {/* 14. Global Enquiry CTA – static */}
+
+      {/* 15. Global Enquiry CTA – static */}
       <HomeCta />
     </div>
   );
