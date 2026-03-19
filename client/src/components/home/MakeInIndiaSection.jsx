@@ -8,7 +8,7 @@ const LOGO_PATH = "/make-in-india-jootoor_orig.gif";
 
 const HIGHLIGHTS = [
   "Proudly manufactured in India",
-  "Export-grade quality for global markets",
+  "Export-grade quality for Bangladesh and Sri Lanka",
   "Contributing to India's manufacturing excellence",
 ];
 
@@ -79,7 +79,7 @@ export function MakeInIndiaSection() {
               variants={fadeUp}
               className="text-lg text-white/60 font-body leading-relaxed max-w-xl mb-8"
             >
-              Manufacturing excellence from India, for the world. We are proud to be part of India&apos;s growing manufacturing ecosystem, delivering export-grade polymer footwear soles to brands across the globe.
+              Manufacturing excellence from India, built for reliable export partnerships. We are proud to be part of India&apos;s growing manufacturing ecosystem, delivering export-grade polymer footwear soles to brands in Bangladesh and Sri Lanka.
             </motion.p>
 
             <motion.ul variants={stagger} className="space-y-3.5">

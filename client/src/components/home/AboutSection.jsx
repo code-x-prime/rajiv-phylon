@@ -26,7 +26,7 @@ export function AboutSection() {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight"
             >
-              A Global Leader in High-Performance Polymer Footwear Soles
+              A Trusted Manufacturer of High-Performance Polymer Footwear Soles
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -35,7 +35,7 @@ export function AboutSection() {
               transition={{ duration: 0.3, delay: 0.05, ease: "easeOut" }}
               className="mt-6 text-muted text-base md:text-lg leading-relaxed font-body"
             >
-              Rajiv Phylon is a premium manufacturer of high-performance polymer shoe soles for the global footwear industry. We operate at scale with modern machinery, rigorous quality systems, and a commitment to international standards—serving OEM and B2B partners who demand reliability, consistency, and long-term supply security.
+              Rajiv Phylon is a premium manufacturer of high-performance polymer shoe soles. We operate at scale with modern machinery, rigorous quality systems, and a commitment to international standards, serving OEM and B2B partners who demand reliability, consistency, and long-term supply security.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 16 }}

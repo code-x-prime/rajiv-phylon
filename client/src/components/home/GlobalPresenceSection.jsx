@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Globe, TrendingUp, Award } from "lucide-react";
 
 const STATS = [
-  { icon: Globe, value: "50+", label: "Countries Served", desc: "Active export markets across 6 continents" },
+  { icon: Globe, value: "2", label: "Export Markets", desc: "Active export partnerships in Bangladesh and Sri Lanka" },
   { icon: TrendingUp, value: "High Volume", label: "Production Capacity", desc: "Scaled for OEM & bulk order timelines" },
   { icon: Award, value: "25+", label: "Years of Experience", desc: "Decades of polymer manufacturing expertise" },
 ];
@@ -25,7 +25,7 @@ export function GlobalPresenceSection() {
               transition={{ duration: 0.5 }}
               className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-3"
             >
-              Our global reach
+              Our export reach
             </motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 28 }}
@@ -34,7 +34,7 @@ export function GlobalPresenceSection() {
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
               className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight leading-tight mb-5"
             >
-              Global Presence,<br />
+              Export Presence,<br />
               <span className="text-[#F5B400]">Reliable</span> Partnership
             </motion.h2>
             <motion.div
@@ -51,7 +51,7 @@ export function GlobalPresenceSection() {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="text-[15px] md:text-base text-gray-500 font-body leading-relaxed max-w-lg"
             >
-              We deliver export-ready production with international quality compliance, built for long-term OEM partnerships. Our supply chain is structured for reliable shipping timelines and consistent delivery to brands and manufacturers worldwide.
+              We deliver export-ready production with international quality compliance, built for long-term OEM partnerships. Our supply chain is structured for reliable shipping timelines and consistent delivery to brands and manufacturers across Bangladesh and Sri Lanka.
             </motion.p>
           </div>
 

@@ -60,7 +60,7 @@ export default async function ProductsPage() {
             Our <span className="text-[#F5B400]">Products</span>
           </h1>
           <p className="text-[15px] text-white/50 font-body leading-relaxed max-w-xl mb-8">
-            Browse our full catalog of high-performance polymer footwear components. Export-grade quality for OEM and B2B partners worldwide.
+            Browse our full catalog of high-performance polymer footwear components. Export-grade quality for OEM and B2B partners in Bangladesh and Sri Lanka.
           </p>
 
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-2">

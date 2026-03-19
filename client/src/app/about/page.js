@@ -16,14 +16,14 @@ const TRUST_HIGHLIGHTS = [
 const STATS = [
   { value: "25+", label: "Years of Experience" },
   { value: "40+", label: "Brand Partners" },
-  { value: "15+", label: "Countries Exported" },
+  { value: "2", label: "Countries Exported" },
   { value: "10L+", label: "Pairs Monthly" },
 ];
 
 const VALUES = [
   { svg: "/value/quality-first.svg", title: "Quality First", desc: "Every sole undergoes strict QC. International standards are our baseline, not our ceiling." },
   { svg: "/value/scale-precision.svg", title: "Scale & Precision", desc: "Modern automated lines built for bulk production without sacrificing dimensional accuracy." },
-  { svg: "/value/global-reach.svg", title: "Global Reach", desc: "Export-grade products shipped to 15+ countries. We understand global compliance & documentation." },
+  { svg: "/value/global-reach.svg", title: "Global Reach", desc: "Export-grade products shipped to Bangladesh and Sri Lanka. We understand compliance and export documentation." },
   { svg: "/value/partnership-mindset.svg", title: "Partnership Mindset", desc: "We grow with our partners. Long-term OEM relationships are built on trust and delivery consistency." },
   { svg: "/value/fast-turnaround.svg", title: "Fast Turnaround", desc: "Lean workflows and in-house raw material processing keep lead times competitive." },
   { svg: "/value/continuous-innovation.svg", title: "Continuous Innovation", desc: "R&D investment in polymer blends ensures we always have a product edge for our clients." },
@@ -102,7 +102,7 @@ export default function AboutPage() {
             transition={{ duration: 0.65, delay: 0.2 }}
             className="mt-6 text-lg text-white/50 font-body leading-relaxed max-w-2xl"
           >
-            A global leader in high-performance polymer footwear soles. 25+ years of precision manufacturing, trusted by 40+ brands across 15+ countries.
+            A trusted manufacturer of high-performance polymer footwear soles. 25+ years of precision manufacturing, trusted by 40+ brands with exports across Bangladesh and Sri Lanka.
           </motion.p>
 
           <motion.div
@@ -145,14 +145,14 @@ export default function AboutPage() {
                 Our Story
               </motion.p>
               <motion.h2 variants={fadeUp} className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight leading-tight mb-5">
-                A Global Leader in<br />
+                A Trusted Leader in<br />
                 <span className="text-[#F5B400]">Polymer Footwear</span><br />
                 Soles
               </motion.h2>
               <motion.div variants={fadeUp} className="w-12 h-[3px] bg-[#F5B400] rounded-full mb-7" />
 
               <motion.p variants={fadeUp} className="text-[15px] text-gray-500 font-body leading-relaxed mb-5">
-                Rajiv Phylon is a premium manufacturer of high-performance polymer shoe soles for the global footwear industry. We operate at scale with modern machinery, rigorous quality systems, and a commitment to international standards—serving OEM and B2B partners who demand reliability, consistency, and long-term supply security.
+                Rajiv Phylon is a premium manufacturer of high-performance polymer shoe soles. We operate at scale with modern machinery, rigorous quality systems, and a commitment to international standards, serving OEM and B2B partners who demand reliability, consistency, and long-term supply security.
               </motion.p>
               <motion.p variants={fadeUp} className="text-[15px] text-gray-500 font-body leading-relaxed mb-10">
                 Our facility is built for bulk production without compromising on quality. From raw material to finished sole, every step is controlled and traceable. We invest in technology and people to deliver export-grade products that meet the strictest specifications, making us the preferred partner for brands and manufacturers worldwide.

@@ -32,7 +32,7 @@ const ITEMS = [
     svg: "/why-choose/timely-global-delivery.svg",
     title: "Timely Global Delivery",
     description:
-      "Reliable logistics and proven supply chain to ship to multiple regions. We meet committed timelines so your production and planning stay on track.",
+      "Reliable logistics and a proven supply chain for committed export timelines. We keep your production and planning on track with dependable dispatch support.",
   },
   {
     svg: "/why-choose/custom-development-support.svg",

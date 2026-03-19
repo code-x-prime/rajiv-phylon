@@ -43,7 +43,7 @@ export async function Footer() {
                 />
               </Link>
               <p className="text-[14px] leading-relaxed text-gray-400 font-body mb-6 max-w-[220px]">
-                High-performance polymer footwear soles. Export-grade quality for B2B partners worldwide.
+                High-performance polymer footwear soles. Export-grade quality for B2B partners in Bangladesh and Sri Lanka.
               </p>
               {/* Yellow accent bar */}
               <div className="w-8 h-[3px] rounded-full bg-[#F5B400]" aria-hidden />

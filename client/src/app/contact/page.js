@@ -39,7 +39,7 @@ const CONTACT_DETAILS = [
 
 const TRUST_POINTS = [
   "25+ years of manufacturing experience",
-  "Export to 15+ countries worldwide",
+  "Active exports in Bangladesh and Sri Lanka",
   "Trusted by 40+ footwear brands",
   "ISO certified quality standards",
 ];

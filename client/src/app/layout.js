@@ -21,7 +21,7 @@ const FloatingActions = dynamic(() => import("@/components/layout/FloatingAction
 
 export const metadata = {
   title: "Rajiv Phylon | High-Performance Polymer Footwear Soles",
-  description: "Export-grade polymer footwear sole manufacturer. Premium B2B industrial solutions for global OEM partners.",
+  description: "Export-grade polymer footwear sole manufacturer. Premium B2B industrial solutions for OEM partners in Bangladesh and Sri Lanka.",
 };
 
 export default function RootLayout({ children }) {
