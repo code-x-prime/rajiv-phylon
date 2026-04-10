@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCategories } from "@/lib/api";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 
 const quickLinks = [
@@ -9,12 +10,19 @@ const quickLinks = [
   { label: "Products", href: "/products" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "/contact" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
 ];
 
 const contactInfo = [
-  { icon: Phone, text: "+91 98765 43210", href: "tel:+919876543210" },
+  { icon: Phone, text: "+91-9253369349", href: "tel:+919253369349" },
+  { icon: Phone, text: "0130-4050921", href: "tel:01304050921", isMain: true },
   { icon: Mail, text: "info@rajivphylon.com", href: "mailto:info@rajivphylon.com" },
   { icon: MapPin, text: "Delhi, India", href: null },
+];
+
+const socialLinks = [
+  { icon: FaFacebookF, href: "https://www.facebook.com/profile.php?id=61577846368987", label: "Facebook" },
+  { icon: FaInstagram, href: "https://www.instagram.com/rajivphylon/?hl=en", label: "Instagram" },
 ];
 
 export async function Footer() {
@@ -22,13 +30,28 @@ export async function Footer() {
   try { categories = await getCategories(); } catch { categories = []; }
 
   return (
-    <footer className="mt-auto">
+    <footer className="mt-auto"
+    
+    >
       {/* Smooth gradient fade from white to dark */}
       <div className="h-16 bg-gradient-to-b from-white to-[#0D0D0D]" aria-hidden />
 
       {/* Main footer */}
-      <section className="bg-[#0D0D0D] text-gray-400">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-12">
+      <section className="bg-[#0D0D0D] text-gray-400 relative overflow-hidden">
+        {/* Subtle World Map Background */}
+        <div 
+          className="absolute inset-0 opacity-[0.1] pointer-events-none"
+          style={{
+            backgroundImage: "url('/world-map.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+           
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
 
             {/* Col 1 — Brand */}
@@ -45,6 +68,23 @@ export async function Footer() {
               <p className="text-[14px] leading-relaxed text-gray-400 font-body mb-6 max-w-[220px]">
                 High-performance polymer footwear soles. Export-grade quality for B2B partners in Bangladesh and Sri Lanka.
               </p>
+              
+              {/* Social Links */}
+              <div className="flex items-center gap-4 mb-8">
+                {socialLinks.map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-[#F5B400] hover:text-white transition-all duration-300"
+                    aria-label={label}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+
               {/* Yellow accent bar */}
               <div className="w-8 h-[3px] rounded-full bg-[#F5B400]" aria-hidden />
             </div>
@@ -100,15 +140,20 @@ export async function Footer() {
                 Contact
               </h3>
               <ul className="space-y-4 mb-7">
-                {contactInfo.map(({ icon: Icon, text, href }) => (
+                {contactInfo.map(({ icon: Icon, text, href, isMain }) => (
                   <li key={text}>
                     {href ? (
                       <a
                         href={href}
-                        className="flex items-start gap-3 text-[14px] font-body text-gray-400 hover:text-[#F5B400] transition-colors duration-200 group"
+                        className={`flex items-start gap-3 text-[14px] font-body transition-colors duration-200 group ${
+                          isMain ? "text-[#F5B400] font-bold" : "text-gray-400 hover:text-[#F5B400]"
+                        }`}
                       >
-                        <Icon className="h-4 w-4 text-[#F5B400] shrink-0 mt-0.5" />
-                        {text}
+                        <Icon className={`h-4 w-4 shrink-0 mt-0.5 ${isMain ? "text-[#F5B400]" : "text-[#F5B400]"} `} />
+                        <span className="flex flex-col">
+                          {text}
+                          {isMain && <span className="text-[10px] uppercase tracking-wider opacity-80">- Main Office Line</span>}
+                        </span>
                       </a>
                     ) : (
                       <span className="flex items-start gap-3 text-[14px] font-body text-gray-400">
@@ -139,7 +184,7 @@ export async function Footer() {
             © {new Date().getFullYear()} Rajiv Phylon. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="text-[13px] text-gray-500 hover:text-[#F5B400] font-body transition-colors duration-200">
+            <Link href="/privacy-policy" className="text-[13px] text-gray-500 hover:text-[#F5B400] font-body transition-colors duration-200">
               Privacy Policy
             </Link>
             <span className="text-gray-700 text-xs">·</span>

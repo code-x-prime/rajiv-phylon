@@ -111,7 +111,7 @@ export function Navbar() {
                 alt="Rajiv Phylon"
                 width={150}
                 height={150}
-                className="w-auto h-9 md:h-10 object-contain"
+                className="w-auto h-12 md:h-14 object-contain"
                 priority
               />
             </Link>
@@ -217,7 +217,7 @@ export function Navbar() {
                 alt="Rajiv Phylon secondary mark"
                 width={150}
                 height={150}
-                className="h-14 w-auto object-contain"
+                className="h-16 w-auto object-contain"
               />
             </div>
 
@@ -229,7 +229,7 @@ export function Navbar() {
                 alt="Rajiv Phylon"
                 width={100}
                 height={100}
-                className="h-12 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
               <button
                 type="button"

@@ -12,20 +12,28 @@ const CONTACT_DETAILS = [
     label: "Email",
     value: "info@rajivphylon.com",
     href: "mailto:info@rajivphylon.com",
-    desc: "We reply within 24 hours",
+    desc: "Primary business email",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+91 98765 43210",
-    href: "tel:+919876543210",
+    value: "+91-9253369349",
+    href: "tel:+919253369349",
     desc: "Mon–Sat, 9am–6pm IST",
+  },
+  {
+    icon: Phone,
+    label: "Landline",
+    value: "0130-4050921",
+    href: "tel:01304050921",
+    desc: "Office direct line",
+    isHighlight: true,
   },
   {
     icon: MessageCircle,
     label: "WhatsApp",
-    value: "Chat on WhatsApp",
-    href: "https://wa.me/919876543210",
+    value: "+91-9253369349",
+    href: "https://wa.me/919253369349",
     desc: "Quick B2B enquiries",
   },
   {
@@ -75,16 +83,31 @@ export default function ContactPage() {
 
               {/* Contact cards */}
               <div className="grid sm:grid-cols-2 gap-4 mb-10">
-                {CONTACT_DETAILS.map(({ icon: Icon, label, value, href, desc }) => (
+                {CONTACT_DETAILS.map(({ icon: Icon, label, value, href, desc, isHighlight }) => (
                   <a
                     key={label}
                     href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group flex items-start gap-4 p-5 rounded-2xl border border-gray-100 bg-[#FAFAFA] hover:border-[#F5B400]/40 hover:bg-white hover:shadow-md transition-all duration-300"
+                    className={`group relative flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 ${
+                      isHighlight 
+                        ? "border-[#F5B400] bg-[#F5B400]/5 shadow-md scale-[1.02]" 
+                        : "border-gray-100 bg-[#FAFAFA] hover:border-[#F5B400]/40 hover:bg-white hover:shadow-md"
+                    }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#F5B400]/10 border border-[#F5B400]/20 flex items-center justify-center shrink-0 group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-300">
-                      <Icon className="h-4.5 w-4.5 text-[#F5B400] group-hover:text-white transition-colors duration-300 h-[18px] w-[18px]" />
+                    {isHighlight && (
+                      <div className="absolute -top-3 -right-3 bg-[#F5B400] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wider z-20">
+                        Main
+                      </div>
+                    )}
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isHighlight
+                        ? "bg-[#F5B400] border-[#F5B400]"
+                        : "bg-[#F5B400]/10 border border-[#F5B400]/20 group-hover:bg-[#F5B400] group-hover:border-[#F5B400]"
+                    }`}>
+                      <Icon className={`h-[18px] w-[18px] transition-colors duration-300 ${
+                        isHighlight ? "text-white" : "text-[#F5B400] group-hover:text-white"
+                      }`} />
                     </div>
                     <div>
                       <p className="font-heading font-bold text-[13px] text-[#111111] mb-0.5">{label}</p>

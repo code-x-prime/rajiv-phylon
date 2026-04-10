@@ -2,11 +2,12 @@
 
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
+import Image from "next/image";
 
 // Current export markets – keep this list honest & focused.
 const COUNTRIES = [
-  { name: "Bangladesh", flag: "🇧🇩" },
-  { name: "Sri Lanka", flag: "🇱🇰" },
+  { name: "Bangladesh", flag: "/bangladesh.jpg" },
+  { name: "Sri Lanka", flag: "/sri-lanka.jpg" },
 ];
 
 const itemVariants = {
@@ -57,8 +58,8 @@ export function ExportCountries() {
                 whileHover={{ y: -4, scale: 1.02 }}
                 className="group flex items-center gap-3 md:gap-4 bg-white border border-gray-200 rounded-3xl px-5 py-4 md:px-7 md:py-5 shadow-sm hover:border-[#F5B400]/60 hover:shadow-lg transition-all duration-200 cursor-default"
               >
-                <div className="flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-[#FFF7E0] text-2xl">
-                  <span className="leading-none">{c.flag}</span>
+                <div className="flex items-center justify-center w-14 h-11 md:w-16 md:h-12 rounded-2xl bg-[#FFF7E0] text-2xl">
+                  <Image src={c.flag} alt={c.name} width={100} height={100} className="rounded-md h-full w-full object-cover" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-heading font-semibold text-[15px] md:text-[17px] text-[#111111] group-hover:text-[#F5B400] transition-colors duration-200">
