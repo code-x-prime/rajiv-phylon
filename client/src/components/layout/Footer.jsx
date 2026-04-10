@@ -34,7 +34,7 @@ export async function Footer() {
     
     >
       {/* Smooth gradient fade from white to dark */}
-      <div className="h-16 bg-gradient-to-b from-white to-[#0D0D0D]" aria-hidden />
+      <div className="h-8 bg-gradient-to-b from-white to-[#000]" aria-hidden />
 
       {/* Main footer */}
       <section className="bg-[#0D0D0D] text-gray-400 relative overflow-hidden">
