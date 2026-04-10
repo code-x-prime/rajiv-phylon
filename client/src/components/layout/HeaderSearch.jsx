@@ -84,21 +84,21 @@ export function HeaderSearch({ variant = "bar", onClose }) {
   return (
     <div
       ref={containerRef}
-      className={`relative ${isDialog ? "w-full" : "flex-1 max-w-xl mx-4 hidden md:block"}`}
+      className={`relative ${isDialog ? "w-full" : "flex-1 max-w-[300px] hidden md:block"}`}
       role="combobox"
       aria-expanded={open}
       aria-haspopup="listbox"
     >
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-black/60 z-10 pointer-events-none" />
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => debouncedQuery && debouncedQuery.length >= 2 && setOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search products, categories..."
-          className="w-full rounded-full border border-gray-200 bg-gray-50/80 pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F5B400]/40 focus:border-[#F5B400] transition-all duration-300"
+          placeholder="Search items..."
+          className="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-[#F5B400]/10 focus:border-[#F5B400] focus:bg-white transition-all duration-300 shadow-sm hover:border-gray-300"
           aria-label="Search products and categories"
           aria-autocomplete="list"
         />
