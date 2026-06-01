@@ -45,10 +45,10 @@ app.use(
             // Fallback: allow any origin from our domain (www, admin, non-www)
             try {
                 const u = new URL(origin);
-                if (u.hostname === "testingkeliye.online" || u.hostname.endsWith(".testingkeliye.online")) {
+                if (u.hostname === "rajivphylon.com" || u.hostname.endsWith(".rajivphylon.com")) {
                     return callback(null, true);
                 }
-            } catch (_) {}
+            } catch (_) { }
 
             callback(new Error("Not allowed by CORS"));
         },

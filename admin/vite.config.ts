@@ -15,19 +15,19 @@ export default defineConfig({
   },
   // Add the preview configuration for production builds
   preview: {
-    port: 4174,
+    port: 4173,
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.testingkeliye.online",
-      "www.admin.testingkeliye.online",
+      "admin.rajivphylon.com",
+      "www.admin.rajivphylon.com",
     ],
   },
   // Add server configuration for development
   server: {
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.testingkeliye.online",
-      "www.admin.testingkeliye.online",
+      "admin.rajivphylon.com",
+      "www.admin.rajivphylon.com",
     ],
   },
 })
