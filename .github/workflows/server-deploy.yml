@@ -35,8 +35,8 @@ jobs:
             npm install --legacy-peer-deps
             echo "Generating Prisma Client..."
             npx prisma generate
-            echo "Reloading server process under PM2..."
-            pm2 reload rajiv-server || pm2 start npm --name rajiv-server -- run start
+            echo "Restarting server process under PM2..."
+            pm2 restart rajiv-server || pm2 start npm --name rajiv-server -- run start
             
             echo "=== Server Deployment Finished Successfully! ==="
             pm2 status

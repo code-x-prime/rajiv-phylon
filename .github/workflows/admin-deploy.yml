@@ -35,8 +35,8 @@ jobs:
             npm install --legacy-peer-deps
             echo "Building Admin Panel..."
             npm run build
-            echo "Reloading admin process under PM2..."
-            pm2 reload rajiv-admin || pm2 start "npm run preview -- --host 0.0.0.0 --port 4173" --name rajiv-admin
+            echo "Restarting admin process under PM2..."
+            pm2 restart rajiv-admin || pm2 start "npm run preview -- --host 0.0.0.0 --port 4173" --name rajiv-admin
             
             echo "=== Admin Panel Deployment Finished Successfully! ==="
             pm2 status

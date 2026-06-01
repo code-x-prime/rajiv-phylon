@@ -35,8 +35,8 @@ jobs:
             npm install --legacy-peer-deps
             echo "Building Client..."
             npm run build
-            echo "Reloading client process under PM2..."
-            pm2 reload rajiv-client || pm2 start server.js --name rajiv-client
+            echo "Restarting client process under PM2..."
+            pm2 restart rajiv-client || pm2 start server.js --name rajiv-client
             
             echo "=== Client Deployment Finished Successfully! ==="
             pm2 status
