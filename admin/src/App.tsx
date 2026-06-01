@@ -39,7 +39,6 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="categories" element={<Categories />} />
               <Route path="subcategories" element={<SubCategories />} />
-
               <Route path="products" element={<ProductList />} />
               <Route path="products/add" element={<ProductAdd />} />
               <Route path="products/edit/:id" element={<ProductEdit />} />
