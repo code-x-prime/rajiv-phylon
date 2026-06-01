@@ -1,0 +1,41 @@
+name: Deploy Rajiv Server (Express)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+
+jobs:
+  deploy:
+    name: Deploy Express Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "=== Starting Express Server Deployment ==="
+            cd ${{ secrets.PROJECT_PATH }}
+            
+            echo "--- Fetching latest code from Git ---"
+            git pull origin main
+
+            echo "--- Deploying Server ---"
+            cd server
+            echo "Cleaning node_modules..."
+            rm -rf node_modules
+            echo "Installing server dependencies..."
+            npm install --legacy-peer-deps
+            echo "Generating Prisma Client..."
+            npx prisma generate
+            echo "Reloading server process under PM2..."
+            pm2 reload rajiv-server || pm2 start npm --name rajiv-server -- run start
+            
+            echo "=== Server Deployment Finished Successfully! ==="
+            pm2 status

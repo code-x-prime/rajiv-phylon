@@ -1,0 +1,41 @@
+name: Deploy Rajiv Admin Panel (Vite)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'admin/**'
+
+jobs:
+  deploy:
+    name: Deploy Admin Panel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Admin via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "=== Starting Admin Panel Deployment ==="
+            cd ${{ secrets.PROJECT_PATH }}
+            
+            echo "--- Fetching latest code from Git ---"
+            git pull origin main
+
+            echo "--- Deploying Admin Panel ---"
+            cd admin
+            echo "Cleaning node_modules and Dist build folder..."
+            rm -rf node_modules dist
+            echo "Installing admin dependencies..."
+            npm install --legacy-peer-deps
+            echo "Building Admin Panel..."
+            npm run build
+            echo "Reloading admin process under PM2..."
+            pm2 reload rajiv-admin || pm2 start "npm run preview -- --host 0.0.0.0 --port 4173" --name rajiv-admin
+            
+            echo "=== Admin Panel Deployment Finished Successfully! ==="
+            pm2 status

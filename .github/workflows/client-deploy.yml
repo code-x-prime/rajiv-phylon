@@ -1,0 +1,41 @@
+name: Deploy Rajiv Client (Next.js)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+
+jobs:
+  deploy:
+    name: Deploy Next.js Client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Client via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "=== Starting Next.js Client Deployment ==="
+            cd ${{ secrets.PROJECT_PATH }}
+            
+            echo "--- Fetching latest code from Git ---"
+            git pull origin main
+
+            echo "--- Deploying Next.js Client ---"
+            cd client
+            echo "Cleaning node_modules and Next.js cache..."
+            rm -rf node_modules .next
+            echo "Installing client dependencies..."
+            npm install --legacy-peer-deps
+            echo "Building Client..."
+            npm run build
+            echo "Reloading client process under PM2..."
+            pm2 reload rajiv-client || pm2 start server.js --name rajiv-client
+            
+            echo "=== Client Deployment Finished Successfully! ==="
+            pm2 status
