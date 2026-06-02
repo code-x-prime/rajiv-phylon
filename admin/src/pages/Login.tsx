@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { getApiError } from "@/lib/axios";
 
-// Diagnostic trigger 2
+// Production release trigger
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
