@@ -123,11 +123,10 @@ export function Navbar() {
       </div>
 
       <header
-        className={`fixed inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          scrolled 
-            ? "top-0 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)]" 
+        className={`fixed inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${scrolled
+            ? "top-0 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
             : "top-0 lg:top-9 h-[84px] bg-white/95 backdrop-blur-md border-b border-gray-100"
-        } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+          } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
         {/* Dynamic Nav Accent Line */}
         <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#F5B400]/40 to-transparent" />
@@ -185,7 +184,7 @@ export function Navbar() {
                         <div className="flex">
                           {/* Sidebar Accent */}
                           <div className="w-1.5 bg-[#F5B400]" />
-                          
+
                           <div className="flex-1 p-8">
                             <div className="flex items-center justify-between mb-8">
                               <p className="text-[11px] font-heading font-black text-[#F5B400] uppercase tracking-[0.25em]">
@@ -224,7 +223,7 @@ export function Navbar() {
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Mega Menu Footer */}
                         <div className="bg-gray-50/80 px-8 py-5 flex items-center justify-between border-t border-gray-100">
                           <p className="text-[12px] text-gray-500 font-medium italic">Premium grade quality for industrial OEM partners.</p>
@@ -266,7 +265,7 @@ export function Navbar() {
                   alt="Quality Mark"
                   width={150}
                   height={150}
-                  className="h-14 w-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 relative"
+                  className="h-14 w-auto object-contain  transition-all duration-500 relative"
                 />
               </div>
 
