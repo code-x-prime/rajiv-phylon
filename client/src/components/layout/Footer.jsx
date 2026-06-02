@@ -224,10 +224,12 @@ export async function Footer() {
         {/* Polished Bottom Bar */}
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <div className="space-y-2">
-            <p className="text-[13px] text-gray-500 font-body items-center flex gap-2">
+            <p className="text-[13px] text-gray-500 font-body items-center flex flex-wrap justify-center md:justify-start gap-2">
                © {new Date().getFullYear()} <span className="text-gray-300 font-semibold">Rajiv Phylon</span> 
                <span className="hidden sm:inline text-gray-700">|</span> 
                All rights reserved worldwide.
+               <span className="hidden sm:inline text-gray-700">|</span> 
+               <span>Design & Developed by <a href="https://www.groxmedia.in" target="_blank" rel="noopener noreferrer" className="text-[#F5B400] hover:text-white transition-colors duration-200">Grox Media</a></span>
             </p>
             <p className="text-[10px] text-gray-600 font-heading font-semibold uppercase tracking-[0.25em]">
               Precision Engineered Footwear Components
