@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "=== Starting Express Server Deployment ==="
-            cd "${{ secrets.PROJECT_PATH }}" || cd ~/rajiv-phylon
+            cd "${{ secrets.PROJECT_PATH }}" || cd ~/rajiv-phylon || cd /root/rajiv-phylon || cd /home/ubuntu/rajiv-phylon
             
             echo "--- Fetching latest code from Git ---"
             git pull origin main
