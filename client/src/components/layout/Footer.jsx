@@ -37,6 +37,7 @@ const socialLinks = [
   },
 ];
 
+// Modernized footer layout with 3 columns and chevron list items
 export async function Footer() {
   let categories = [];
   try { categories = await getCategories(); } catch { categories = []; }
