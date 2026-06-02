@@ -21,8 +21,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "=== Diagnostic Run ==="
-            whoami
-            pwd
-            pm2 show rajiv-admin
+            echo "=== Diagnostic Run 2 ==="
+            ls -la /root/rajiv-phylon
             exit 1
