@@ -22,7 +22,15 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "=== Starting Admin Panel Deployment ==="
-            cd "${{ secrets.PROJECT_PATH }}" || cd $HOME/rajiv-phylon || cd /r"o"ot/rajiv-phylon || cd /home/ubuntu/rajiv-phylon
+            if [ -n "${{ secrets.PROJECT_PATH }}" ] && [ -d "${{ secrets.PROJECT_PATH }}" ]; then
+              cd "${{ secrets.PROJECT_PATH }}"
+            elif [ -d "$HOME/rajiv-phylon" ]; then
+              cd "$HOME/rajiv-phylon"
+            elif [ -d "/r"o"ot/rajiv-phylon" ]; then
+              cd "/r"o"ot/rajiv-phylon"
+            else
+              cd /home/ubuntu/rajiv-phylon
+            fi
             
             echo "--- Fetching latest code from Git ---"
             git pull origin main
