@@ -64,10 +64,10 @@ export async function Footer() {
         />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-12 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-0">
 
             {/* Col 1 — Brand Identity */}
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start pb-8 md:pb-0 md:pr-10 lg:pr-16 md:border-r md:border-white/10">
               <Link href="/" className="inline-block transition-transform hover:scale-[1.02] duration-300">
                 <div className="bg-white rounded-xl p-3 shadow-lg shadow-white/5 border border-white/10">
                   <Image
@@ -82,6 +82,15 @@ export async function Footer() {
               <p className="mt-8 text-[15px] leading-relaxed text-gray-400 font-body max-w-[280px]">
                 Global leaders in high-performance polymer footwear soles. Engineered for excellence, exported worldwide.
               </p>
+              
+              <a 
+                href="https://www.rajivphylon.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="mt-6 text-[15px] font-heading font-semibold text-[#F5B400] hover:text-white transition-colors duration-200"
+              >
+                www.rajivphylon.com
+              </a>
               
               {/* Branded Social Icons (Always Colored) */}
               <div className="flex items-center gap-4 mt-8">
@@ -100,91 +109,106 @@ export async function Footer() {
               </div>
             </div>
 
-            {/* Col 2 — Navigation */}
-            <div className="lg:pl-8">
+            {/* Col 2 — Corporate HQ / Connect with Us */}
+            <div className="flex flex-col pb-8 md:pb-0 md:px-10 lg:px-16 md:border-r md:border-white/10">
               <h3 className="text-white font-heading font-bold text-[14px] uppercase tracking-[0.2em] mb-8 border-l-2 border-[#F5B400] pl-3">
-                Quick Navigation
+                Connect With Us
               </h3>
-              <ul className="space-y-4">
-                {quickLinks.map(({ label, href }) => (
-                  <li key={href}>
-                    <Link
-                      href={href}
-                      className="text-[14px] font-body text-gray-400 hover:text-white transition-all duration-200 flex items-center group"
-                    >
-                      <span className="w-0 group-hover:w-4 h-[1px] bg-[#F5B400] transition-all duration-300 mr-0 group-hover:mr-3" />
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              <ul className="space-y-6 mb-8">
+                <li className="flex items-start gap-4 text-[14px] font-body text-gray-400">
+                  <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5 border border-white/5">
+                    <MapPin className="h-4 w-4 text-[#F5B400]" />
+                  </div>
+                  <span className="flex flex-col">
+                    <strong className="text-white font-semibold">Rajiv Phylon Pvt. Ltd.</strong>
+                    <span className="mt-1 leading-relaxed">
+                      Manufacturing & Export Office, Delhi, India
+                    </span>
+                  </span>
+                </li>
+                
+                <li>
+                  <a
+                    href="tel:+919253369349"
+                    className="flex items-start gap-4 text-[14px] font-body text-gray-400 hover:text-white transition-colors duration-200"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5 border border-white/5">
+                      <Phone className="h-4 w-4 text-gray-400 opacity-80" />
+                    </div>
+                    <span className="flex flex-col">
+                      <span>+91-9253369349</span>
+                      <span className="text-[10px] text-gray-500">Mon–Sat, 9am–6pm IST</span>
+                    </span>
+                  </a>
+                </li>
 
-            {/* Col 3 — Solutions */}
-            <div>
-              <h3 className="text-white font-heading font-bold text-[14px] uppercase tracking-[0.2em] mb-8 border-l-2 border-[#F5B400] pl-3">
-                Product Lines
-              </h3>
-              <ul className="space-y-4">
-                {categories.length > 0
-                  ? categories.slice(0, 6).map((cat) => (
-                    <li key={cat.id}>
-                      <Link
-                        href={`/category/${cat.slug}`}
-                        className="text-[14px] font-body text-gray-400 hover:text-white transition-all duration-200 flex items-center group"
-                      >
-                        <span className="w-0 group-hover:w-4 h-[1px] bg-[#F5B400] transition-all duration-300 mr-0 group-hover:mr-3" />
-                        {cat.name}
-                      </Link>
-                    </li>
-                  ))
-                  : (
-                    <li className="text-[14px] text-gray-500 italic opacity-60">Inventory syncing...</li>
-                  )
-                }
-              </ul>
-            </div>
+                <li>
+                  <a
+                    href="tel:01304050921"
+                    className="flex items-start gap-4 text-[14px] font-body text-white font-semibold hover:text-[#F5B400] transition-colors duration-200"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5 border border-white/5">
+                      <Phone className="h-4 w-4 text-[#F5B400]" />
+                    </div>
+                    <span className="flex flex-col">
+                      <span>0130-4050921</span>
+                      <span className="text-[9px] font-heading font-black text-[#F5B400] uppercase tracking-tighter mt-1">Direct Hotline</span>
+                    </span>
+                  </a>
+                </li>
 
-            {/* Col 4 — Corporate HQ */}
-            <div className="bg-white/5 p-7 rounded-2xl border border-white/5 backdrop-blur-sm self-start">
-              <h3 className="text-white font-heading font-bold text-[14px] uppercase tracking-[0.2em] mb-6">
-                Corporate HQ
-              </h3>
-              <ul className="space-y-5 mb-8">
-                {contactInfo.map(({ icon: Icon, text, href, isMain }) => (
-                  <li key={text}>
-                    {href ? (
-                      <a
-                        href={href}
-                        className={`flex items-start gap-4 text-[14px] font-body transition-all duration-200 ${
-                          isMain ? "text-white font-semibold" : "text-gray-400 hover:text-white"
-                        }`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5">
-                          <Icon className={`h-4 w-4 ${isMain ? "text-[#F5B400]" : "text-gray-400 opacity-80"}`} />
-                        </div>
-                        <span className="flex flex-col">
-                          {text}
-                          {isMain && <span className="text-[9px] font-heading font-black text-[#F5B400] uppercase tracking-tighter mt-1">Direct Hotline</span>}
-                        </span>
-                      </a>
-                    ) : (
-                      <span className="flex items-start gap-4 text-[14px] font-body text-gray-400">
-                        <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5">
-                          <Icon className="h-4 w-4 text-gray-400 opacity-80" />
-                        </div>
-                        {text}
-                      </span>
-                    )}
-                  </li>
-                ))}
+                <li>
+                  <a
+                    href="mailto:info@rajivphylon.com"
+                    className="flex items-start gap-4 text-[14px] font-body text-gray-400 hover:text-white transition-colors duration-200"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gray-800/50 flex items-center justify-center shrink-0 mt-0.5 border border-white/5">
+                      <Mail className="h-4 w-4 text-gray-400 opacity-80" />
+                    </div>
+                    <span>info@rajivphylon.com</span>
+                  </a>
+                </li>
               </ul>
+              
               <Link
                 href="/contact"
                 className="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#F5B400] to-[#e0a300] text-black px-6 py-3.5 font-heading font-extrabold text-[13px] uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(245,180,0,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(245,180,0,0.6)] hover:scale-[1.01] active:scale-[0.98] transition-all duration-300"
               >
                 Start an Enquiry
               </Link>
+            </div>
+
+            {/* Col 3 — Solutions / Navigation in Chevron-List Style */}
+            <div className="flex flex-col md:pl-10 lg:pl-16">
+              <h3 className="text-white font-heading font-bold text-[14px] uppercase tracking-[0.2em] mb-8 border-l-2 border-[#F5B400] pl-3">
+                Product Lines
+              </h3>
+              <div className="divide-y divide-white/5 border-t border-b border-white/5">
+                {(categories.length > 0 ? categories.slice(0, 4) : [
+                  { name: "Phylon Soles", slug: "phylon-soles" },
+                  { name: "PU Soles", slug: "pu-soles" },
+                  { name: "TPR Soles", slug: "tpr-soles" },
+                  { name: "EVA Soles", slug: "eva-soles" }
+                ]).map((cat) => (
+                  <Link
+                    key={cat.slug || cat.id}
+                    href={`/category/${cat.slug}`}
+                    className="py-4 flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-[15px] font-body font-medium text-gray-300 group-hover:text-[#F5B400] transition-colors duration-200">
+                        {cat.name}
+                      </span>
+                      <span className="text-[11px] text-gray-500 font-heading tracking-wider mt-1 uppercase">
+                        Premium Footwear Soles
+                      </span>
+                    </div>
+                    <span className="text-gray-600 group-hover:text-[#F5B400] transition-all duration-300 transform group-hover:translate-x-1 text-sm font-bold">
+                      &gt;
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
           </div>
