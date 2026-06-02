@@ -185,30 +185,31 @@ export async function Footer() {
                 Product Lines
               </h3>
               <div className="divide-y divide-white/5 border-t border-b border-white/5">
-                {(categories.length > 0 ? categories.slice(0, 4) : [
-                  { name: "Phylon Soles", slug: "phylon-soles" },
-                  { name: "PU Soles", slug: "pu-soles" },
-                  { name: "TPR Soles", slug: "tpr-soles" },
-                  { name: "EVA Soles", slug: "eva-soles" }
-                ]).map((cat) => (
-                  <Link
-                    key={cat.slug || cat.id}
-                    href={`/category/${cat.slug}`}
-                    className="py-4 flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200"
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-[15px] font-body font-medium text-gray-300 group-hover:text-[#F5B400] transition-colors duration-200">
-                        {cat.name}
+                {categories.length > 0 ? (
+                  categories.slice(0, 6).map((cat) => (
+                    <Link
+                      key={cat.id || cat.slug}
+                      href={`/category/${cat.slug}`}
+                      className="py-4 flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200"
+                    >
+                      <div className="flex flex-col">
+                        <span className="text-[15px] font-body font-medium text-gray-300 group-hover:text-[#F5B400] transition-colors duration-200">
+                          {cat.name}
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-heading tracking-wider mt-1 uppercase">
+                          Premium Footwear Soles
+                        </span>
+                      </div>
+                      <span className="text-gray-600 group-hover:text-[#F5B400] transition-all duration-300 transform group-hover:translate-x-1 text-sm font-bold">
+                        &gt;
                       </span>
-                      <span className="text-[11px] text-gray-500 font-heading tracking-wider mt-1 uppercase">
-                        Premium Footwear Soles
-                      </span>
-                    </div>
-                    <span className="text-gray-600 group-hover:text-[#F5B400] transition-all duration-300 transform group-hover:translate-x-1 text-sm font-bold">
-                      &gt;
-                    </span>
-                  </Link>
-                ))}
+                    </Link>
+                  ))
+                ) : (
+                  <div className="py-4 text-[14px] text-gray-500 italic opacity-60">
+                    Inventory syncing...
+                  </div>
+                )}
               </div>
             </div>
 
