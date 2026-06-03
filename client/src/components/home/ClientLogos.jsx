@@ -34,7 +34,6 @@ const BRAND_LOGO_MAP = {
   "Nice": null,
   "Aygo": "AYGO.jpg",
   "Staed": "STAED.jpg",
-  "Striker": "striker.jpeg",
   "Paragon": "PARAGON.jpg",
   "Khadim's": "KHADIM'S.jpg",
   "Campus": "CAMPUS.jpg",
@@ -162,9 +161,8 @@ export function ClientLogos() {
  * Jin brands ki logo image nahi hai (public/logos me file nahi):
  * - Today
  * - Nice
- * - Striker
  *
- * Inke liye public/logos me file add karo, e.g. TODAY.jpg, NICE.jpg, STRIKER.jpg
+ * Inke liye public/logos me file add karo, e.g. TODAY.jpg, NICE.jpg
  * Phir BRAND_LOGO_MAP me entry add karo: "Today": "TODAY.jpg", etc.
  */
-export const BRANDS_WITHOUT_LOGO = ["Today", "Nice", "Striker"];
+export const BRANDS_WITHOUT_LOGO = ["Today", "Nice"];

@@ -21,16 +21,16 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-  { 
-    icon: FaFacebookF, 
-    href: "https://www.facebook.com/profile.php?id=61577846368987", 
+  {
+    icon: FaFacebookF,
+    href: "https://www.facebook.com/profile.php?id=61577846368987",
     label: "Facebook",
     colorClass: "bg-[#1877F2]",
     glowClass: "shadow-[#1877F2]/40"
   },
-  { 
-    icon: FaInstagram, 
-    href: "https://www.instagram.com/rajivphylon/?hl=en", 
+  {
+    icon: FaInstagram,
+    href: "https://www.instagram.com/rajivphylon/?hl=en",
     label: "Instagram",
     colorClass: "bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]",
     glowClass: "shadow-[#dc2743]/40"
@@ -51,15 +51,17 @@ export async function Footer() {
       <section className="bg-[#0A0A0A] text-gray-400 relative overflow-hidden">
         {/* Deep Gradient Radial Overlay for Depth */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,180,0,0.03),transparent_70%)] pointer-events-none" />
-        
-        {/* Subtle World Map Background with improved blending */}
-        <div 
-          className="absolute inset-0 opacity-[0.06] pointer-events-none grayscale invert mix-blend-screen"
+
+        {/* World Map Background */}
+        <div
+          className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage: "url('/world-map.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            opacity: 0.35,
+            filter: "invert(1) grayscale(1) brightness(0.8)",
           }}
           aria-hidden="true"
         />
@@ -70,29 +72,29 @@ export async function Footer() {
             {/* Col 1 — Brand Identity */}
             <div className="flex flex-col items-start pb-8 md:pb-0 md:pr-10 lg:pr-16 md:border-r md:border-white/10">
               <Link href="/" className="inline-block transition-transform hover:scale-[1.02] duration-300">
-                <div className="bg-white rounded-xl p-3 shadow-lg shadow-white/5 border border-white/10">
+                <div>
                   <Image
-                    src="/logo.png"
+                    src="/logo-w.png"
                     alt="Rajiv Phylon"
                     width={160}
                     height={160}
-                    className="w-auto h-12 object-contain"
+                    className="w-auto h-32 object-contain"
                   />
                 </div>
               </Link>
-              <p className="mt-8 text-[15px] leading-relaxed text-gray-400 font-body max-w-[280px]">
+              <p className="mt-5 text-[15px] leading-relaxed text-gray-400 font-body max-w-[280px]">
                 Global leaders in high-performance polymer footwear soles. Engineered for excellence, exported worldwide.
               </p>
-              
-              <a 
-                href="https://www.rajivphylon.com" 
-                target="_blank" 
+
+              <a
+                href="https://www.rajivphylon.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 text-[15px] font-heading font-semibold text-[#F5B400] hover:text-white transition-colors duration-200"
               >
                 www.rajivphylon.com
               </a>
-              
+
               {/* Branded Social Icons (Always Colored) */}
               <div className="flex items-center gap-4 mt-8">
                 {socialLinks.map(({ icon: Icon, href, label, colorClass, glowClass }) => (
@@ -127,7 +129,7 @@ export async function Footer() {
                     </span>
                   </span>
                 </li>
-                
+
                 <li>
                   <a
                     href="tel:+919253369349"
@@ -170,7 +172,7 @@ export async function Footer() {
                   </a>
                 </li>
               </ul>
-              
+
               <Link
                 href="/contact"
                 className="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#F5B400] to-[#e0a300] text-black px-6 py-3.5 font-heading font-extrabold text-[13px] uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(245,180,0,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(245,180,0,0.6)] hover:scale-[1.01] active:scale-[0.98] transition-all duration-300"
@@ -225,17 +227,17 @@ export async function Footer() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <div className="space-y-2">
             <p className="text-[13px] text-gray-500 font-body items-center flex flex-wrap justify-center md:justify-start gap-2">
-               © {new Date().getFullYear()} <span className="text-gray-300 font-semibold">Rajiv Phylon</span> 
-               <span className="hidden sm:inline text-gray-700">|</span> 
-               All rights reserved worldwide.
-               <span className="hidden sm:inline text-gray-700">|</span> 
-               <span>Design & Developed by <a href="https://www.groxmedia.in" target="_blank" rel="noopener noreferrer" className="text-[#F5B400] hover:text-white transition-colors duration-200">Grox Media</a></span>
+              © {new Date().getFullYear()} <span className="text-gray-300 font-semibold">Rajiv Phylon</span>
+              <span className="hidden sm:inline text-gray-700">|</span>
+              All rights reserved worldwide.
+              <span className="hidden sm:inline text-gray-700">|</span>
+              <span>Design & Developed by <a href="https://www.groxmedia.in" target="_blank" rel="noopener noreferrer" className="text-[#F5B400] hover:text-white transition-colors duration-200">Grox Media</a></span>
             </p>
             <p className="text-[10px] text-gray-600 font-heading font-semibold uppercase tracking-[0.25em]">
               Precision Engineered Footwear Components
             </p>
           </div>
-          
+
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
             <Link href="/privacy-policy" className="text-[12px] text-gray-500 hover:text-white font-medium transition-colors duration-200 uppercase tracking-widest">
               Legal Policy
@@ -243,10 +245,7 @@ export async function Footer() {
             <Link href="/contact" className="text-[12px] text-gray-500 hover:text-white font-medium transition-colors duration-200 uppercase tracking-widest">
               Global Support
             </Link>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[11px] text-gray-400 font-bold uppercase tracking-tight">System Operational</span>
-            </div>
+
           </div>
         </div>
       </section>
