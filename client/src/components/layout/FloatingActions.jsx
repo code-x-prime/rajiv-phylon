@@ -9,7 +9,7 @@ export function FloatingActions() {
     const [isVisible, setIsVisible] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
 
-    const phoneNumber = "+919999999999"; // Replace with actual number
+    const phoneNumber = "+919253369349"; // Replace with actual number
     const whatsappLink = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, "")}`;
 
     useEffect(() => {

@@ -124,8 +124,8 @@ export function Navbar() {
 
       <header
         className={`fixed inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${scrolled
-            ? "top-0 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
-            : "top-0 lg:top-9 h-[84px] bg-white/95 backdrop-blur-md border-b border-gray-100"
+          ? "top-0 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
+          : "top-0 lg:top-8 h-[84px] bg-white/95 backdrop-blur-md border-b border-gray-100"
           } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
         {/* Dynamic Nav Accent Line */}

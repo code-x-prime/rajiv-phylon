@@ -18,9 +18,9 @@ function WhatsAppIcon({ className }) {
   );
 }
 
-const PHONE           = process.env.NEXT_PUBLIC_PHONE    || "+91-9876543210";
+const PHONE           = process.env.NEXT_PUBLIC_PHONE    || "+91-9253369349";
 const EMAIL           = process.env.NEXT_PUBLIC_EMAIL    || "info@rajivphylon.com";
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || "919876543210";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || "919253369349";
 
 const UNITS = [
   { value: "",           label: "Select unit" },
