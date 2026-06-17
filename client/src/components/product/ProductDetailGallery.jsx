@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Check, ZoomIn, X, ChevronLeft, ChevronRight, Award } from "lucide-react";
@@ -11,6 +12,11 @@ export function ProductDetailGallery({ images = [], productName }) {
   const [selected, setSelected] = useState(0);
   const [copied, setCopied] = useState(false);
   const [lightbox, setLightbox] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const list = Array.isArray(images) ? images : [];
   const mainImg = list[selected];
@@ -89,7 +95,7 @@ export function ProductDetailGallery({ images = [], productName }) {
         )}
 
         {/* Main image */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-white border border-gray-200 group cursor-zoom-in shadow-sm select-none"
+        <div className="relative w-full rounded-2xl overflow-hidden bg-white border border-gray-200 group cursor-zoom-in shadow-sm select-none"
           style={{ aspectRatio: "1/1" }}
           onClick={() => setLightbox(true)}
           onContextMenu={(e) => e.preventDefault()}
@@ -176,88 +182,91 @@ export function ProductDetailGallery({ images = [], productName }) {
       </div>
 
       {/* ── Lightbox ─────────────────────────────── */}
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/97 flex items-center justify-center"
-            onClick={() => setLightbox(false)}
-          >
-            {/* Close */}
-            <button
-              type="button"
-              className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors z-10"
+      {mounted && typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {lightbox && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] bg-black/97 flex items-center justify-center"
               onClick={() => setLightbox(false)}
             >
-              <X className="h-5 w-5" />
-            </button>
+              {/* Close */}
+              <button
+                type="button"
+                className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors z-10"
+                onClick={() => setLightbox(false)}
+              >
+                <X className="h-5 w-5" />
+              </button>
 
-            {/* Counter */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/50 font-body text-sm z-10">
-              {selected + 1} / {list.length}
-            </div>
-
-            {list.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setSelected((s) => Math.max(0, s - 1)); }}
-                  disabled={selected === 0}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/25 disabled:opacity-30 transition-colors"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setSelected((s) => Math.min(list.length - 1, s + 1)); }}
-                  disabled={selected === list.length - 1}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/25 disabled:opacity-30 transition-colors"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </>
-            )}
-
-            <motion.div
-              key={selected}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="relative mx-4 sm:mx-14 w-full max-w-4xl select-none"
-              style={{ height: "75vh" }}
-              onClick={(e) => e.stopPropagation()}
-              onContextMenu={(e) => e.preventDefault()}
-            >
-              <ProtectedImage
-                wrapperClassName="relative w-full h-full"
-                src={mainImg.url}
-                alt={productName}
-                fill
-                className="object-contain rounded-xl"
-                sizes="(max-width: 1024px) 95vw, 896px"
-                priority
-              />
-            </motion.div>
-
-            {/* Dot strip */}
-            {list.length > 1 && list.length <= 12 && (
-              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                {list.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); setSelected(i); }}
-                    className={`rounded-full transition-all duration-200 ${i === selected ? "w-5 h-1.5 bg-[#F5B400]" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/60"}`}
-                  />
-                ))}
+              {/* Counter */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/50 font-body text-sm z-10">
+                {selected + 1} / {list.length}
               </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              {list.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setSelected((s) => Math.max(0, s - 1)); }}
+                    disabled={selected === 0}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/25 disabled:opacity-30 transition-colors"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setSelected((s) => Math.min(list.length - 1, s + 1)); }}
+                    disabled={selected === list.length - 1}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 text-white hover:bg-white/25 disabled:opacity-30 transition-colors"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
+
+              <motion.div
+                key={selected}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+                className="relative mx-4 sm:mx-14 w-full max-w-4xl select-none"
+                style={{ height: "75vh" }}
+                onClick={(e) => e.stopPropagation()}
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                <ProtectedImage
+                  wrapperClassName="relative w-full h-full"
+                  src={mainImg.url}
+                  alt={productName}
+                  fill
+                  className="object-contain rounded-xl"
+                  sizes="(max-width: 1024px) 95vw, 896px"
+                  priority
+                />
+              </motion.div>
+
+              {/* Dot strip */}
+              {list.length > 1 && list.length <= 12 && (
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                  {list.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setSelected(i); }}
+                      className={`rounded-full transition-all duration-200 ${i === selected ? "w-5 h-1.5 bg-[#F5B400]" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/60"}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
