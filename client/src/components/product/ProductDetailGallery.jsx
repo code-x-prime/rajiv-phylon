@@ -189,7 +189,8 @@ export function ProductDetailGallery({ images = [], productName }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] bg-black/97 flex items-center justify-center"
+              className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm"
+              style={{ backgroundColor: "rgba(8, 14, 36, 0.97)" }}
               onClick={() => setLightbox(false)}
             >
               {/* Close */}
