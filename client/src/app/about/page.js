@@ -256,7 +256,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────── */}
-      <section className="py-16 md:py-20 bg-[#FAFAFA]">
+      <section className="py-16 md:py-24 bg-[#FAFAFA]">
         <div className="max-w-site mx-auto px-6 lg:px-10">
           <div className="relative rounded-3xl bg-[#111111] overflow-hidden px-8 py-16 md:px-16 md:py-20 text-center">
             <motion.div

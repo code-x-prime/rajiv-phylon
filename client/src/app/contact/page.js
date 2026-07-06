@@ -48,7 +48,6 @@ const CONTACT_DETAILS = [
 const TRUST_POINTS = [
   "25+ years of manufacturing experience",
   "Trusted by 50+ footwear brands",
-  "ISO certified quality standards",
 ];
 
 export const metadata = {
@@ -63,7 +62,7 @@ export default function ContactPage() {
       <ContactHero />
 
       {/* Main content */}
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="max-w-site mx-auto px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1fr_520px] gap-12 lg:gap-16 items-start">
 
@@ -125,7 +124,7 @@ export default function ContactPage() {
       </section>
 
       {/* Map section */}
-      <section className="py-16 bg-[#FAFAFA] border-t border-gray-100">
+      <section className="py-16 md:py-24 bg-[#FAFAFA] border-t border-gray-100">
         <div className="max-w-site mx-auto px-6 lg:px-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>

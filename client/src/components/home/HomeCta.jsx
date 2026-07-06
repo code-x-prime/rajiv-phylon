@@ -6,7 +6,7 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 
 export function HomeCta() {
   return (
-    <section className="py-16 md:py-20 bg-white border-b border-gray-100 overflow-hidden">
+    <section className="py-16 md:py-24 bg-white border-b border-gray-100 overflow-hidden">
       <div className="max-w-site mx-auto px-6 lg:px-10">
 
         <div className="relative rounded-3xl bg-[#111111] overflow-hidden px-8 py-16 md:px-16 md:py-24 text-center">

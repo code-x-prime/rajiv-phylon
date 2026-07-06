@@ -139,7 +139,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
   const apiCategories = Array.isArray(categoriesWithSubs) ? categoriesWithSubs : [];
 
   return (
-    <section className="py-20 md:py-24 lg:py-32 bg-[#0A0A0A] overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#0A0A0A] overflow-hidden">
       <div className="max-w-site mx-auto px-6 lg:px-10">
 
         {/* Header */}
@@ -213,7 +213,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
 
 export function TopCategoriesSkeleton() {
   return (
-    <section className="py-16 bg-[#0A0A0A]">
+    <section className="py-16 md:py-24 bg-[#0A0A0A]">
       <div className="max-w-site mx-auto px-6 lg:px-10">
         <div className="h-3 w-28 rounded bg-white/10 animate-pulse mb-4" />
         <div className="h-12 w-72 rounded-xl bg-white/10 animate-pulse mb-3" />

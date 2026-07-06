@@ -44,7 +44,7 @@ function Cell({ label, src, alt, span, priority = false }) {
               <rect x="10" y="10" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           </div>
-          <span className="text-[11px] font-heading font-semibold text-gray-400 uppercase tracking-widest">
+          <span className="text-[11px] font-display font-semibold text-gray-400 uppercase tracking-widest">
             {label}
           </span>
         </div>
@@ -55,7 +55,7 @@ function Cell({ label, src, alt, span, priority = false }) {
 
       {/* Label chip at bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out">
-        <span className="inline-block bg-white/90 backdrop-blur-sm text-[#111111] font-heading font-bold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full">
+        <span className="inline-block bg-white/90 backdrop-blur-sm text-[#111111] font-display font-bold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full">
           {label}
         </span>
       </div>
@@ -70,7 +70,7 @@ export function AboutImageGrid() {
   return (
     <div className="relative">
       {/* Main 2×2 bento grid — left column spans 2 rows */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4" style={{ gridTemplateRows: "240px 240px" }}>
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 auto-rows-[200px] lg:auto-rows-[240px]">
         <Cell label={CELLS[0].label} src={CELLS[0].src} alt={CELLS[0].alt} span="tall" priority />
         <Cell label={CELLS[1].label} src={CELLS[1].src} alt={CELLS[1].alt} span="normal" />
         <Cell label={CELLS[2].label} src={CELLS[2].src} alt={CELLS[2].alt} span="normal" />
@@ -81,7 +81,7 @@ export function AboutImageGrid() {
         {BADGE_LABELS.map((b) => (
           <span
             key={b}
-            className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-[#111111] font-heading font-semibold text-[11px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-[#111111] font-display font-semibold text-[11px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-sm"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#F5B400] inline-block" />
             {b}

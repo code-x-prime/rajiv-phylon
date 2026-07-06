@@ -24,7 +24,7 @@ const POINTS = [
   {
     icon: Truck,
     title: "Strategic Logistics",
-    text: "Direct corridors to major ports for Bangladesh, Sri Lanka, and Global hubs.",
+    text: "Direct corridors to major ports across South Asia and Global hubs.",
   },
 ];
 
