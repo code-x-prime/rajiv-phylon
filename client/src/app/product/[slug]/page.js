@@ -135,26 +135,37 @@ export default async function ProductPage({ params }) {
 
       <div className="bg-white min-h-screen">
 
-        {/* ── BREADCRUMB ─────────────────────────────── */}
-        <div className="bg-[#F8F8F8] border-b border-gray-200">
-          <div className="max-w-site mx-auto px-6 lg:px-10 py-3">
-            <nav className="flex flex-wrap items-center gap-1 text-[12px] text-gray-400">
-              <Link href="/" className="hover:text-[#111] transition-colors">Home</Link>
+        {/* ── DARK TOP BAR ───────────────────────────── */}
+        <section className="relative bg-[#0A0A0A] overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+              backgroundSize: "60px 60px",
+            }}
+            aria-hidden
+          />
+          <div className="relative z-10 max-w-site mx-auto px-6 lg:px-10 pt-32 pb-8 lg:pt-40 lg:pb-10">
+            <nav className="flex flex-wrap items-center gap-1 text-[12px] text-white/50 mb-4">
+              <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <ChevronRight className="h-3 w-3 shrink-0" />
-              <Link href="/products" className="hover:text-[#111] transition-colors">Products</Link>
+              <Link href="/products" className="hover:text-white transition-colors">Products</Link>
               {primaryCat && (<>
                 <ChevronRight className="h-3 w-3 shrink-0" />
-                <Link href={`/category/${primaryCat.slug}`} className="hover:text-[#111] transition-colors">{primaryCat.name}</Link>
+                <Link href={`/category/${primaryCat.slug}`} className="hover:text-white transition-colors">{primaryCat.name}</Link>
               </>)}
               {primarySub && (<>
                 <ChevronRight className="h-3 w-3 shrink-0" />
-                <Link href={`/subcategory/${primarySub.slug}`} className="hover:text-[#111] transition-colors">{primarySub.name}</Link>
+                <Link href={`/subcategory/${primarySub.slug}`} className="hover:text-white transition-colors">{primarySub.name}</Link>
               </>)}
               <ChevronRight className="h-3 w-3 shrink-0" />
-              <span className="text-[#111] font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+              <span className="text-white font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
             </nav>
+            <h1 className="font-display font-medium text-[clamp(1.5rem,3vw,2.5rem)] text-white tracking-[-0.02em]">
+              {product.name}
+            </h1>
           </div>
-        </div>
+        </section>
 
         {/* ── MAIN GRID ─────────────────────────────── */}
         {/*
