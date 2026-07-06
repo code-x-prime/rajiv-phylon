@@ -10,7 +10,7 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import { ChevronLeft, ChevronRight, ArrowRight, Package, Globe, ShieldCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 /* ── Fallback image paths ────────────────────────────────── */
 const FB_DESK = "/desk-banner.png";
@@ -27,13 +27,6 @@ const slideVariants = {
 };
 
 
-
-/* ── Trust badges (shown in fallback) ───────────────────── */
-const BADGES = [
-  { icon: Package, text: "Export Grade Quality" },
-  { icon: Globe, text: "50+ Countries Served" },
-  { icon: ShieldCheck, text: "ISO Certified Manufacturing" },
-];
 
 /* ═══════════════════════════════════════════════════════════
    API BANNER SLIDER
@@ -237,11 +230,11 @@ function FallbackHero() {
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-3 mb-8"
+            className="inline-flex items-center gap-3 mb-6"
           >
             <div className="h-px w-10 bg-[#F5B400]" />
             <span className="type-overline text-[#F5B400]">
-              Export Grade Manufacturer
+              Trusted B2B & OEM Partner
             </span>
           </motion.div>
 
@@ -251,7 +244,7 @@ function FallbackHero() {
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.75rem,5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[0.95]"
+              className="font-display text-[clamp(3rem,6vw,6.5rem)] font-medium text-white tracking-[-0.03em] leading-[0.95]"
             >
               High-Performance
             </motion.h1>
@@ -261,7 +254,7 @@ function FallbackHero() {
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.75rem,5vw,5.5rem)] font-medium text-[#F5B400] tracking-[-0.03em] leading-[0.95]"
+              className="font-display text-[clamp(3rem,6vw,6.5rem)] font-medium text-[#F5B400] tracking-[-0.03em] leading-[0.95]"
             >
               Polymer Soles
             </motion.h1>
@@ -272,9 +265,9 @@ function FallbackHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-white/55 font-body leading-relaxed max-w-xl mb-10"
+            className="text-xl md:text-2xl text-white/55 font-body leading-relaxed max-w-xl mb-10"
           >
-            Trusted B2B & OEM partner for global footwear brands. Export-grade quality, bulk-ready production.
+            Trusted B2B & OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
           </motion.p>
 
           {/* CTAs */}
@@ -299,22 +292,39 @@ function FallbackHero() {
             </Link>
           </motion.div>
 
-          {/* Trust badges */}
+          {/* Scale & Trust Ribbon */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center gap-6 mt-12 pt-10 border-t border-white/[0.08]"
+            className="mt-12 pt-8 border-t border-white/[0.08]"
           >
-            {BADGES.map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-2.5">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#F5B400]/10 border border-[#F5B400]/20">
-                  <Icon className="h-4 w-4 text-[#F5B400]" />
-                </div>
-                <span className="text-[13px] font-display font-medium text-white/60">{text}</span>
-              </div>
-            ))}
+            <p className="type-overline text-white/40 mb-5 tracking-[0.15em]">Scale & Trust</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+              {[
+                { value: "10M+", label: "Soles Engineered" },
+                { value: "50,000+", label: "Daily Pair Capacity" },
+                { value: "500+", label: "Active Mold Designs" },
+                { value: "25+", label: "Years of Manufacturing Excellence" },
+              ].map((metric, i) => (
+                <motion.div
+                  key={metric.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className="text-left"
+                >
+                  <div className="font-display font-medium text-2xl md:text-3xl text-[#F5B400] leading-none mb-1.5 tracking-[-0.02em]">
+                    {metric.value}
+                  </div>
+                  <div className="text-[12px] font-body text-white/45 leading-snug">
+                    {metric.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
+
         </div>
       </div>
 

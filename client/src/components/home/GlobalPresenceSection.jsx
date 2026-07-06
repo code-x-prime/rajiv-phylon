@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Globe, TrendingUp, Award } from "lucide-react";
+import { MapPin, TrendingUp, Award } from "lucide-react";
 
 const STATS = [
-  { icon: Globe, value: "2", label: "Export Markets", desc: "Active export partnerships in Bangladesh and Sri Lanka" },
-  { icon: TrendingUp, value: "High Volume", label: "Production Capacity", desc: "Scaled for OEM & bulk order timelines" },
-  { icon: Award, value: "25+", label: "Years of Experience", desc: "Decades of polymer manufacturing expertise" },
+  { icon: MapPin, value: "Strategic", label: "Regional Dominance", desc: "Proximate to South Asian footwear manufacturing hubs" },
+  { icon: TrendingUp, value: "50,000+", label: "Daily Production Scale", desc: "Consistent volume for global assembly lines" },
+  { icon: Award, value: "2.5", label: "Decades of Material Science", desc: "Deep expertise in polymer compounding" },
 ];
 
 export function GlobalPresenceSection() {
@@ -25,17 +25,17 @@ export function GlobalPresenceSection() {
               transition={{ duration: 0.5 }}
               className="type-overline text-[#F5B400] mb-4"
             >
-              Our export reach
+              Our Export Reach
             </motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-[#111111] tracking-[-0.02em] leading-tight mb-6"
+              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-3"
             >
-              Export Presence,<br />
-              <span className="text-[#F5B400]">Reliable</span> Partnership
+              Global Logistics,<br />
+              <span className="text-[#F5B400]">Industrial Precision.</span>
             </motion.h2>
             <motion.div
               initial={{ scaleX: 0 }}
@@ -51,7 +51,7 @@ export function GlobalPresenceSection() {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="text-[15px] md:text-base text-gray-500 font-body leading-relaxed max-w-lg"
             >
-              We deliver export-ready production with international quality compliance, built for long-term OEM partnerships. Our supply chain is structured for reliable shipping timelines and consistent delivery to brands and manufacturers across Bangladesh and Sri Lanka.
+              We operate at the intersection of high-volume manufacturing and frictionless global logistics. Strategically located near the National Capital Region&apos;s dry ports, we provide established shipping corridors to footwear hubs across South Asia and beyond. Our infrastructure is built to support the rapid lead times and stringent compliance standards of the world&apos;s most successful brands.
             </motion.p>
           </div>
 
@@ -74,7 +74,7 @@ export function GlobalPresenceSection() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-display font-medium text-2xl text-[#111111]">{stat.value}</span>
+                      <span className="font-display font-medium text-2xl text-foreground">{stat.value}</span>
                       <span className="text-[13px] font-display font-medium text-gray-400">{stat.label}</span>
                     </div>
                     <p className="text-[13px] text-gray-400 font-body mt-0.5">{stat.desc}</p>

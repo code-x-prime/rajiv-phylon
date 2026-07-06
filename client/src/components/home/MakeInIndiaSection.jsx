@@ -2,15 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
 
 const LOGO_PATH = "/make-in-india-jootoor_orig.gif";
-
-const HIGHLIGHTS = [
-  "Proudly manufactured in India",
-  "Export-grade quality for Bangladesh and Sri Lanka",
-  "Contributing to India's manufacturing excellence",
-];
 
 const stagger = {
   hidden: {},
@@ -77,21 +70,10 @@ export function MakeInIndiaSection() {
 
             <motion.p
               variants={fadeUp}
-              className="text-lg text-white/55 font-body leading-relaxed max-w-xl mb-10"
+              className="text-lg text-white/55 font-body leading-relaxed max-w-xl"
             >
-              Manufacturing excellence from India, built for reliable export partnerships. We are proud to be part of India&apos;s growing manufacturing ecosystem, delivering export-grade polymer footwear soles to brands in Bangladesh and Sri Lanka.
+              Manufacturing excellence from India, delivering high-performance polymer footwear soles to global brands.
             </motion.p>
-
-            <motion.ul variants={stagger} className="space-y-4">
-              {HIGHLIGHTS.map((item, i) => (
-                <motion.li key={i} variants={fadeUp} className="flex items-center gap-3.5">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-[#F5B400] flex items-center justify-center">
-                    <Check className="w-3 h-3 text-[#0A0A0A]" strokeWidth={3} />
-                  </span>
-                  <span className="text-[15px] text-white/75 font-body">{item}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
           </motion.div>
 
           {/* Right — logo in white card */}

@@ -1,175 +1,120 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { Settings, Cog, ShieldCheck, TrendingUp, Globe, Lightbulb } from "lucide-react";
 
-const ITEMS = [
+const PILLARS = [
   {
-    svg: "/why-choose/precision-engineering.svg",
-    img: "/precision-engineering.png",
-    title: "Precision Engineering",
-    description:
-      "Every sole is produced to exact specifications with consistent tolerances. Our engineering processes ensure repeatability and performance your brand can rely on.",
+    icon: Settings,
+    number: "01",
+    title: "Micron-Level Tolerance Engineering",
+    copy: "We combine 2.5 decades of compounding heritage with advanced automated molding. Our engineering protocols ensure the absolute repeatability and performance required for high-spec global footwear ranges.",
   },
   {
-    svg: "/why-choose/advanced-infrastructure.svg",
-    img: "/advanced-infrastructure.png",
-    title: "Advanced Infrastructure",
-    description:
-      "Modern manufacturing facilities equipped with automated systems and dedicated production lines. Built to support high-volume, export-grade output.",
+    icon: Cog,
+    number: "02",
+    title: "Integrated Industrial Ecosystem",
+    copy: "Our Sonipat facility is a vertically integrated powerhouse. Equipped with multi-station rotary injection and advanced Phylon compression molding, we control every variable from polymer compounding to the finished sole.",
   },
   {
-    svg: "/why-choose/strict-quality-control.svg",
-    img: "/strict-quality-control.png",
-    title: "Strict Quality Control",
-    description:
-      "Rigorous inspection at every stage—from raw material to finished product. We adhere to international standards and documented quality systems.",
+    icon: ShieldCheck,
+    number: "03",
+    title: "Certified Quality Assurance",
+    copy: "Quality is our core protocol, not a final check. Our in-house testing laboratory conducts rigorous DIN abrasion, SATRA flex, and REACH chemical compliance tests on every production batch.",
   },
   {
-    svg: "/why-choose/bulk-order-capability.svg",
-    img: "/bulk-order-capability.png",
-    title: "Bulk Order Capability",
-    description:
-      "Scaled production capacity to fulfil large orders without compromising quality or lead times. We are structured for OEM and high-volume partnerships.",
+    icon: TrendingUp,
+    number: "04",
+    title: "Institutional Scalability",
+    copy: "Built for global assembly lines. With a daily capacity of 50,000+ pairs, we provide the supply chain security necessary for million-pair monthly contracts without compromising on lead times.",
   },
   {
-    svg: "/why-choose/timely-global-delivery.svg",
-    img: "/timely-global-delivery.png",
-    title: "Timely Global Delivery",
-    description:
-      "Reliable logistics and a proven supply chain for committed export timelines. We keep your production and planning on track with dependable dispatch support.",
+    icon: Globe,
+    number: "05",
+    title: "Frictionless Global Logistics",
+    copy: "Strategically located to serve South Asian and global footwear hubs. We offer optimized land and sea-freight corridors, ensuring your production schedule remains uninterrupted.",
   },
   {
-    svg: "/why-choose/custom-development-support.svg",
-    img: "/custom-development-support.png",
-    title: "Custom Development Support",
-    description:
-      "Dedicated technical support for custom sole development and sampling. We work with you to refine designs, materials, and specifications for your range.",
+    icon: Lightbulb,
+    number: "06",
+    title: "Rapid Prototyping & ODM Solutions",
+    copy: "Innovation at the speed of retail. Our in-house CNC tooling facility accelerates your speed-to-market, transforming 2D sketches into production-ready 3D prototypes within days.",
   },
 ];
 
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.08 } },
 };
-
 const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
-  },
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export function WhyChooseUs() {
   return (
-    <section className="py-20 md:py-28 bg-[#F9F7F4] overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#F9F7F4] overflow-hidden">
       <div className="max-w-site mx-auto px-6 lg:px-10">
 
-        {/* ── Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 md:mb-20">
-          <div className="max-w-xl">
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="type-overline text-[#F5B400] mb-5 flex items-center gap-3"
-            >
-              <span className="h-px w-8 bg-[#F5B400]/60" aria-hidden />
-              Why work with us
-            </motion.p>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-medium text-[clamp(1.75rem,4vw,3.25rem)] text-[#111111] leading-[1.05] tracking-[-0.025em]"
-            >
-              Why Choose{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-[#F5B400]">Rajiv Phylon</span>
-                <motion.span
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute -bottom-1 left-0 h-[2px] w-full bg-[#F5B400]/40 rounded-full origin-left"
-                  aria-hidden
-                />
-              </span>
-            </motion.h2>
-          </div>
-
+        {/* Header */}
+        <div className="mb-10 md:mb-14">
           <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-sm text-sm text-gray-500 font-body leading-relaxed md:text-right"
+            transition={{ duration: 0.45 }}
+            className="type-overline text-[#F5B400] mb-4"
           >
-            Built for brands that demand precision, scale, and reliability — from
-            first sample to bulk export.
+            Why Choose Rajiv Phylon
           </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-foreground tracking-[-0.02em] leading-tight"
+          >
+            Engineered for <span className="text-[#F5B400]">Global Standards</span>
+          </motion.h2>
+          <motion.div
+            initial={{ scaleX: 0, originX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="mt-3 h-[2px] w-16 bg-[#F5B400] rounded-full"
+          />
         </div>
 
-        {/* ── Cards Grid ── */}
+        {/* 6 Pillars */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {ITEMS.map((item, i) => {
-            const num = String(i + 1).padStart(2, "0");
+          {PILLARS.map((pillar) => {
+            const Icon = pillar.icon;
             return (
               <motion.div
-                key={i}
+                key={pillar.number}
                 variants={cardVariants}
-                className="group relative bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-500 flex flex-col"
+                className="group bg-white rounded-2xl p-7 border border-gray-100 hover:border-[#F5B400]/30 hover:shadow-[0_20px_60px_-15px_rgba(245,180,0,0.1)] transition-all duration-500"
               >
-                {/* ── Image Area ── */}
-                <div className="relative h-52 sm:h-56 overflow-hidden bg-white">
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 p-3 rounded-lg"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/5 to-transparent group-hover:from-white/70 transition-all duration-500" />
-
-                  <span className="absolute top-4 right-5 font-display font-medium text-5xl text-white/20 select-none tracking-[-0.03em] leading-none">
-                    {num}
-                  </span>
-
-                  <div className="absolute bottom-4 left-5">
-                    <div className="relative w-14 h-14 rounded-xl bg-[#F5B400] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <Image
-                        src={item.svg}
-                        alt=""
-                        width={30}
-                        height={30}
-                        className="object-contain brightness-0 invert w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]"
-                      />
-                    </div>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-500">
+                    <Icon className="h-5 w-5 text-[#F5B400] group-hover:text-white transition-colors duration-500" />
                   </div>
-
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#F5B400] translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out" />
+                  <span className="font-display font-medium text-[13px] text-gray-300 tracking-[0.1em]">
+                    {pillar.number}
+                  </span>
                 </div>
-
-                {/* ── Text Area ── */}
-                <div className="p-6 sm:p-7 flex flex-col flex-1">
-                  <h3 className="font-display font-medium text-[16px] sm:text-[18px] text-[#111111] mb-3 leading-snug group-hover:text-[#111]">
-                    {item.title}
-                  </h3>
-                  <p className="text-[13px] sm:text-[14px] text-gray-500 font-body leading-relaxed flex-1">
-                    {item.description}
-                  </p>
-                </div>
+                <h3 className="font-display font-medium text-[17px] text-foreground mb-3 leading-snug">
+                  {pillar.title}
+                </h3>
+                <p className="text-[14px] text-gray-500 font-body leading-relaxed">
+                  {pillar.copy}
+                </p>
               </motion.div>
             );
           })}

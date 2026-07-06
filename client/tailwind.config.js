@@ -14,7 +14,7 @@ module.exports = {
         display: ["var(--font-display)", "var(--font-heading)", "system-ui", "sans-serif"],
       },
       maxWidth: {
-        "site": "var(--container-max, 1400px)",
+        "site": "var(--container-max, 1600px)",
       },
       colors: {
         background: "var(--background)",

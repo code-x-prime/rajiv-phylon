@@ -1,170 +1,142 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowUpRight, User, Users, Baby } from "lucide-react";
 
-/* ── Max categories shown on home ───────────────────────── */
-const HOME_LIMIT = 8;
 const PLACEHOLDER_IMAGE = "/placeholder.png";
 
-/* ── Gradient fallbacks (lighter, more premium) ─────────── */
-const GRAD = [
-  { from: "#1a1a2e", to: "#16213e", accent: "#3b82f6" },
-  { from: "#1a0533", to: "#2d0b5a", accent: "#8b5cf6" },
-  { from: "#0f2027", to: "#2d4a22", accent: "#22c55e" },
-  { from: "#1c1c1c", to: "#3a2012", accent: "#f97316" },
-  { from: "#0a1628", to: "#1a2744", accent: "#06b6d4" },
-  { from: "#1a0a28", to: "#2a1040", accent: "#ec4899" },
-  { from: "#0d1b0d", to: "#1a3a1a", accent: "#84cc16" },
-  { from: "#1a1200", to: "#3a2a00", accent: "#f5b400" },
+const PRODUCT_LINES = [
+  {
+    name: "EVA Soles",
+    slug: "eva-soles",
+    description: "Lightweight, flexible & shock-absorbing",
+    tabs: [
+      { label: "For Men", slug: "men", icon: User },
+      { label: "For Women", slug: "women", icon: Users },
+      { label: "For Kids", slug: "kids", icon: Baby },
+    ],
+  },
+  {
+    name: "Phylon Sole",
+    slug: "phylon-sole",
+    description: "Premium cushioning & durability",
+    tabs: [
+      { label: "For Men", slug: "men", icon: User },
+      { label: "For Women", slug: "women", icon: Users },
+      { label: "For Kids", slug: "kids", icon: Baby },
+    ],
+  },
+  {
+    name: "Semi Phylon Sole",
+    slug: "semi-phylon-sole",
+    description: "Balance of comfort & performance",
+    tabs: [
+      { label: "For Men", slug: "men", icon: User },
+      { label: "For Women", slug: "women", icon: Users },
+      { label: "For Kids", slug: "kids", icon: Baby },
+    ],
+  },
 ];
 
-/* ── Variants ────────────────────────────────────────────── */
+const GRAD = [
+  { from: "#1a1a2e", to: "#16213e", accent: "#3b82f6" },
+  { from: "#1c1c1c", to: "#3a2012", accent: "#f97316" },
+  { from: "#0a1628", to: "#1a2744", accent: "#06b6d4" },
+];
+
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 };
 const cardVariants = {
   hidden: { opacity: 0, y: 40, scale: 0.97 },
-  show:   { opacity: 1, y: 0,  scale: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
-/* ── Parallax card ───────────────────────────────────────── */
-function ParallaxCard({ cat, index, size = "normal" }) {
-  const ref      = useRef(null);
-  const imageUrl = cat.imageUrl || cat.image || PLACEHOLDER_IMAGE;
-  const subcats  = cat.subCategories ?? [];
-  const grad     = GRAD[index % GRAD.length];
-  const num      = String(index + 1).padStart(2, "0");
+function ProductLineCard({ product, index, apiCategories }) {
+  const [activeTab, setActiveTab] = useState(0);
+  const grad = GRAD[index % GRAD.length];
 
-  const mouseX   = useMotionValue(0);
-  const mouseY   = useMotionValue(0);
-  const springX  = useSpring(mouseX, { stiffness: 80, damping: 20 });
-  const springY  = useSpring(mouseY, { stiffness: 80, damping: 20 });
-  const imgX     = useTransform(springX, [-0.5, 0.5], ["-6px", "6px"]);
-  const imgY     = useTransform(springY, [-0.5, 0.5], ["-5px", "5px"]);
-  const imgScale = useTransform(springX, [-0.5, 0.5], [1.05, 1.1]);
-
-  const onMove  = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const { left, top, width, height } = el.getBoundingClientRect();
-    mouseX.set((e.clientX - left) / width  - 0.5);
-    mouseY.set((e.clientY - top)  / height - 0.5);
-  };
-  const onLeave = () => { mouseX.set(0); mouseY.set(0); };
-
-  const minH =
-    size === "featured"
-      ? "min-h-[380px] sm:min-h-[440px] lg:min-h-[520px]"
-      : size === "normal"
-      ? "min-h-[220px] sm:min-h-[260px]"
-      : "min-h-[180px] sm:min-h-[200px]";
-
-  const nameSize =
-    size === "featured"
-      ? "text-2xl sm:text-3xl lg:text-4xl"
-      : "text-lg sm:text-xl";
+  const matchedCat = apiCategories?.find(
+    (c) => c.name?.toLowerCase().includes(product.slug.split("-")[0])
+  );
+  const imageUrl = matchedCat?.imageUrl || matchedCat?.image || PLACEHOLDER_IMAGE;
 
   return (
     <motion.div variants={cardVariants} className="h-full">
-      <Link
-        ref={ref}
-        href={`/category/${cat.slug}`}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl ${minH} block`}
+      <div
+        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl min-h-[340px] sm:min-h-[400px] lg:min-h-[460px]"
         style={{ background: `linear-gradient(140deg, ${grad.from}, ${grad.to})` }}
       >
         {/* Image layer */}
-        <motion.div
-          className="absolute inset-[-8px] will-change-transform"
-          style={{ x: imgX, y: imgY, scale: imgScale }}
-          aria-hidden
-        >
+        <div className="absolute inset-0">
           <Image
             src={imageUrl}
-            alt={cat.name}
+            alt={product.name}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
-        </motion.div>
+        </div>
 
         {/* Dark overlay */}
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5 z-[1]"
-          aria-hidden
-        />
-        {/* Hover accent overlay */}
-        <div
-          className="absolute inset-0 z-[1] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{ background: `linear-gradient(135deg, ${grad.accent}15, transparent)` }}
-          aria-hidden
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 z-[1]" />
 
         {/* Number + arrow (top) */}
-        <div className="relative z-[3] flex items-start justify-between p-4 sm:p-5">
+        <div className="relative z-[3] flex items-start justify-between p-5 sm:p-6">
           <span className="font-display font-medium text-[10px] text-white/40 tracking-[0.2em] uppercase select-none">
-            {num}
+            {String(index + 1).padStart(2, "0")}
           </span>
-          <div className="w-9 h-9 rounded-full bg-[#F5B400] shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+          <div className="w-10 h-10 rounded-full bg-[#F5B400] shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
             <ArrowUpRight className="h-4 w-4 text-white" />
           </div>
         </div>
 
-        {/* Name + subcats (bottom) */}
-        <div className="relative z-[3] p-4 sm:p-5 space-y-2">
-          {/* Subcats pills */}
-          {subcats.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-350">
-              {subcats.slice(0, size === "featured" ? 5 : 3).map((s) => (
-                <span
-                  key={s.id}
-                  className="rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 text-[10px] font-display font-medium text-white/90 whitespace-nowrap"
-                >
-                  {s.name}
-                </span>
-              ))}
-              {subcats.length > (size === "featured" ? 5 : 3) && (
-                <span
-                  className="rounded-full px-2.5 py-0.5 text-[10px] font-display font-medium text-white"
-                  style={{ background: grad.accent + "cc" }}
-                >
-                  +{subcats.length - (size === "featured" ? 5 : 3)}
-                </span>
-              )}
-            </div>
-          )}
+        {/* Content (bottom) */}
+        <div className="relative z-[3] p-5 sm:p-6 space-y-4">
+          <p className="type-overline text-[#F5B400] text-[11px]">{product.description}</p>
 
-          <h3 className={`font-display font-medium text-white leading-tight group-hover:text-[#F5B400] transition-colors duration-300 ${nameSize}`}>
-            {cat.name}
+          <h3 className="font-display font-medium text-2xl sm:text-3xl lg:text-4xl text-white leading-tight group-hover:text-[#F5B400] transition-colors duration-300">
+            {product.name}
           </h3>
 
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+          {/* Sub-tabs */}
+          <div className="flex flex-wrap gap-2 pt-1">
+            {product.tabs.map((tab, tabIdx) => {
+              const Icon = tab.icon;
+              return (
+                <Link
+                  key={tab.slug}
+                  href={`/category/${product.slug}?gender=${tab.slug}`}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-display font-medium transition-all duration-300 ${
+                    activeTab === tabIdx
+                      ? "bg-[#F5B400] text-black"
+                      : "bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10"
+                  }`}
+                  onMouseEnter={() => setActiveTab(tabIdx)}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300 pt-2">
             <div className="h-px w-5 bg-[#F5B400]" />
             <span className="type-overline text-[#F5B400] text-[10px]">Explore</span>
           </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }
 
-/* ── Main ────────────────────────────────────────────────── */
 export function TopCategoriesSection({ categoriesWithSubs }) {
-  const all  = Array.isArray(categoriesWithSubs) ? categoriesWithSubs : [];
-  if (all.length === 0) return null;
-
-  const list     = all.slice(0, HOME_LIMIT);
-  const overflow = all.length - HOME_LIMIT;
-  const total    = all.length;
-
-  const featured = list[0];
-  const rest     = list.slice(1);
+  const apiCategories = Array.isArray(categoriesWithSubs) ? categoriesWithSubs : [];
 
   return (
     <section className="py-20 md:py-24 lg:py-32 bg-[#0A0A0A] overflow-hidden">
@@ -190,7 +162,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
               className="font-display font-medium text-[clamp(1.75rem,4vw,3.5rem)] text-white tracking-[-0.025em] leading-[1.0]"
             >
               Our Product<br />
-              <span className="text-[#F5B400]">Categories</span>
+              <span className="text-[#F5B400]">Lines</span>
             </motion.h2>
             <motion.div
               initial={{ scaleX: 0, originX: 0 }}
@@ -217,77 +189,28 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
           </motion.div>
         </div>
 
-        {/* Grid */}
+        {/* 3-column grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6"
         >
-          {list.length === 1 && (
-            <ParallaxCard cat={list[0]} index={0} size="featured" />
-          )}
-
-          {list.length === 2 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {list.map((c, i) => <ParallaxCard key={c.id} cat={c} index={i} size="featured" />)}
-            </div>
-          )}
-
-          {list.length >= 3 && (
-            <>
-              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4">
-                <ParallaxCard cat={featured} index={0} size="featured" />
-
-                <div className="grid grid-cols-2 gap-4">
-                  {rest.slice(0, 4).map((c, i) => (
-                    <ParallaxCard key={c.id} cat={c} index={i + 1} size="normal" />
-                  ))}
-                </div>
-              </div>
-
-              {rest.length > 4 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-                  {rest.slice(4).map((c, i) => (
-                    <ParallaxCard key={c.id} cat={c} index={i + 5} size="small" />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+          {PRODUCT_LINES.map((product, i) => (
+            <ProductLineCard
+              key={product.slug}
+              product={product}
+              index={i}
+              apiCategories={apiCategories}
+            />
+          ))}
         </motion.div>
-
-        {/* Footer row */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.3 }}
-          className="mt-8 flex items-center justify-between border-t border-white/10 pt-7"
-        >
-          <p className="text-white/40 font-body text-sm">
-            Showing{" "}
-            <span className="text-white font-display font-medium">{list.length}</span>
-            {overflow > 0 && (
-              <> of <span className="text-white font-display font-medium">{total}</span></>
-            )}{" "}
-            {total === 1 ? "category" : "categories"}
-          </p>
-          <Link
-            href="/products"
-            className="flex items-center gap-1.5 text-[#F5B400] text-sm font-display font-medium hover:gap-3 transition-all duration-200"
-          >
-            {overflow > 0 ? `+${overflow} more categories` : "Browse all"}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </motion.div>
-
       </div>
     </section>
   );
 }
 
-/* ── Skeleton ─────────────────────────────────────────────── */
 export function TopCategoriesSkeleton() {
   return (
     <section className="py-16 bg-[#0A0A0A]">
@@ -295,13 +218,10 @@ export function TopCategoriesSkeleton() {
         <div className="h-3 w-28 rounded bg-white/10 animate-pulse mb-4" />
         <div className="h-12 w-72 rounded-xl bg-white/10 animate-pulse mb-3" />
         <div className="h-12 w-56 rounded-xl bg-white/10 animate-pulse mb-10" />
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4">
-          <div className="rounded-2xl bg-white/5 animate-pulse min-h-[420px]" />
-          <div className="grid grid-cols-2 gap-4">
-            {[1,2,3,4].map((i) => (
-              <div key={i} className="rounded-2xl bg-white/5 animate-pulse min-h-[200px]" />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="rounded-2xl bg-white/5 animate-pulse min-h-[400px]" />
+          ))}
         </div>
       </div>
     </section>

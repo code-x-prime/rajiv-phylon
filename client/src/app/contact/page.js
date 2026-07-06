@@ -1,6 +1,6 @@
 import { ContactForm } from "@/components/ContactForm";
 import { ContactHero } from "@/components/contact/ContactHero";
-import { Mail, Phone, MapPin, ExternalLink, MessageCircle, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink, MessageCircle } from "lucide-react";
 
 const MAP_EMBED_SRC =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3493.9037402075064!2d77.13670957550958!3d28.871481075535154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa5a7db300cd4dd53%3A0x77c9e1bd3ef9ae6b!2sRAJIV%20PHYLON%20PRIVATE%20LIMITED!5e0!3m2!1sen!2sin!4v1771908168013!5m2!1sen!2sin";
@@ -19,7 +19,7 @@ const CONTACT_DETAILS = [
     label: "Phone",
     value: "+91-9253369349",
     href: "tel:+919253369349",
-    desc: "Mon–Sat, 9am–6pm IST",
+    desc: "Mon-Sat, 9am-6pm IST",
   },
   {
     icon: Phone,
@@ -41,20 +41,19 @@ const CONTACT_DETAILS = [
     label: "Address",
     value: "Rajiv Phylon Pvt. Ltd.",
     href: MAP_LINK,
-    desc: "Manufacturing & Export Office, Delhi",
+    desc: "Manufacturing & Office, Delhi",
   },
 ];
 
 const TRUST_POINTS = [
   "25+ years of manufacturing experience",
-  "Active exports in Bangladesh and Sri Lanka",
-  "Trusted by 40+ footwear brands",
+  "Trusted by 50+ footwear brands",
   "ISO certified quality standards",
 ];
 
 export const metadata = {
   title: "Contact | Rajiv Phylon",
-  description: "Get in touch for quotes, bulk orders, and partnership inquiries. Export-grade B2B enquiry.",
+  description: "Get in touch for quotes, bulk orders, and partnership inquiries.",
 };
 
 export default function ContactPage() {
@@ -65,21 +64,16 @@ export default function ContactPage() {
 
       {/* Main content */}
       <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-site mx-auto px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1fr_520px] gap-12 lg:gap-16 items-start">
 
             {/* Left — Info */}
             <div>
-              <p className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-3">
-                Get in touch
-              </p>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-[#111111] tracking-tight mb-4 leading-tight">
-                Let&apos;s build something<br />
-                <span className="text-[#F5B400]">great together</span>
+              <h2 className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-foreground tracking-[-0.02em] leading-tight mb-4">
+                Let&apos;s Build Something<br />
+                <span className="text-[#F5B400]">Great Together</span>
               </h2>
-              <p className="text-[15px] text-gray-500 font-body leading-relaxed mb-10 max-w-md">
-                Reach out for product information, bulk quotes, or partnership opportunities. We respond to all B2B and export enquiries promptly.
-              </p>
+              <div className="h-[2px] w-16 bg-[#F5B400] rounded-full mb-8" />
 
               {/* Contact cards */}
               <div className="grid sm:grid-cols-2 gap-4 mb-10">
@@ -90,8 +84,8 @@ export default function ContactPage() {
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
                     className={`group relative flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 ${
-                      isHighlight 
-                        ? "border-[#F5B400] bg-[#F5B400]/5 shadow-md scale-[1.02]" 
+                      isHighlight
+                        ? "border-[#F5B400] bg-[#F5B400]/5 shadow-md scale-[1.02]"
                         : "border-gray-100 bg-[#FAFAFA] hover:border-[#F5B400]/40 hover:bg-white hover:shadow-md"
                     }`}
                   >
@@ -110,31 +104,12 @@ export default function ContactPage() {
                       }`} />
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-[13px] text-[#111111] mb-0.5">{label}</p>
+                      <p className="font-display font-medium text-[13px] text-foreground mb-0.5">{label}</p>
                       <p className="font-body text-[14px] text-gray-700 font-medium mb-0.5">{value}</p>
                       <p className="font-body text-[12px] text-gray-400">{desc}</p>
                     </div>
                   </a>
                 ))}
-              </div>
-
-              {/* Trust section */}
-              <div className="rounded-2xl border border-gray-100 bg-[#111111] p-7 relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#F5B400]/10 blur-3xl" aria-hidden />
-                <div className="relative z-10">
-                  <div className="inline-flex items-center gap-2 mb-4">
-                    <Clock className="h-4 w-4 text-[#F5B400]" />
-                    <span className="font-heading font-bold text-[12px] text-[#F5B400] uppercase tracking-wider">Why Partner With Us</span>
-                  </div>
-                  <ul className="space-y-2.5">
-                    {TRUST_POINTS.map((p) => (
-                      <li key={p} className="flex items-center gap-3 text-[14px] text-white/70 font-body">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F5B400] shrink-0" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
             </div>
 
@@ -151,11 +126,11 @@ export default function ContactPage() {
 
       {/* Map section */}
       <section className="py-16 bg-[#FAFAFA] border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-site mx-auto px-6 lg:px-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
-              <p className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-2">Location</p>
-              <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#111111] tracking-tight">
+              <p className="type-overline text-[#F5B400] mb-2">Location</p>
+              <h2 className="font-display font-medium text-[clamp(1.5rem,2.5vw,2rem)] text-foreground tracking-[-0.02em]">
                 Find Us
               </h2>
             </div>
@@ -163,7 +138,7 @@ export default function ContactPage() {
               href={MAP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white text-[#111111] font-heading font-semibold text-sm px-5 py-2.5 hover:border-[#F5B400]/50 hover:shadow-sm transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white text-foreground font-display font-medium text-[13px] px-5 py-2.5 hover:border-[#F5B400]/50 hover:shadow-sm transition-all duration-200"
             >
               <ExternalLink className="h-4 w-4 text-[#F5B400]" />
               Open in Google Maps

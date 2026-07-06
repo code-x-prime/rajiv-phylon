@@ -10,7 +10,7 @@ export function SectionWrapper({ children, alternate = false, className = "" }) 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={`py-14 md:py-20 border-b border-gray-100 ${bg} ${className}`}
+      className={`py-16 md:py-24 border-b border-gray-100 ${bg} ${className}`}
     >
       {children}
     </motion.section>

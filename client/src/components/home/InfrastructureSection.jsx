@@ -2,29 +2,29 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Wrench, Atom, ShieldCheck, Truck } from "lucide-react";
 import { ProtectedImage } from "@/components/ui/ProtectedImage";
 
 const POINTS = [
   {
-    title: "Modern machinery",
-    text: "State-of-the-art equipment and automated processes drive consistency and output. Our production lines are built for precision at scale.",
+    icon: Wrench,
+    title: "In-House Tooling",
+    text: "From 3D CAD to production molds in weeks, not months.",
   },
   {
-    title: "Organized workflow",
-    text: "Structured processes from raw material to finished sole ensure efficiency and traceability. Every step is defined, measured, and controlled.",
+    icon: Atom,
+    title: "Advanced Compounding",
+    text: "Custom material durometer and density tuning.",
   },
   {
-    title: "Skilled workforce",
-    text: "Trained teams with deep experience in polymer manufacturing. We invest in people to maintain the standards our partners depend on.",
+    icon: ShieldCheck,
+    title: "Chemical Compliance",
+    text: "Fully REACH, and CA Prop 65 compliant.",
   },
   {
-    title: "Capacity for high-volume orders",
-    text: "Scaled infrastructure to fulfil bulk and OEM commitments. We are equipped to support your growth and delivery timelines.",
-  },
-  {
-    title: "Quality assurance labs",
-    text: "Dedicated QA facilities and in-process checks ensure every batch meets specifications. International standards and documentation underpin our output.",
+    icon: Truck,
+    title: "Strategic Logistics",
+    text: "Direct corridors to major ports for Bangladesh, Sri Lanka, and Global hubs.",
   },
 ];
 
@@ -36,12 +36,6 @@ const INFRASTRUCTURE_IMAGES = [
 
 function ImageGrid({ images }) {
   const list = Array.isArray(images) && images.length > 0 ? images.slice(0, 4) : INFRASTRUCTURE_IMAGES;
-  const filled = [
-    list[0] || null,
-    list[1] || null,
-    list[2] || null,
-    list[3] || null,
-  ];
 
   function Item({ item, className = "", priority = false }) {
     const hasImage = item && (item.imageUrl || item.image);
@@ -88,9 +82,9 @@ function ImageGrid({ images }) {
 
   return (
     <div className="grid grid-cols-2 grid-rows-2 gap-3 lg:gap-4 h-[420px] md:h-[500px] lg:h-[540px]">
-      <Item item={filled[0]} className="row-span-2" priority />
-      <Item item={filled[1]} />
-      <Item item={filled[2]} />
+      <Item item={list[0]} className="row-span-2" priority />
+      <Item item={list[1]} />
+      <Item item={list[2]} />
     </div>
   );
 }
@@ -119,18 +113,17 @@ export function InfrastructureSection({ galleryImages = [] }) {
               transition={{ duration: 0.5 }}
               className="type-overline text-[#F5B400] mb-4"
             >
-              Our facility
+              Ecosystems of Efficiency
             </motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-[#111111] tracking-[-0.02em] leading-tight mb-5"
+              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-3"
             >
-              Advanced<br />
-              <span className="text-[#F5B400]">Manufacturing</span><br />
-              Infrastructure
+              Vertical Integration.<br />
+              <span className="text-[#F5B400]">Seamless Export.</span>
             </motion.h2>
             <motion.div
               initial={{ scaleX: 0 }}
@@ -139,15 +132,6 @@ export function InfrastructureSection({ galleryImages = [] }) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-14 h-[2px] bg-[#F5B400] rounded-full origin-left mb-7"
             />
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-[15px] text-gray-500 font-body leading-relaxed mb-10"
-            >
-              Our facility is built for performance. From modern machinery and organized workflow to a skilled workforce and dedicated quality assurance labs, we combine capacity with control to deliver export-grade polymer soles at scale.
-            </motion.p>
 
             {/* Checklist points */}
             <motion.ul
@@ -157,19 +141,24 @@ export function InfrastructureSection({ galleryImages = [] }) {
               viewport={{ once: true, margin: "-40px" }}
               className="space-y-4 mb-10"
             >
-              {POINTS.map((point, i) => (
-                <motion.li key={i} variants={listItemVariants} className="flex items-start gap-3.5 group">
-                  <CheckCircle2 className="h-5 w-5 text-[#F5B400] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-display font-medium text-[15px] text-[#111111] block mb-0.5">
-                      {point.title}
-                    </span>
-                    <p className="text-[13px] text-gray-500 font-body leading-relaxed">
-                      {point.text}
-                    </p>
-                  </div>
-                </motion.li>
-              ))}
+              {POINTS.map((point, i) => {
+                const Icon = point.icon;
+                return (
+                  <motion.li key={i} variants={listItemVariants} className="flex items-start gap-3.5 group">
+                    <div className="w-9 h-9 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-300">
+                      <Icon className="h-4 w-4 text-[#F5B400] group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <div>
+                      <span className="font-display font-medium text-[15px] text-foreground block mb-0.5">
+                        {point.title}
+                      </span>
+                      <p className="text-[13px] text-gray-500 font-body leading-relaxed">
+                        {point.text}
+                      </p>
+                    </div>
+                  </motion.li>
+                );
+              })}
             </motion.ul>
 
             <motion.div

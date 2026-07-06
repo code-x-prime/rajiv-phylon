@@ -37,7 +37,6 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const megaTimeout = useRef(null);
 
   useEffect(() => {
@@ -57,14 +56,12 @@ export function Navbar() {
 
   useEffect(() => {
     const onScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 50);
-      setLastScrollY(currentScrollY);
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScrollY]);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen || searchOpen ? "hidden" : "";
@@ -106,10 +103,6 @@ export function Navbar() {
             </a>
           </div>
           <div className={`flex items-center gap-6 transition-colors duration-300 ${scrolled ? "text-gray-500" : "text-white/70"}`}>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-              Global Exports: Bangladesh & Sri Lanka
-            </span>
             <div className={`w-px h-3 transition-colors duration-300 ${scrolled ? "bg-gray-200" : "bg-white/20"}`} />
             <Link href="/contact" className="hover:text-[#F5B400] transition-colors">
               Corporate Support

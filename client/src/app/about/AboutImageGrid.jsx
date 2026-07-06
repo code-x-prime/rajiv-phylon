@@ -10,7 +10,7 @@ const CELLS = [
   { label: "Quality Lab", src: "/polymer-sole-quality-testing-lab.png", alt: "Footwear sole quality testing laboratory", span: "normal" },
 ];
 
-const BADGE_LABELS = ["ISO Certified", "Export Grade", "25+ Years"];
+const BADGE_LABELS = ["25+ Years"];
 
 function Cell({ label, src, alt, span, priority = false }) {
   const [errored, setErrored] = useState(false);

@@ -92,7 +92,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
 
 export function ClientLogos() {
   return (
-    <section className="py-10 md:py-16 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
       {/* Heading */}
       <div className="max-w-site mx-auto px-6 lg:px-10 mb-10 text-center">
         <motion.p

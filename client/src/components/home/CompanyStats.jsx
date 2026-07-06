@@ -45,24 +45,24 @@ function StatBlock({ stat, isInView, index }) {
       transition={{ duration: 0.8, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
       className="group relative"
     >
-      <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-15px_rgba(245,180,0,0.15)] transition-all duration-500 hover:-translate-y-2 relative overflow-hidden h-full flex flex-col items-center">
+      <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-15px_rgba(245,180,0,0.15)] transition-all duration-500 hover:-translate-y-2 relative overflow-hidden h-full flex flex-col items-center text-center">
         {/* Top Accent Bar */}
         <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#F5B400] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         {/* Icon Container */}
-        <div className="mb-5 relative">
+        <div className="mb-4 relative">
           <div className="absolute inset-0 bg-[#F5B400]/10 rounded-xl scale-0 group-hover:scale-125 transition-transform duration-500 blur-xl" />
-          <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center relative z-10 border border-gray-100 group-hover:bg-[#F5B400] group-hover:text-white transition-colors duration-500">
-            <Icon className="h-6 w-6 text-[#F5B400] group-hover:text-white transition-colors duration-500" />
+          <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center relative z-10 border border-gray-100 group-hover:bg-[#F5B400] group-hover:text-white transition-colors duration-500">
+            <Icon className="h-5 w-5 text-[#F5B400] group-hover:text-white transition-colors duration-500" />
           </div>
         </div>
 
-        <div className="font-display font-medium text-4xl md:text-5xl text-[#111111] leading-none mb-3 tabular-nums tracking-[-0.03em]">
+        <div className="font-display font-medium text-[clamp(2rem,3.5vw,3rem)] text-[#111111] leading-none mb-2 tabular-nums tracking-[-0.03em]">
           {count.toLocaleString()}
           <span className="text-[#F5B400] group-hover:animate-pulse">{suffix}</span>
         </div>
         
-        <p className="type-overline text-gray-400 text-center group-hover:text-gray-600 transition-colors duration-300">
+        <p className="type-overline text-gray-400 text-center uppercase tracking-[0.12em] group-hover:text-gray-600 transition-colors duration-300">
           {stat.label}
         </p>
 
@@ -91,7 +91,7 @@ export function CompanyStats() {
   }, []);
 
   return (
-    <section ref={ref} className="py-14 md:py-20 relative overflow-hidden bg-[#FAFAFA]">
+    <section ref={ref} className="py-16 md:py-24 relative overflow-hidden bg-[#FAFAFA]">
       {/* Industrial Texture Overlay */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '32px 32px' }} />

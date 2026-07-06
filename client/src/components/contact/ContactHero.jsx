@@ -29,7 +29,7 @@ export function ContactHero() {
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 mt-16">
+      <div className="relative z-10 max-w-site mx-auto px-6 lg:px-10 mt-16">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -37,8 +37,8 @@ export function ContactHero() {
           className="inline-flex items-center gap-2 mb-6"
         >
           <div className="h-px w-8 bg-[#F5B400]" />
-          <span className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.28em]">
-            B2B &amp; Export Enquiries
+          <span className="type-overline text-[#F5B400]">
+            Enquiries
           </span>
           <div className="h-px w-8 bg-[#F5B400]" />
         </motion.div>
@@ -47,19 +47,10 @@ export function ContactHero() {
           initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
-          className="font-heading text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white tracking-tight leading-[1.06] mb-5 max-w-2xl"
+          className="font-display font-medium text-[clamp(2.5rem,5vw,4.5rem)] text-white tracking-[-0.03em] leading-[1.0] mb-5 max-w-2xl"
         >
           Let&apos;s <span className="text-[#F5B400]">Connect</span>
         </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="text-lg text-white/50 font-body leading-relaxed max-w-xl"
-        >
-          Get in touch for bulk quotes, product inquiries, or long-term OEM partnerships. Our team responds within 24 hours.
-        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -67,10 +58,10 @@ export function ContactHero() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-8 flex flex-wrap gap-3"
         >
-          {["Bulk Orders", "OEM Partnerships", "Export Enquiries", "Product Info"].map((tag) => (
+          {["Bulk Orders", "OEM Partnerships", "Product Info"].map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-1.5 bg-white/8 border border-white/12 rounded-full px-4 py-1.5 text-[13px] font-heading font-medium text-white/60"
+              className="inline-flex items-center gap-1.5 bg-white/8 border border-white/12 rounded-full px-4 py-1.5 text-[13px] font-display font-medium text-white/60"
             >
               <MessageCircle className="h-3.5 w-3.5 text-[#F5B400]" />
               {tag}

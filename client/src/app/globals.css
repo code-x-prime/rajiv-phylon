@@ -38,17 +38,17 @@
     /* Display font for hero / landing page headings */
     --font-display: "NeueHaasDisplay", var(--font-heading), system-ui, sans-serif;
     /* Premium container width */
-    --container-max: 1400px;
+    --container-max: 1600px;
     /* Typography scale — premium enterprise hierarchy */
-    --type-hero: clamp(3rem, 5.5vw, 5.5rem);
-    --type-h1: clamp(2.25rem, 4vw, 4rem);
-    --type-h2: clamp(1.75rem, 3vw, 3rem);
-    --type-h3: clamp(1.25rem, 2vw, 1.5rem);
-    --type-body-lg: 1.125rem;
-    --type-body: 1rem;
-    --type-body-sm: 0.875rem;
-    --type-caption: 0.75rem;
-    --type-overline: 0.6875rem;
+    --type-hero: clamp(3.5rem, 6vw, 6.5rem);
+    --type-h1: clamp(2.5rem, 4.5vw, 4.5rem);
+    --type-h2: clamp(2rem, 3.5vw, 3.5rem);
+    --type-h3: clamp(1.5rem, 2.5vw, 2rem);
+    --type-body-lg: 1.25rem;
+    --type-body: 1.125rem;
+    --type-body-sm: 1rem;
+    --type-caption: 0.875rem;
+    --type-overline: 0.8125rem;
     /* Letter-spacing scale */
     --tracking-tight: -0.025em;
     --tracking-normal: 0;

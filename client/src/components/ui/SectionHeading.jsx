@@ -1,9 +1,10 @@
 export function SectionHeading({ children, className = "" }) {
   return (
-    <h2
-      className={`font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-foreground tracking-[-0.02em] leading-tight mb-10 md:mb-12 border-b border-gray-100 pb-4 ${className}`}
-    >
-      {children}
-    </h2>
+    <div className={`mb-8 md:mb-10 ${className}`}>
+      <h2 className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-foreground tracking-[-0.02em] leading-tight">
+        {children}
+      </h2>
+      <div className="mt-3 h-[2px] w-16 bg-[#F5B400] rounded-full" />
+    </div>
   );
 }

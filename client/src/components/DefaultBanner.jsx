@@ -9,18 +9,18 @@ export function DefaultBanner() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full bg-[#111827] text-white border-b border-[#374151] py-16 md:py-24"
+      className="w-full bg-[#0A0A0A] text-white border-b border-white/10 py-16 md:py-24"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+      <div className="max-w-site mx-auto px-6 lg:px-10 text-center">
+        <h1 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] text-white tracking-[-0.02em]">
           Rajiv Phylon
         </h1>
-        <p className="mt-2 text-lg text-gray-300 max-w-2xl mx-auto">
+        <p className="mt-3 text-lg text-white/50 max-w-2xl mx-auto font-body">
           Premium B2B industrial products and solutions.
         </p>
         <Link
-          href="/#categories"
-          className="inline-block mt-6 px-6 py-3 bg-[hsl(var(--accent))] text-[#111827] font-semibold hover:opacity-90 transition-opacity"
+          href="/products"
+          className="inline-block mt-8 px-7 py-3.5 bg-[#F5B400] text-black font-display font-medium text-[13px] uppercase tracking-[0.1em] rounded-xl hover:bg-[#e0a300] transition-colors"
         >
           Browse categories
         </Link>

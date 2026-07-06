@@ -137,7 +137,7 @@ export default async function ProductPage({ params }) {
 
         {/* ── BREADCRUMB ─────────────────────────────── */}
         <div className="bg-[#F8F8F8] border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 mt-24">
+          <div className="max-w-site mx-auto px-6 lg:px-10 py-3">
             <nav className="flex flex-wrap items-center gap-1 text-[12px] text-gray-400">
               <Link href="/" className="hover:text-[#111] transition-colors">Home</Link>
               <ChevronRight className="h-3 w-3 shrink-0" />
@@ -162,7 +162,7 @@ export default async function ProductPage({ params }) {
           Mobile:  stacked — gallery → info → enquiry
         */}
         <section className="py-8 md:py-10 lg:py-16">
-          <div className="max-w-7xl mx-auto px-4 ">
+          <div className="max-w-site mx-auto px-6 lg:px-10">
             <div className="lg:grid lg:grid-cols-2 lg:gap-10  lg:items-start">
 
               {/* ── LEFT: Sticky Gallery ── */}
@@ -250,9 +250,9 @@ export default async function ProductPage({ params }) {
         </section>
 
         {/* ── FULL DESCRIPTION ─────────────────────── */}
-        {product.description && (
+        {product.description && stripHtml(product.description) && (
           <section className="py-10 md:py-14 bg-[#F8F8F8] border-t border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-site mx-auto px-6 lg:px-10">
               <div className="max-w-5xl">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-1 h-5 bg-[#F5B400] rounded-full" />
@@ -272,7 +272,7 @@ export default async function ProductPage({ params }) {
         {/* ── RELATED PRODUCTS ─────────────────────── */}
         {relatedProducts.length > 0 && (
           <section className="py-10 md:py-14 bg-white border-t border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-site mx-auto px-6 lg:px-10">
               <div className="flex items-end justify-between mb-6">
                 <div>
                   <p className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-1">More Products</p>
