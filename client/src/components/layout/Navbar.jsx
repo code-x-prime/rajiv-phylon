@@ -5,11 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getCategories, getSubCategoriesByCategory } from "@/lib/api";
 import { Menu, X, Search, Mail, ChevronDown, ArrowRight, Phone } from "lucide-react";
-import { HeaderSearch } from "./HeaderSearch";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-function NavLink({ href, children, onClick }) {
+function NavLink({ href, children, onClick, scrolled }) {
   const pathname = usePathname();
   const active = pathname === href || (href !== "/" && pathname.startsWith(href));
 
@@ -17,11 +16,15 @@ function NavLink({ href, children, onClick }) {
     <Link
       href={href}
       onClick={onClick}
-      className={`group relative px-3 py-2 text-[13px] font-heading font-extrabold uppercase tracking-widest transition-all duration-300 ${active ? "text-black" : "text-gray-500 hover:text-black"}`}
+      className={`group relative px-4 py-2 text-[14px] font-display font-medium tracking-[0.04em] transition-all duration-300 ${scrolled
+        ? "text-gray-600 hover:text-black"
+        : "text-white/80 hover:text-white"
+        }`}
     >
       <span className="relative z-10">{children}</span>
       <span
-        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] bg-[#F5B400] rounded-full transition-all duration-300 ${active ? "w-4 opacity-100" : "w-0 opacity-0 group-hover:w-4 group-hover:opacity-100"}`}
+        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-[#F5B400] rounded-full transition-all duration-300 ${active ? "w-5 opacity-100" : "w-0 opacity-0 group-hover:w-5 group-hover:opacity-100"
+          }`}
       />
     </Link>
   );
@@ -34,7 +37,6 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const megaTimeout = useRef(null);
 
@@ -56,16 +58,7 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 8);
-
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down & past header
-        setIsVisible(false);
-      } else {
-        // Scrolling up or at top
-        setIsVisible(true);
-      }
-
+      setScrolled(currentScrollY > 50);
       setLastScrollY(currentScrollY);
     };
 
@@ -96,10 +89,13 @@ export function Navbar() {
 
   return (
     <>
-      {/* Premium Top Bar */}
-      <div className="bg-[#050505] text-white py-2 hidden lg:block border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-[11px] font-heading font-bold uppercase tracking-[0.15em]">
-          <div className="flex items-center gap-6">
+      {/* ═══════════════════════════════════════════════════════
+          TOP BAR — always sticky, dark over hero, white on scroll
+      ═══════════════════════════════════════════════════════ */}
+      <div className={`fixed inset-x-0 z-[51] hidden lg:block top-0 transition-colors duration-300 ${scrolled ? "bg-white border-b border-gray-100" : "bg-[#0A0A0A]"
+        }`}>
+        <div className="max-w-site mx-auto px-6 lg:px-10 flex justify-between items-center py-2 text-[11px] font-body font-semibold uppercase tracking-[0.12em]">
+          <div className={`flex items-center gap-6 transition-colors duration-300 ${scrolled ? "text-gray-500" : "text-white/70"}`}>
             <a href="tel:01304050921" className="flex items-center gap-2 hover:text-[#F5B400] transition-colors">
               <Phone className="h-3 w-3 text-[#F5B400]" />
               0130-4050921
@@ -109,12 +105,12 @@ export function Navbar() {
               info@rajivphylon.com
             </a>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2 opacity-80">
+          <div className={`flex items-center gap-6 transition-colors duration-300 ${scrolled ? "text-gray-500" : "text-white/70"}`}>
+            <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
               Global Exports: Bangladesh & Sri Lanka
             </span>
-            <div className="w-px h-3 bg-white/20" />
+            <div className={`w-px h-3 transition-colors duration-300 ${scrolled ? "bg-gray-200" : "bg-white/20"}`} />
             <Link href="/contact" className="hover:text-[#F5B400] transition-colors">
               Corporate Support
             </Link>
@@ -122,42 +118,83 @@ export function Navbar() {
         </div>
       </div>
 
+      {/* ═══════════════════════════════════════════════════════
+          HEADER — transparent over hero, white glass on scroll
+      ═══════════════════════════════════════════════════════ */}
       <header
-        className={`fixed inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${scrolled
-          ? "top-0 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
-          : "top-0 lg:top-8 h-[84px] bg-white/95 backdrop-blur-md border-b border-gray-100"
-          } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+        className={`fixed inset-x-0 z-50 transition-all duration-300 ${scrolled
+          ? "top-0 lg:top-[32px] h-[64px] bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+          : "top-0 lg:top-[32px] h-[64px] bg-black/20 backdrop-blur-[2px] border-b border-white/[0.06]"
+          }`}
       >
-        {/* Dynamic Nav Accent Line */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#F5B400]/40 to-transparent" />
+        {/* Gold accent line — only when scrolled */}
+        {scrolled && (
+          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#F5B400]/25 to-transparent" />
+        )}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center justify-between h-full gap-4">
+        <div className="max-w-site mx-auto px-6 lg:px-10 h-full">
+          <div className="flex items-center justify-between h-full gap-6">
 
-            {/* Logo Section */}
-            <div className="flex items-center shrink-0">
+            {/* Left: Logo + divider + Secondary Logo */}
+            <div className="flex items-center gap-4 shrink-0">
               <Link href="/" className="group relative">
                 <div className="absolute -inset-2 bg-[#F5B400]/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
-                <Image
-                  src="/logo.png"
-                  alt="Rajiv Phylon"
-                  width={150}
-                  height={150}
-                  className="w-auto h-10 md:h-12 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
-                  priority
-                />
+                {scrolled ? (
+                  <Image
+                    src="/logo.png"
+                    alt="Rajiv Phylon"
+                    width={150}
+                    height={150}
+                    className="w-auto h-8 lg:h-12 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/logo-w-lg.png"
+                    alt="Rajiv Phylon"
+                    width={150}
+                    height={150}
+                    className="w-auto h-10 lg:h-14 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    priority
+                  />
+                )}
               </Link>
+
+              {/* Vertical Divider between logos — desktop only */}
+              <div className={`hidden lg:block h-10 w-px ${scrolled ? "bg-gray-200" : "bg-white/30"}`} />
+
+              {/* Secondary Logo — desktop only */}
+              <div className="hidden lg:block relative group">
+                <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
+                {scrolled ? (
+                  <Image
+                    src="/sec-logo.png"
+                    alt="Quality Mark"
+                    width={150}
+                    height={150}
+                    className="h-11 w-auto object-contain transition-all duration-500 relative"
+                  />
+                ) : (
+                  <Image
+                    src="/sec-logo.png"
+                    alt="Quality Mark"
+                    width={150}
+                    height={150}
+                    className="h-11 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
+                  />
+                )}
+              </div>
             </div>
 
-            {/* Desktop Navigation Link Cluster */}
+            {/* Center: Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center gap-0.5">
               {navLinks.map((link) => (
-                <NavLink key={link.href} href={link.href}>
+                <NavLink key={link.href} href={link.href} scrolled={scrolled}>
                   {link.label}
                 </NavLink>
               ))}
 
-              {/* Enhanced Categories Mega Menu */}
+              {/* Solutions Mega Menu */}
               <div
                 className="relative"
                 onMouseEnter={openMega}
@@ -165,10 +202,13 @@ export function Navbar() {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[14px] font-heading font-bold text-gray-700 hover:text-black hover:bg-black/5 transition-all duration-300 group"
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-[14px] font-display font-medium transition-all duration-300 group ${scrolled
+                    ? "text-gray-600 hover:text-black hover:bg-black/5"
+                    : "text-white/80 hover:text-white hover:bg-white/[0.06]"
+                    }`}
                 >
                   Solutions
-                  <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${megaOpen ? "rotate-180 text-[#F5B400]" : "text-gray-400"}`} />
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${megaOpen ? "rotate-180 text-[#F5B400]" : scrolled ? "text-gray-400" : "text-white/40"}`} />
                 </button>
 
                 <AnimatePresence>
@@ -182,25 +222,18 @@ export function Navbar() {
                     >
                       <div className="bg-white/95 backdrop-blur-2xl border border-gray-200/50 shadow-[0_20px_50px_rgba(0,0,0,0.12)] rounded-2xl overflow-hidden">
                         <div className="flex">
-                          {/* Sidebar Accent */}
                           <div className="w-1.5 bg-[#F5B400]" />
-
                           <div className="flex-1 p-8">
                             <div className="flex items-center justify-between mb-8">
-                              <p className="text-[11px] font-heading font-black text-[#F5B400] uppercase tracking-[0.25em]">
-                                Industry Solutions
-                              </p>
-                              <Link href="/products" className="text-[11px] font-heading font-bold text-gray-400 hover:text-black transition-colors">
-                                View Catalog
-                              </Link>
+                              <p className="type-overline text-[#F5B400]">Industry Solutions</p>
+                              <Link href="/products" className="text-[11px] font-body font-semibold text-gray-400 hover:text-black transition-colors">View Catalog</Link>
                             </div>
-
                             <div className="grid grid-cols-2 gap-x-12 gap-y-8">
                               {categories.map((cat) => (
                                 <div key={cat.id} className="group/item">
                                   <Link
                                     href={`/category/${cat.slug}`}
-                                    className="flex items-center justify-between font-heading font-extrabold text-[15px] text-[#111111] group-hover/item:text-[#F5B400] transition-colors duration-200"
+                                    className="flex items-center justify-between font-display font-medium text-[15px] text-[#111111] group-hover/item:text-[#F5B400] transition-colors duration-200"
                                     onClick={() => setMegaOpen(false)}
                                   >
                                     {cat.name}
@@ -223,13 +256,11 @@ export function Navbar() {
                             </div>
                           </div>
                         </div>
-
-                        {/* Mega Menu Footer */}
                         <div className="bg-gray-50/80 px-8 py-5 flex items-center justify-between border-t border-gray-100">
                           <p className="text-[12px] text-gray-500 font-medium italic">Premium grade quality for industrial OEM partners.</p>
                           <Link
                             href="/contact"
-                            className="bg-black text-white text-[11px] font-heading font-bold uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-[#F5B400] hover:text-black transition-all duration-300 shadow-lg shadow-black/10"
+                            className="bg-black text-white text-[11px] font-display font-medium uppercase tracking-[0.15em] px-4 py-2 rounded-lg hover:bg-[#F5B400] hover:text-black transition-all duration-300 shadow-lg shadow-black/10"
                             onClick={() => setMegaOpen(false)}
                           >
                             Custom Quote
@@ -242,38 +273,39 @@ export function Navbar() {
               </div>
             </nav>
 
-            {/* Action Group */}
-            <div className="flex items-center gap-4 shrink-0">
-              <div className="hidden xl:block">
-                <HeaderSearch />
-              </div>
+            {/* Right: Action Group */}
+            <div className="flex items-center gap-2 lg:gap-4 shrink-0">
+              {/* Desktop Search Icon */}
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                className={`hidden lg:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${scrolled
+                  ? "text-gray-500 hover:text-black hover:bg-gray-100"
+                  : "text-white/70 hover:text-white hover:bg-white/[0.08]"
+                  }`}
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </button>
 
+              {/* Desktop Enquiry Button */}
               <Link
                 href="/contact"
-                className="hidden md:inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#F5B400] to-[#e0a300] text-black px-6 py-3 font-heading font-black text-[12px] uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(245,180,0,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(245,180,0,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border border-white/20"
+                className={`hidden lg:inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-display font-medium text-[12px] uppercase tracking-[0.1em] transition-all duration-300 ${scrolled
+                  ? "bg-gradient-to-r from-[#F5B400] to-[#e0a300] text-black shadow-[0_8px_16px_-8px_rgba(245,180,0,0.4)] hover:shadow-[0_12px_24px_-8px_rgba(245,180,0,0.5)] hover:scale-[1.02] active:scale-[0.98]"
+                  : "bg-[#F5B400] text-black hover:bg-[#e0a300] hover:scale-[1.02] active:scale-[0.98]"
+                  }`}
               >
-                <Mail className="h-4 w-4" aria-hidden />
+                <Mail className="h-3.5 w-3.5" aria-hidden />
                 Start Enquiry
               </Link>
 
-              {/* Secondary Trust Mark */}
-              <div className="hidden lg:block h-10 w-px bg-gray-200/60" />
-              <div className="hidden lg:block relative group">
-                <div className="absolute -inset-2 bg-gray-50 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
-                <Image
-                  src="/sec-logo.png"
-                  alt="Quality Mark"
-                  width={150}
-                  height={150}
-                  className="h-14 w-auto object-contain  transition-all duration-500 relative"
-                />
-              </div>
-
-              {/* Mobile Interaction */}
-              <div className="flex items-center gap-2 lg:hidden">
+              {/* Mobile Icons */}
+              <div className="flex items-center gap-1 lg:hidden">
                 <button
                   type="button"
-                  className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 hover:bg-gray-100 transition-all"
+                  className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${scrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/[0.1]"
+                    }`}
                   onClick={() => setSearchOpen(true)}
                   aria-label="Search"
                 >
@@ -281,7 +313,8 @@ export function Navbar() {
                 </button>
                 <button
                   type="button"
-                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-black text-white shadow-lg shadow-black/10 transition-all active:scale-95"
+                  className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all active:scale-95 ${scrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/[0.1]"
+                    }`}
                   onClick={() => setMobileOpen(true)}
                   aria-label="Open menu"
                 >
@@ -298,16 +331,14 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <div className="fixed inset-0 z-[60] lg:hidden">
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/50"
+              className="absolute inset-0 bg-black/40"
               onClick={closeMobile}
             />
-            {/* Drawer */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -317,29 +348,12 @@ export function Navbar() {
             >
               {/* Drawer header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <Link href="/" onClick={closeMobile} className="flex items-center justify-between w-full">
-                  <Image
-                    src="/logo.png"
-                    alt="Rajiv Phylon"
-                    width={100}
-                    height={100}
-                    className="h-12 w-auto object-contain"
-                  />
-                  <span className="hidden sm:inline-block h-6 w-px bg-gray-200" aria-hidden />
-                  <Image
-                    src="/sec-logo.png"
-                    alt="Rajiv Phylon"
-                    width={100}
-                    height={100}
-                    className="h-12 w-auto object-contain"
-                  />
-                  <span className="hidden sm:inline-block h-6 w-px bg-gray-200" aria-hidden />
+                <Link href="/" onClick={closeMobile} className="flex items-center gap-3 w-full">
+                  <Image src="/logo.png" alt="Rajiv Phylon" width={100} height={100} className="h-9 w-auto object-contain" />
+                  <span className="h-6 w-px bg-gray-200" aria-hidden />
+                  <Image src="/sec-logo.png" alt="Rajiv Phylon" width={100} height={100} className="h-9 w-auto object-contain" />
                 </Link>
-                <button
-                  type="button"
-                  className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-                  onClick={closeMobile}
-                >
+                <button type="button" className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" onClick={closeMobile}>
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -348,31 +362,18 @@ export function Navbar() {
               <nav className="flex-1 overflow-y-auto px-5 py-5">
                 <div className="space-y-1 mb-6">
                   {[{ href: "/", label: "Home" }, ...navLinks].map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={closeMobile}
-                      className="flex items-center justify-between py-3.5 px-2 rounded-xl text-[15px] font-heading font-medium text-gray-700 hover:text-[#111111] hover:bg-gray-50 transition-all duration-150"
-                    >
+                    <Link key={link.href} href={link.href} onClick={closeMobile} className="flex items-center justify-between py-3.5 px-2 rounded-xl text-[16px] font-display font-medium text-gray-700 hover:text-[#111111] hover:bg-gray-50 transition-all duration-150">
                       {link.label}
                       <ArrowRight className="h-4 w-4 text-gray-300" />
                     </Link>
                   ))}
                 </div>
-
                 {categories.length > 0 && (
                   <div className="border-t border-gray-100 pt-5">
-                    <p className="text-[11px] font-heading font-bold text-gray-400 uppercase tracking-[0.2em] mb-3 px-2">
-                      Categories
-                    </p>
+                    <p className="type-overline text-gray-400 mb-3 px-2">Categories</p>
                     <div className="space-y-0.5">
                       {categories.map((cat) => (
-                        <Link
-                          key={cat.id}
-                          href={`/category/${cat.slug}`}
-                          onClick={closeMobile}
-                          className="flex items-center justify-between py-2.5 px-2 rounded-xl text-[14px] font-body text-gray-600 hover:text-[#111111] hover:bg-gray-50 transition-all duration-150"
-                        >
+                        <Link key={cat.id} href={`/category/${cat.slug}`} onClick={closeMobile} className="flex items-center justify-between py-2.5 px-2 rounded-xl text-[14px] font-body text-gray-600 hover:text-[#111111] hover:bg-gray-50 transition-all duration-150">
                           {cat.name}
                           <span className="w-1.5 h-1.5 rounded-full bg-[#F5B400]" />
                         </Link>
@@ -384,11 +385,7 @@ export function Navbar() {
 
               {/* Drawer footer CTA */}
               <div className="px-5 py-5 border-t border-gray-100">
-                <Link
-                  href="/contact"
-                  onClick={closeMobile}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#F5B400] text-white px-6 py-3.5 font-heading font-bold text-sm hover:bg-[#e0a300] transition-colors duration-200"
-                >
+                <Link href="/contact" onClick={closeMobile} className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#F5B400] text-white px-6 py-3.5 font-display font-medium text-sm hover:bg-[#e0a300] transition-colors duration-200">
                   <Mail className="h-4 w-4" />
                   Send Enquiry
                 </Link>
@@ -398,38 +395,108 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile search overlay */}
+      {/* Desktop search overlay — slides down below header */}
       <AnimatePresence>
         {searchOpen && (
-          <div className="fixed inset-0 z-[70] lg:hidden">
+          <div className="fixed inset-x-0 z-[55] hidden lg:block">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/30"
               onClick={() => setSearchOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -10 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-4 top-16 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
-              style={{ maxHeight: "calc(100vh - 5rem)" }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mx-auto max-w-site px-6 lg:px-10 top-[100px]"
             >
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <span className="font-heading font-semibold text-[#111111]">Search</span>
-                <button
-                  type="button"
-                  className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
-                  onClick={() => setSearchOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                </button>
+              <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden">
+                <div className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Search className="h-5 w-5 text-gray-400 shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Search products, categories, solutions..."
+                      className="flex-1 text-[15px] font-body text-[#111111] placeholder:text-gray-400 focus:outline-none bg-transparent"
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(false)}
+                      className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50">
+                  <p className="text-[11px] font-body font-semibold uppercase tracking-[0.1em] text-gray-400 mb-2">Popular Searches</p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Polymer Soles", "TPR Soles", "EVA Soles", "Safety Footwear", "Custom Solutions"].map((term) => (
+                      <span key={term} className="text-[12px] font-body text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-1.5 hover:border-[#F5B400] hover:text-[#111111] cursor-pointer transition-colors">
+                        {term}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(100vh - 9rem)" }}>
-                <HeaderSearch variant="dialog" onClose={() => setSearchOpen(false)} />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile search overlay — slides down below header */}
+      <AnimatePresence>
+        {searchOpen && (
+          <div className="fixed inset-x-0 z-[55] lg:hidden">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setSearchOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative top-[60px] mx-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+                <div className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Search className="h-5 w-5 text-gray-400 shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      className="flex-1 text-[15px] font-body text-[#111111] placeholder:text-gray-400 focus:outline-none bg-transparent"
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(false)}
+                      className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50">
+                  <p className="text-[11px] font-body font-semibold uppercase tracking-[0.1em] text-gray-400 mb-2">Popular</p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Polymer Soles", "TPR Soles", "EVA Soles"].map((term) => (
+                      <span key={term} className="text-[12px] font-body text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-1.5 hover:border-[#F5B400] hover:text-[#111111] cursor-pointer transition-colors">
+                        {term}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>

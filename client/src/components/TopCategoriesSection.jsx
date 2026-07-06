@@ -94,7 +94,7 @@ function ParallaxCard({ cat, index, size = "normal" }) {
           />
         </motion.div>
 
-        {/* Dark overlay — lighter than before */}
+        {/* Dark overlay */}
         <div
           className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5 z-[1]"
           aria-hidden
@@ -108,7 +108,7 @@ function ParallaxCard({ cat, index, size = "normal" }) {
 
         {/* Number + arrow (top) */}
         <div className="relative z-[3] flex items-start justify-between p-4 sm:p-5">
-          <span className="font-heading text-[10px] font-bold text-white/40 tracking-[0.2em] uppercase select-none">
+          <span className="font-display font-medium text-[10px] text-white/40 tracking-[0.2em] uppercase select-none">
             {num}
           </span>
           <div className="w-9 h-9 rounded-full bg-[#F5B400] shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
@@ -124,14 +124,14 @@ function ParallaxCard({ cat, index, size = "normal" }) {
               {subcats.slice(0, size === "featured" ? 5 : 3).map((s) => (
                 <span
                   key={s.id}
-                  className="rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 text-[10px] font-heading font-semibold text-white/90 whitespace-nowrap"
+                  className="rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 text-[10px] font-display font-medium text-white/90 whitespace-nowrap"
                 >
                   {s.name}
                 </span>
               ))}
               {subcats.length > (size === "featured" ? 5 : 3) && (
                 <span
-                  className="rounded-full px-2.5 py-0.5 text-[10px] font-heading font-bold text-white"
+                  className="rounded-full px-2.5 py-0.5 text-[10px] font-display font-medium text-white"
                   style={{ background: grad.accent + "cc" }}
                 >
                   +{subcats.length - (size === "featured" ? 5 : 3)}
@@ -140,13 +140,13 @@ function ParallaxCard({ cat, index, size = "normal" }) {
             </div>
           )}
 
-          <h3 className={`font-heading font-bold text-white leading-tight group-hover:text-[#F5B400] transition-colors duration-300 ${nameSize}`}>
+          <h3 className={`font-display font-medium text-white leading-tight group-hover:text-[#F5B400] transition-colors duration-300 ${nameSize}`}>
             {cat.name}
           </h3>
 
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
             <div className="h-px w-5 bg-[#F5B400]" />
-            <span className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-wider">Explore</span>
+            <span className="type-overline text-[#F5B400] text-[10px]">Explore</span>
           </div>
         </div>
       </Link>
@@ -159,27 +159,26 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
   const all  = Array.isArray(categoriesWithSubs) ? categoriesWithSubs : [];
   if (all.length === 0) return null;
 
-  /* Hard cap: show only first HOME_LIMIT (8) on home page */
   const list     = all.slice(0, HOME_LIMIT);
-  const overflow = all.length - HOME_LIMIT;   // how many are hidden
+  const overflow = all.length - HOME_LIMIT;
   const total    = all.length;
 
   const featured = list[0];
-  const rest     = list.slice(1);   // up to 7
+  const rest     = list.slice(1);
 
   return (
-    <section className="py-16 md:py-20 lg:py-28 bg-[#0A0A0A] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 md:py-24 lg:py-32 bg-[#0A0A0A] overflow-hidden">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 md:mb-16">
           <div>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45 }}
-              className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-3"
+              className="type-overline text-[#F5B400] mb-4"
             >
               Browse by category
             </motion.p>
@@ -188,7 +187,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white tracking-tight leading-[1.05]"
+              className="font-display font-medium text-[clamp(1.75rem,4vw,3.5rem)] text-white tracking-[-0.025em] leading-[1.0]"
             >
               Our Product<br />
               <span className="text-[#F5B400]">Categories</span>
@@ -198,7 +197,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="mt-4 h-0.5 w-16 bg-[#F5B400] rounded-full"
+              className="mt-4 h-[2px] w-16 bg-[#F5B400] rounded-full"
             />
           </div>
 
@@ -210,7 +209,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
           >
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/20 text-white font-heading font-semibold text-sm px-5 py-2.5 hover:border-[#F5B400] hover:text-[#F5B400] transition-all duration-300"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-5 py-2.5 hover:border-[#F5B400] hover:text-[#F5B400] transition-all duration-300"
             >
               View all products
               <ArrowRight className="h-4 w-4" />
@@ -237,11 +236,9 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
 
           {list.length >= 3 && (
             <>
-              {/* Row 1: featured left + up to 4 on right */}
               <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4">
                 <ParallaxCard cat={featured} index={0} size="featured" />
 
-                {/* Right 2×2 grid (max 4 cards) */}
                 <div className="grid grid-cols-2 gap-4">
                   {rest.slice(0, 4).map((c, i) => (
                     <ParallaxCard key={c.id} cat={c} index={i + 1} size="normal" />
@@ -249,7 +246,6 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
                 </div>
               </div>
 
-              {/* Row 2: remaining (max 3 more = total 8) */}
               {rest.length > 4 && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
                   {rest.slice(4).map((c, i) => (
@@ -271,15 +267,15 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
         >
           <p className="text-white/40 font-body text-sm">
             Showing{" "}
-            <span className="text-white font-heading font-bold">{list.length}</span>
+            <span className="text-white font-display font-medium">{list.length}</span>
             {overflow > 0 && (
-              <> of <span className="text-white font-heading font-bold">{total}</span></>
+              <> of <span className="text-white font-display font-medium">{total}</span></>
             )}{" "}
             {total === 1 ? "category" : "categories"}
           </p>
           <Link
             href="/products"
-            className="flex items-center gap-1.5 text-[#F5B400] text-sm font-heading font-semibold hover:gap-3 transition-all duration-200"
+            className="flex items-center gap-1.5 text-[#F5B400] text-sm font-display font-medium hover:gap-3 transition-all duration-200"
           >
             {overflow > 0 ? `+${overflow} more categories` : "Browse all"}
             <ArrowRight className="h-3.5 w-3.5" />
@@ -295,7 +291,7 @@ export function TopCategoriesSection({ categoriesWithSubs }) {
 export function TopCategoriesSkeleton() {
   return (
     <section className="py-16 bg-[#0A0A0A]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
         <div className="h-3 w-28 rounded bg-white/10 animate-pulse mb-4" />
         <div className="h-12 w-72 rounded-xl bg-white/10 animate-pulse mb-3" />
         <div className="h-12 w-56 rounded-xl bg-white/10 animate-pulse mb-10" />

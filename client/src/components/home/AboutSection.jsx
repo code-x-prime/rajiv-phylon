@@ -15,16 +15,16 @@ const TRUST_HIGHLIGHTS = [
 
 export function AboutSection() {
   return (
-    <section className="py-12 md:py-16  border-b border bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section className="py-16 md:py-24 border-b border-gray-100 bg-white">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <div className="max-w-3xl">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight"
+              className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-foreground tracking-[-0.02em] leading-tight"
             >
               A Trusted Manufacturer of High-Performance Polymer Footwear Soles
             </motion.h2>
@@ -47,7 +47,7 @@ export function AboutSection() {
               Our facility is built for bulk production without compromising on quality. From raw material to finished sole, every step is controlled and traceable. We invest in technology and people to deliver export-grade products that meet the strictest specifications.
             </motion.p>
 
-            <ul className="mt-8 md:mt-10 space-y-3 md:space-y-4">
+            <ul className="mt-10 md:mt-12 space-y-4">
               {TRUST_HIGHLIGHTS.map((item, i) => (
                 <motion.li
                   key={i}
@@ -70,7 +70,7 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
-              className="mt-8 md:mt-10"
+              className="mt-10 md:mt-12"
             >
               <PrimaryButton as={Link} href="/contact" size="lg">
                 Partner With Us

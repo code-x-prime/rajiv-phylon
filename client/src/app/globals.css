@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Neue Haas Grotesk Display Pro 65 Medium ── */
+@font-face {
+  font-family: "NeueHaasDisplay";
+  src: url("/fonts/NeueHaasDisplayMedium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Rajiv Phylon – Premium B2B Industrial Design System */
 @layer base {
   :root {
@@ -26,6 +35,26 @@
     --radius-xl: 1rem;
     /* Transitions */
     --transition: 0.3s ease;
+    /* Display font for hero / landing page headings */
+    --font-display: "NeueHaasDisplay", var(--font-heading), system-ui, sans-serif;
+    /* Premium container width */
+    --container-max: 1400px;
+    /* Typography scale — premium enterprise hierarchy */
+    --type-hero: clamp(3rem, 5.5vw, 5.5rem);
+    --type-h1: clamp(2.25rem, 4vw, 4rem);
+    --type-h2: clamp(1.75rem, 3vw, 3rem);
+    --type-h3: clamp(1.25rem, 2vw, 1.5rem);
+    --type-body-lg: 1.125rem;
+    --type-body: 1rem;
+    --type-body-sm: 0.875rem;
+    --type-caption: 0.75rem;
+    --type-overline: 0.6875rem;
+    /* Letter-spacing scale */
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.05em;
+    --tracking-wider: 0.1em;
+    --tracking-widest: 0.2em;
   }
 }
 
@@ -42,14 +71,18 @@
     color: var(--foreground);
     @apply antialiased;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading), system-ui, sans-serif;
-    font-weight: 600;
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.1;
   }
-  /* Body text uses Manrope for clear hierarchy with headings */
   p, li {
     font-family: var(--font-body), system-ui, sans-serif;
+    line-height: 1.7;
   }
 }
 
@@ -59,5 +92,41 @@
   }
   .transition-premium {
     transition: var(--transition);
+  }
+  /* Premium typography utilities */
+  .type-hero {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--type-hero);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+  }
+  .type-h1 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--type-h1);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .type-h2 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--type-h2);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .type-h3 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--type-h3);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .type-overline {
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: var(--type-overline);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
 }

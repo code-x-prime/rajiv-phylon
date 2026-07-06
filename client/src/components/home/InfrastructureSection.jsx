@@ -28,14 +28,12 @@ const POINTS = [
   },
 ];
 
-/* Static images for Advanced Manufacturing Infrastructure section */
 const INFRASTRUCTURE_IMAGES = [
   { imageUrl: "/high-capacity-manufacturing-infrastructure.png", title: "Infrastructure", alt: "High capacity manufacturing infrastructure" },
   { imageUrl: "/automated-footwear-production-workflow.png", title: "Workflow", alt: "Organized automated footwear production workflow" },
   { imageUrl: "/skilled-workforce-polymer-manufacturing.png", title: "Workforce", alt: "Skilled workforce in polymer manufacturing" },
 ];
 
-/* 2×2 bento grid with a tall left item + 3 smaller items */
 function ImageGrid({ images }) {
   const list = Array.isArray(images) && images.length > 0 ? images.slice(0, 4) : INFRASTRUCTURE_IMAGES;
   const filled = [
@@ -68,7 +66,6 @@ function ImageGrid({ images }) {
             />
           </div>
         ) : (
-          /* Premium placeholder */
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-gray-100 to-gray-200">
             <div className="w-8 h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-gray-400">
@@ -78,26 +75,21 @@ function ImageGrid({ images }) {
                 <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
               </svg>
             </div>
-            <span className="text-[11px] font-heading font-semibold text-gray-400 uppercase tracking-wider">
+            <span className="text-[11px] font-display font-medium text-gray-400 uppercase tracking-wider">
               {item?.title || "Infrastructure"}
             </span>
           </div>
         )}
-        {/* Subtle dark overlay on hover */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-400" aria-hidden />
-        {/* Yellow corner accent */}
-        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#F5B400] group-hover:w-full transition-all duration-500 ease-out" aria-hidden />
+        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#F5B400] group-hover:w-full transition-all duration-500 ease-out" aria-hidden />
       </motion.div>
     );
   }
 
   return (
     <div className="grid grid-cols-2 grid-rows-2 gap-3 lg:gap-4 h-[420px] md:h-[500px] lg:h-[540px]">
-      {/* Top-left tall: spans 2 rows — first visible tall image gets priority */}
       <Item item={filled[0]} className="row-span-2" priority />
-      {/* Top-right */}
       <Item item={filled[1]} />
-      {/* Bottom-right top */}
       <Item item={filled[2]} />
     </div>
   );
@@ -114,9 +106,9 @@ const listItemVariants = {
 
 export function InfrastructureSection({ galleryImages = [] }) {
   return (
-    <section className="py-12 md:py-16  bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+    <section className="py-16 md:py-24 bg-white border-b border-gray-100">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
           {/* Left — text content */}
           <div>
@@ -125,7 +117,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-3"
+              className="type-overline text-[#F5B400] mb-4"
             >
               Our facility
             </motion.p>
@@ -134,7 +126,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight leading-tight mb-4"
+              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-[#111111] tracking-[-0.02em] leading-tight mb-5"
             >
               Advanced<br />
               <span className="text-[#F5B400]">Manufacturing</span><br />
@@ -145,14 +137,14 @@ export function InfrastructureSection({ galleryImages = [] }) {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-14 h-[3px] bg-[#F5B400] rounded-full origin-left mb-6"
+              className="w-14 h-[2px] bg-[#F5B400] rounded-full origin-left mb-7"
             />
             <motion.p
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-[15px] text-gray-500 font-body leading-relaxed mb-8"
+              className="text-[15px] text-gray-500 font-body leading-relaxed mb-10"
             >
               Our facility is built for performance. From modern machinery and organized workflow to a skilled workforce and dedicated quality assurance labs, we combine capacity with control to deliver export-grade polymer soles at scale.
             </motion.p>
@@ -169,7 +161,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
                 <motion.li key={i} variants={listItemVariants} className="flex items-start gap-3.5 group">
                   <CheckCircle2 className="h-5 w-5 text-[#F5B400] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-heading font-bold text-[15px] text-[#111111] block mb-0.5">
+                    <span className="font-display font-medium text-[15px] text-[#111111] block mb-0.5">
                       {point.title}
                     </span>
                     <p className="text-[13px] text-gray-500 font-body leading-relaxed">
@@ -188,7 +180,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
             >
               <Link
                 href="/gallery"
-                className="inline-flex items-center gap-2.5 rounded-xl bg-[#111111] text-white font-heading font-bold text-sm px-7 py-3.5 hover:bg-[#F5B400] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,180,0,0.35)] transition-all duration-300 group"
+                className="inline-flex items-center gap-2.5 rounded-xl bg-[#111111] text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:bg-[#F5B400] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,180,0,0.35)] transition-all duration-300 group"
               >
                 View Facility &amp; Gallery
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />

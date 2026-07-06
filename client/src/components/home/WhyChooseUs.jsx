@@ -64,8 +64,8 @@ const cardVariants = {
 
 export function WhyChooseUs() {
   return (
-    <section className="py-16 md:py-24 bg-[#F9F7F4] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 md:py-28 bg-[#F9F7F4] overflow-hidden">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
 
         {/* ── Header ── */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 md:mb-20">
@@ -75,7 +75,7 @@ export function WhyChooseUs() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.3em] mb-5 flex items-center gap-3"
+              className="type-overline text-[#F5B400] mb-5 flex items-center gap-3"
             >
               <span className="h-px w-8 bg-[#F5B400]/60" aria-hidden />
               Why work with us
@@ -86,7 +86,7 @@ export function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="font-heading text-3xl md:text-5xl lg:text-[3.5rem] font-bold text-[#111111] leading-[1.1] tracking-tight"
+              className="font-display font-medium text-[clamp(1.75rem,4vw,3.25rem)] text-[#111111] leading-[1.05] tracking-[-0.025em]"
             >
               Why Choose{" "}
               <span className="relative inline-block">
@@ -96,7 +96,7 @@ export function WhyChooseUs() {
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#F5B400]/40 rounded-full origin-left"
+                  className="absolute -bottom-1 left-0 h-[2px] w-full bg-[#F5B400]/40 rounded-full origin-left"
                   aria-hidden
                 />
               </span>
@@ -133,7 +133,6 @@ export function WhyChooseUs() {
               >
                 {/* ── Image Area ── */}
                 <div className="relative h-52 sm:h-56 overflow-hidden bg-white">
-                  {/* Actual photo */}
                   <Image
                     src={item.img}
                     alt={item.title}
@@ -141,15 +140,12 @@ export function WhyChooseUs() {
                     className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 p-3 rounded-lg"
                   />
 
-                  {/* Dark gradient overlay — stronger on hover */}
                   <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/5 to-transparent group-hover:from-white/70 transition-all duration-500" />
 
-                  {/* ── Card number (top-right corner on image) ── */}
-                  <span className="absolute top-4 right-5 font-heading text-5xl font-light text-white/20 select-none tracking-tight leading-none">
+                  <span className="absolute top-4 right-5 font-display font-medium text-5xl text-white/20 select-none tracking-[-0.03em] leading-none">
                     {num}
                   </span>
 
-                  {/* ── SVG Icon Badge (bottom-left corner on image) ── */}
                   <div className="absolute bottom-4 left-5">
                     <div className="relative w-14 h-14 rounded-xl bg-[#F5B400] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <Image
@@ -162,19 +158,17 @@ export function WhyChooseUs() {
                     </div>
                   </div>
 
-                  {/* Yellow accent bar that slides in from bottom on hover */}
-                  <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#F5B400] translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out" />
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#F5B400] translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out" />
                 </div>
 
                 {/* ── Text Area ── */}
                 <div className="p-6 sm:p-7 flex flex-col flex-1">
-                  <h3 className="font-heading font-bold text-[16px] sm:text-[18px] text-[#111111] mb-3 leading-snug group-hover:text-[#111]">
+                  <h3 className="font-display font-medium text-[16px] sm:text-[18px] text-[#111111] mb-3 leading-snug group-hover:text-[#111]">
                     {item.title}
                   </h3>
                   <p className="text-[13px] sm:text-[14px] text-gray-500 font-body leading-relaxed flex-1">
                     {item.description}
                   </p>
-
                 </div>
               </motion.div>
             );

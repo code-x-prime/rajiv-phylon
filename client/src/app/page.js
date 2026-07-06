@@ -34,6 +34,8 @@ export default function HomePage() {
         <BannersFetcher />
       </Suspense>
 
+
+
       {/* 2. Company Stats – static, renders immediately */}
       <CompanyStats />
 
@@ -79,7 +81,6 @@ export default function HomePage() {
 
       {/* 13. Export Countries – static */}
       <ExportCountries />
-
 
       {/* 15. Global Enquiry CTA – static */}
       <HomeCta />

@@ -11,6 +11,10 @@ module.exports = {
       fontFamily: {
         heading: ["var(--font-heading)", "system-ui", "sans-serif"],
         body: ["var(--font-body)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-heading)", "system-ui", "sans-serif"],
+      },
+      maxWidth: {
+        "site": "var(--container-max, 1400px)",
       },
       colors: {
         background: "var(--background)",

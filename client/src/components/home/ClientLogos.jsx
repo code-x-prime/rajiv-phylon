@@ -3,10 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-/**
- * Brand name → logo filename in public/logos (exact match).
- * Jis brand ki yahan entry nahi hai ya file nahi hai, wo "image nahi hai" list me aata hai.
- */
 const BRAND_LOGO_MAP = {
   "Bata": "BATA.jpg",
   "Relaxo": "RELAXO.jpg",
@@ -51,7 +47,6 @@ const BRAND_LOGO_MAP = {
 
 const BRANDS = Object.keys(BRAND_LOGO_MAP);
 
-/* Duplicate for two seamless rows scrolling in opposite directions */
 const ROW1 = [...BRANDS.slice(0, 20), ...BRANDS.slice(0, 20)];
 const ROW2 = [...BRANDS.slice(20), ...BRANDS.slice(20)];
 
@@ -83,7 +78,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
                   />
                 </div>
               ) : (
-                <span className="font-heading font-semibold text-[12px] text-gray-500 whitespace-nowrap">
+                <span className="font-display font-medium text-[12px] text-gray-500 whitespace-nowrap">
                   {name}
                 </span>
               )}
@@ -97,15 +92,15 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
 
 export function ClientLogos() {
   return (
-    <section className="md:py-10 py-6 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
+    <section className="py-10 md:py-16 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
       {/* Heading */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
+      <div className="max-w-site mx-auto px-6 lg:px-10 mb-10 text-center">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
-          className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-2"
+          className="type-overline text-[#F5B400] mb-3"
         >
           Trusted By
         </motion.p>
@@ -114,7 +109,7 @@ export function ClientLogos() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="font-heading text-2xl md:text-3xl font-bold text-[#111111] tracking-tight"
+          className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-[#111111] tracking-[-0.02em]"
         >
           Brands That Rely On Us
         </motion.h2>
@@ -123,7 +118,7 @@ export function ClientLogos() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-[14px] text-gray-500 font-body mt-2"
+          className="text-[14px] text-gray-500 font-body mt-3"
         >
           40+ leading footwear brands trust our polymer soles
         </motion.p>
@@ -157,12 +152,4 @@ export function ClientLogos() {
   );
 }
 
-/**
- * Jin brands ki logo image nahi hai (public/logos me file nahi):
- * - Today
- * - Nice
- *
- * Inke liye public/logos me file add karo, e.g. TODAY.jpg, NICE.jpg
- * Phir BRAND_LOGO_MAP me entry add karo: "Today": "TODAY.jpg", etc.
- */
 export const BRANDS_WITHOUT_LOGO = ["Today", "Nice"];
