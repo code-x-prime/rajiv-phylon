@@ -292,38 +292,7 @@ function FallbackHero() {
             </Link>
           </motion.div>
 
-          {/* Scale & Trust Ribbon */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-12 pt-8 border-t border-white/[0.08]"
-          >
-            <p className="type-overline text-white/40 mb-5 tracking-[0.15em]">Scale & Trust</p>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              {[
-                { value: "10M+", label: "Soles Engineered" },
-                { value: "50,000+", label: "Daily Pair Capacity" },
-                { value: "500+", label: "Active Mold Designs" },
-                { value: "25+", label: "Years of Manufacturing Excellence" },
-              ].map((metric, i) => (
-                <motion.div
-                  key={metric.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.7 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="text-left"
-                >
-                  <div className="font-display font-medium text-2xl md:text-3xl text-[#F5B400] leading-none mb-1.5 tracking-[-0.02em]">
-                    {metric.value}
-                  </div>
-                  <div className="text-[12px] font-body text-white/45 leading-snug">
-                    {metric.label}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+
 
         </div>
       </div>

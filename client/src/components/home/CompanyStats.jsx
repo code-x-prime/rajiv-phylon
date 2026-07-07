@@ -1,13 +1,13 @@
 "use client"
-import { Award, Globe, Layers, Users } from "lucide-react";
+import { Award, Globe, Layers, Users, Zap, TrendingUp } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const STATS = [
-  { label: "Successful Years", value: "25+", num: 25, icon: Award },
-  { label: "Export Markets", value: "2", num: 2, icon: Globe },
-  { label: "Product Portfolio", value: "500+", num: 500, icon: Layers },
-  { label: "Global Clients", value: "1000+", num: 1000, icon: Users },
+  { label: "Soles Engineered", value: "10M+", num: 10, icon: TrendingUp },
+  { label: "Daily Pair Capacity", value: "50,000+", num: 50000, icon: Zap },
+  { label: "Active Mold Designs", value: "500+", num: 500, icon: Layers },
+  { label: "Years of Manufacturing Excellence", value: "25+", num: 25, icon: Award },
 ];
 
 const DURATION_MS = 2000;
@@ -34,7 +34,7 @@ function useCountUp(end, start, isInView) {
 
 function StatBlock({ stat, isInView, index }) {
   const count = useCountUp(stat.num, 0, isInView);
-  const suffix = stat.value.replace(/^\d+/, "");
+  const suffix = stat.value.replace(/^[0-9,]+/g, "");
   const Icon = stat.icon;
 
   return (
@@ -107,7 +107,7 @@ export function CompanyStats() {
           >
             <span className="w-2 h-2 rounded-full bg-[#F5B400] animate-pulse" />
             <span className="type-overline text-gray-500">
-              Performance Metrics
+              Scale & Trust
             </span>
           </motion.div>
           
@@ -118,7 +118,7 @@ export function CompanyStats() {
             transition={{ delay: 0.1 }}
             className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#111111] tracking-[-0.02em] leading-tight"
           >
-            Engineering Excellence <span className="text-[#F5B400]">By The Numbers</span>
+            Scale & <span className="text-[#F5B400]">Trust</span>
           </motion.h2>
         </div>
 
