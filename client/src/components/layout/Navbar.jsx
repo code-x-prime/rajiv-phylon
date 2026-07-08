@@ -128,8 +128,33 @@ export function Navbar() {
         <div className="max-w-site mx-auto px-6 lg:px-10 h-full">
           <div className="flex items-center justify-between h-full gap-6">
 
-            {/* Left: Logo + divider + Secondary Logo */}
+            {/* Left: Secondary Logo + divider + Primary Logo */}
             <div className="flex items-center gap-4 shrink-0">
+              {/* Secondary Logo — desktop only */}
+              <div className="hidden lg:block relative group">
+                <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
+                {scrolled ? (
+                  <Image
+                    src="/sec-logo.png"
+                    alt="Quality Mark"
+                    width={150}
+                    height={150}
+                    className="h-11 w-auto object-contain transition-all duration-500 relative"
+                  />
+                ) : (
+                  <Image
+                    src="/sec-logo.png"
+                    alt="Quality Mark"
+                    width={150}
+                    height={150}
+                    className="h-11 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
+                  />
+                )}
+              </div>
+
+              {/* Vertical Divider between logos — desktop only */}
+              <div className={`hidden lg:block h-10 w-px ${scrolled ? "bg-gray-200" : "bg-white/30"}`} />
+
               <Link href="/" className="group relative">
                 <div className="absolute -inset-2 bg-[#F5B400]/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
                 {scrolled ? (
@@ -152,31 +177,6 @@ export function Navbar() {
                   />
                 )}
               </Link>
-
-              {/* Vertical Divider between logos — desktop only */}
-              <div className={`hidden lg:block h-10 w-px ${scrolled ? "bg-gray-200" : "bg-white/30"}`} />
-
-              {/* Secondary Logo — desktop only */}
-              <div className="hidden lg:block relative group">
-                <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
-                {scrolled ? (
-                  <Image
-                    src="/sec-logo.png"
-                    alt="Quality Mark"
-                    width={150}
-                    height={150}
-                    className="h-11 w-auto object-contain transition-all duration-500 relative"
-                  />
-                ) : (
-                  <Image
-                    src="/sec-logo.png"
-                    alt="Quality Mark"
-                    width={150}
-                    height={150}
-                    className="h-11 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
-                  />
-                )}
-              </div>
             </div>
 
             {/* Center: Desktop Navigation */}
@@ -342,9 +342,9 @@ export function Navbar() {
               {/* Drawer header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
                 <Link href="/" onClick={closeMobile} className="flex items-center gap-3 w-full">
-                  <Image src="/logo.png" alt="Rajiv Phylon" width={100} height={100} className="h-9 w-auto object-contain" />
+                  <Image src="/sec-logo.png" alt="Quality Mark" width={100} height={100} className="h-9 w-auto object-contain" />
                   <span className="h-6 w-px bg-gray-200" aria-hidden />
-                  <Image src="/sec-logo.png" alt="Rajiv Phylon" width={100} height={100} className="h-9 w-auto object-contain" />
+                  <Image src="/logo.png" alt="Rajiv Phylon" width={100} height={100} className="h-9 w-auto object-contain" />
                 </Link>
                 <button type="button" className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" onClick={closeMobile}>
                   <X className="h-5 w-5" />

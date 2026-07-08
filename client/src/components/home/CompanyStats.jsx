@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const STATS = [
-  { label: "Soles Engineered", value: "10M+", num: 10, icon: TrendingUp },
+  { label: "Soles Engineered", value: "50M+", num: 50, icon: TrendingUp },
   { label: "Daily Pair Capacity", value: "50,000+", num: 50000, icon: Zap },
   { label: "Active Mold Designs", value: "500+", num: 500, icon: Layers },
   { label: "Years of Manufacturing Excellence", value: "25+", num: 25, icon: Award },

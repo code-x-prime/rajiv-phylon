@@ -33,7 +33,7 @@ const UNITS = [
 ];
 
 /* Quick quantity presets (pairs) */
-const QTY_PRESETS = ["100", "500", "1,000", "5,000", "Custom"];
+const QTY_PRESETS = ["1,000", "5,000", "Custom"];
 
 const TRUST = [
   { icon: ShieldCheck, text: "100% Secure"  },

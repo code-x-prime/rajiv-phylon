@@ -205,14 +205,42 @@ export default async function ProductPage({ params }) {
                   ))}
                 </div>
 
-                {/* Title + Short Description */}
+                {/* Title + Short Description & Sole Details */}
                 <div>
                   <h1 className="font-heading text-2xl sm:text-[1.85rem] md:text-3xl lg:text-[2rem] font-bold text-[#111111] leading-tight tracking-tight">
                     {product.name}
                   </h1>
-                  {shortDesc && (
-                    <p className="mt-3 text-gray-500 text-[14px] sm:text-[15px] leading-relaxed">{shortDesc}</p>
-                  )}
+                  
+                  <div className="mt-4 bg-gray-50/50 rounded-xl p-5 border border-gray-100 space-y-4">
+                    <div>
+                      <h3 className="text-[10px] font-heading font-bold text-gray-400 uppercase tracking-[0.18em] mb-2">Description</h3>
+                      <p className="text-[14px] text-gray-600 font-body leading-relaxed">
+                        {shortDesc || "Premium quality phylon sole engineered for maximum comfort, high flexibility, and durability. Designed to meet international standards for sports, casual, and daily wear footwear."}
+                      </p>
+                    </div>
+                    
+                    <div className="border-t border-gray-100 pt-4">
+                      <h3 className="text-[10px] font-heading font-bold text-gray-400 uppercase tracking-[0.18em] mb-2.5">Sole Details</h3>
+                      <div className="grid grid-cols-2 gap-y-2.5 gap-x-4 text-[13px] font-body text-gray-600">
+                        <div>
+                          <span className="text-gray-400 font-medium">Material: </span>
+                          <span className="text-[#111111] font-semibold">{specEntries.find(([k]) => k.toLowerCase() === 'material')?.[1] || "High-Grade Phylon (EVA)"}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 font-medium">Quality: </span>
+                          <span className="text-[#111111] font-semibold">Export Quality</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 font-medium">Cushioning: </span>
+                          <span className="text-[#111111] font-semibold">Soft Bounce / High Elasticity</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 font-medium">Durability: </span>
+                          <span className="text-[#111111] font-semibold">High Abrasion Resistance</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* MOQ */}

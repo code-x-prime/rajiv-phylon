@@ -45,7 +45,7 @@ const BRAND_LOGO_MAP = {
   "Walkaroo": "WALKAROO.jpg",
 };
 
-const BRANDS = Object.keys(BRAND_LOGO_MAP);
+const BRANDS = Object.keys(BRAND_LOGO_MAP).sort((a, b) => a.localeCompare(b));
 
 const ROW1 = [...BRANDS.slice(0, 20), ...BRANDS.slice(0, 20)];
 const ROW2 = [...BRANDS.slice(20), ...BRANDS.slice(20)];
@@ -78,7 +78,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
                   />
                 </div>
               ) : (
-                <span className="font-display font-medium text-[12px] text-gray-500 whitespace-nowrap">
+                <span className="font-display font-medium text-[14px] text-gray-500 whitespace-nowrap">
                   {name}
                 </span>
               )}
@@ -118,7 +118,7 @@ export function ClientLogos() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-[14px] text-gray-500 font-body mt-3"
+          className="text-[16px] text-gray-500 font-body mt-3"
         >
           40+ leading footwear brands trust our polymer soles
         </motion.p>
@@ -144,7 +144,7 @@ export function ClientLogos() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-center mt-8 text-[12px] text-gray-400 font-body"
+        className="text-center mt-8 text-[14px] text-gray-400 font-body"
       >
         Partnering with footwear brands &amp; OEM manufacturers across India &amp; worldwide
       </motion.p>
