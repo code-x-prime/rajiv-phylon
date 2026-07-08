@@ -16,8 +16,8 @@ const SEGMENTS = [
     icon: Layers,
     name: "EVA",
     subtitle: "Injection Molding",
-    tagline: "Versatile cushioning with zero-defect consistency",
-    description: "For high-volume ranges.",
+    tagline: "Versatile cushioning",
+    description: "Zero-defect consistency for high-volume ranges.",
     gradient: "from-[#1a1a2e] to-[#16213e]",
   },
   {
@@ -60,7 +60,7 @@ export function CoreTechnology() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-foreground tracking-[-0.02em] leading-tight"
+            className="font-display font-medium text-[clamp(1.75rem,3.5vw,2.75rem)] text-foreground tracking-[-0.02em] leading-tight mb-2"
           >
             The Materials <span className="text-[#F5B400]">That Define Performance</span>
           </motion.h2>
@@ -69,7 +69,7 @@ export function CoreTechnology() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.25 }}
-            className="mt-3 h-[2px] w-16 bg-[#F5B400] rounded-full"
+            className="mt-1.5 h-[2px] w-16 bg-[#F5B400] rounded-full mb-6"
           />
         </div>
 

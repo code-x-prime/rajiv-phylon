@@ -32,7 +32,7 @@ export function GlobalPresenceSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-3"
+              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-2"
             >
               Global Logistics,<br />
               <span className="text-[#F5B400]">Industrial Precision.</span>
@@ -42,7 +42,7 @@ export function GlobalPresenceSection() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="w-16 h-[2px] bg-[#F5B400] rounded-full origin-left mb-7"
+              className="w-16 h-[2px] bg-[#F5B400] rounded-full origin-left mt-1.5 mb-6"
             />
             <motion.p
               initial={{ opacity: 0, y: 16 }}

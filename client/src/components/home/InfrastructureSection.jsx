@@ -24,7 +24,7 @@ const POINTS = [
   {
     icon: Truck,
     title: "Strategic Logistics",
-    text: "Direct corridors to major ports across South Asia and Global hubs.",
+    text: "Direct corridors to major ports for Bangladesh, Sri Lanka, and Global hubs.",
   },
 ];
 
@@ -120,7 +120,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-3"
+              className="font-display font-medium text-[clamp(1.75rem,3.5vw,3rem)] text-foreground tracking-[-0.02em] leading-tight mb-2"
             >
               Vertical Integration.<br />
               <span className="text-[#F5B400]">Seamless Export.</span>
@@ -130,7 +130,7 @@ export function InfrastructureSection({ galleryImages = [] }) {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-14 h-[2px] bg-[#F5B400] rounded-full origin-left mb-7"
+              className="w-14 h-[2px] bg-[#F5B400] rounded-full origin-left mt-1.5 mb-6"
             />
 
             {/* Checklist points */}

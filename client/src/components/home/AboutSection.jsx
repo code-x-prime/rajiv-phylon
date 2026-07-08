@@ -44,7 +44,7 @@ export function AboutSection() {
               transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
               className="mt-4 text-muted text-base md:text-lg leading-relaxed font-body"
             >
-              Our facility is built for bulk production without compromising on quality. From raw material to finished sole, every step is controlled and traceable. We invest in technology and people to deliver export-grade products that meet the strictest specifications.
+              Our facility is built for bulk production without compromising on quality. From raw material to finished sole, every step is controlled and traceable. We invest in technology and people to deliver high-performance products that meet the strictest specifications.
             </motion.p>
 
             <ul className="mt-10 md:mt-12 space-y-4">

@@ -21,7 +21,7 @@ export function MissionNarrative() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-foreground tracking-[-0.02em] leading-tight mb-8"
+            className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-foreground tracking-[-0.02em] leading-tight mb-2"
           >
             Bridging Indian Manufacturing Excellence<br />
             <span className="text-[#F5B400]">with International Performance Standards</span>
@@ -31,7 +31,7 @@ export function MissionNarrative() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.25 }}
-            className="h-[2px] w-16 bg-[#F5B400] rounded-full mx-auto mb-8"
+            className="h-[2px] w-16 bg-[#F5B400] rounded-full mx-auto mt-1.5 mb-6"
           />
           <motion.p
             initial={{ opacity: 0, y: 20 }}

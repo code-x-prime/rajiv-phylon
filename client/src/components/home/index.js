@@ -8,3 +8,5 @@ export { ExportCountries } from "./ExportCountries";
 export { MakeInIndiaSection } from "./MakeInIndiaSection";
 export { ClientLogos } from "./ClientLogos";
 export { HomeCta } from "./HomeCta";
+export { CoreTechnology } from "./CoreTechnology";
+export { MissionNarrative } from "./MissionNarrative";

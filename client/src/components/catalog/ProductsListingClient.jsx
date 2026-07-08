@@ -89,11 +89,66 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
   const searchQuery = (searchParams?.get("search") || "").trim().toLowerCase();
   const page = Math.max(1, parseInt(searchParams?.get("page") || "1", 10));
 
+  const mappedCategoriesWithSubs = useMemo(() => {
+    return [
+      {
+        id: "eva-soles",
+        name: "EVA Soles",
+        slug: "eva-soles",
+        subCategories: [
+          { id: "for-men", name: "For Men", slug: "for-men" },
+          { id: "for-women", name: "For Women", slug: "for-women" },
+          { id: "for-kids", name: "For Kids", slug: "for-kids" },
+        ],
+      },
+      {
+        id: "phylon-soles",
+        name: "Phylon Soles",
+        slug: "phylon-soles",
+        subCategories: [
+          { id: "for-men", name: "For Men", slug: "for-men" },
+          { id: "for-women", name: "For Women", slug: "for-women" },
+          { id: "for-kids", name: "For Kids", slug: "for-kids" },
+        ],
+      },
+      {
+        id: "semi-phylon-soles",
+        name: "Semi Phylon Soles",
+        slug: "semi-phylon-soles",
+        subCategories: [
+          { id: "for-men", name: "For Men", slug: "for-men" },
+          { id: "for-women", name: "For Women", slug: "for-women" },
+          { id: "for-kids", name: "For Kids", slug: "for-kids" },
+        ],
+      },
+    ];
+  }, []);
+
   /* Filter + sort */
   const filtered = useMemo(() => {
     let list = [...products];
-    if (categorySlug) list = list.filter((p) => p.categories?.some((c) => c.slug === categorySlug));
-    if (subcategorySlug) list = list.filter((p) => p.subCategories?.some((s) => s.slug === subcategorySlug));
+    if (categorySlug) {
+      list = list.filter((p) =>
+        p.categories?.some((c) => {
+          const s = c.slug.toLowerCase();
+          if (categorySlug === "eva-soles") return s.includes("eva");
+          if (categorySlug === "phylon-soles") return s.includes("phylon") && !s.includes("semi");
+          if (categorySlug === "semi-phylon-soles") return s.includes("semi");
+          return s === categorySlug;
+        })
+      );
+    }
+    if (subcategorySlug) {
+      list = list.filter((p) =>
+        p.subCategories?.some((s) => {
+          const sub = s.slug.toLowerCase();
+          if (subcategorySlug === "for-men") return sub.includes("men");
+          if (subcategorySlug === "for-women") return sub.includes("women");
+          if (subcategorySlug === "for-kids") return sub.includes("kid") || sub.includes("child");
+          return sub === subcategorySlug;
+        })
+      );
+    }
     if (searchQuery) list = list.filter((p) =>
       p.name?.toLowerCase().includes(searchQuery) ||
       p.categories?.some((c) => c.name?.toLowerCase().includes(searchQuery)) ||
@@ -120,7 +175,7 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
   }, [pathname, router, searchParams]);
 
   /* When filters change, reset to page 1 */
-  const activeCategory = categoriesWithSubs.find((c) => c.slug === categorySlug);
+  const activeCategory = mappedCategoriesWithSubs.find((c) => c.slug === categorySlug);
 
   return (
     <div className="flex flex-col gap-5">
@@ -128,7 +183,7 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
       {/* Mobile: filter trigger + count */}
       <div className="flex items-center justify-between lg:hidden">
         <ProductFiltersSidebar
-          categoriesWithSubs={categoriesWithSubs}
+          categoriesWithSubs={mappedCategoriesWithSubs}
           productCount={filtered.length}
         />
         <span className="text-[13px] text-gray-400 font-body">
@@ -141,7 +196,7 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
         {/* Desktop sidebar */}
         <div className="hidden lg:block">
           <ProductFiltersSidebar
-            categoriesWithSubs={categoriesWithSubs}
+            categoriesWithSubs={mappedCategoriesWithSubs}
             productCount={filtered.length}
           />
         </div>

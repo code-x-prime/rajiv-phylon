@@ -239,24 +239,14 @@ function FallbackHero() {
           </motion.div>
 
           {/* Heading */}
-          <div className="overflow-hidden mb-2">
-            <motion.h1
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(3rem,6vw,6.5rem)] font-medium text-white tracking-[-0.03em] leading-[0.95]"
-            >
-              High-Performance
-            </motion.h1>
-          </div>
           <div className="overflow-hidden mb-6">
             <motion.h1
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(3rem,6vw,6.5rem)] font-medium text-[#F5B400] tracking-[-0.03em] leading-[0.95]"
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-[clamp(2.5rem,5.5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
             >
-              Polymer Soles
+              High performance <span className="text-[#F5B400]">polymer soles</span>
             </motion.h1>
           </div>
 
@@ -267,7 +257,7 @@ function FallbackHero() {
             transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="text-xl md:text-2xl text-white/55 font-body leading-relaxed max-w-xl mb-10"
           >
-            Trusted B2B & OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
+            Trusted B2B &amp; OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
           </motion.p>
 
           {/* CTAs */}

@@ -212,18 +212,12 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative rounded-3xl bg-[#111111] p-10 lg:p-12 overflow-hidden min-h-[280px]"
+              className="group relative rounded-3xl bg-[#111111] p-12 lg:p-16 overflow-hidden min-h-[320px] flex flex-col justify-center"
             >
               <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#F5B400]/10 blur-3xl pointer-events-none" aria-hidden />
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 mb-6">
-                  <div className="w-8 h-8 rounded-lg bg-[#F5B400]/20 border border-[#F5B400]/30 flex items-center justify-center">
-                    <Award className="h-4 w-4 text-[#F5B400]" />
-                  </div>
-                  <span className="font-display font-medium text-[12px] text-[#F5B400] uppercase tracking-[0.15em]">Our Mission</span>
-                </div>
-                <div className="w-10 h-[2px] bg-[#F5B400] rounded-full mb-6" />
-                <p className="text-[15px] text-white/70 font-body leading-relaxed">
+                <h3 className="font-display font-medium text-2xl lg:text-3xl text-[#F5B400] mb-4">Our Mission</h3>
+                <p className="text-[16px] lg:text-[18px] text-white/80 font-body leading-relaxed">
                   To engineer the technical foundation of global footwear through industrial scale and material innovation—empowering brands to lead with confidence.
                 </p>
               </div>
@@ -235,18 +229,12 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative rounded-3xl border-2 border-[#F5B400]/30 bg-white p-10 lg:p-12 overflow-hidden hover:border-[#F5B400]/60 transition-colors duration-300 min-h-[280px]"
+              className="group relative rounded-3xl border-2 border-[#F5B400]/30 bg-white p-12 lg:p-16 overflow-hidden hover:border-[#F5B400]/60 transition-colors duration-300 min-h-[320px] flex flex-col justify-center"
             >
               <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full bg-[#F5B400]/5 blur-3xl pointer-events-none" aria-hidden />
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 mb-6">
-                  <div className="w-8 h-8 rounded-lg bg-[#F5B400]/10 border border-[#F5B400]/20 flex items-center justify-center group-hover:bg-[#F5B400] group-hover:border-[#F5B400] transition-all duration-300">
-                    <Globe2 className="h-4 w-4 text-[#F5B400] group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <span className="font-display font-medium text-[12px] text-[#F5B400] uppercase tracking-[0.15em]">Our Vision</span>
-                </div>
-                <div className="w-10 h-[2px] bg-[#F5B400] rounded-full mb-6" />
-                <p className="text-[15px] text-gray-500 font-body leading-relaxed">
+                <h3 className="font-display font-medium text-2xl lg:text-3xl text-[#111111] mb-4">Our Vision</h3>
+                <p className="text-[16px] lg:text-[18px] text-gray-500 font-body leading-relaxed">
                   To be the world&apos;s most resilient footwear component partner, where Indian manufacturing precision defines the global standard for performance and sustainability.
                 </p>
               </div>

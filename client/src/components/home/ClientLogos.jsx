@@ -120,7 +120,7 @@ export function ClientLogos() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-[16px] text-gray-500 font-body mt-3"
         >
-          40+ leading footwear brands trust our polymer soles
+          50+ leading footwear brands trust our polymer soles
         </motion.p>
       </div>
 

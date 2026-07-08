@@ -10,6 +10,8 @@ import {
   MakeInIndiaSection,
   ClientLogos,
   HomeCta,
+  CoreTechnology,
+  MissionNarrative,
 } from "@/components/home";
 import {
   BannersFetcher,
@@ -38,6 +40,12 @@ export default function HomePage() {
 
       {/* 2. Company Stats – static, renders immediately */}
       <CompanyStats />
+
+      {/* Core Technology Segments */}
+      <CoreTechnology />
+
+      {/* Mission & Narrative Segment */}
+      <MissionNarrative />
 
       {/* 3. Top Categories – shows TopCategoriesSkeleton only while loading */}
       <Suspense fallback={<TopCategoriesSkeleton />}>

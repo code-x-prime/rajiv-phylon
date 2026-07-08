@@ -40,18 +40,34 @@ export function Navbar() {
   const megaTimeout = useRef(null);
 
   useEffect(() => {
-    getCategories().then(setCategories).catch(() => setCategories([]));
+    const mapped = [
+      { id: "eva-soles", name: "EVA Soles", slug: "eva-soles" },
+      { id: "phylon-soles", name: "Phylon Soles", slug: "phylon-soles" },
+      { id: "semi-phylon-soles", name: "Semi Phylon Soles", slug: "semi-phylon-soles" }
+    ];
+    setCategories(mapped);
   }, []);
 
   useEffect(() => {
     if (!megaOpen || categories.length === 0) return;
-    Promise.all(categories.map((c) => getSubCategoriesByCategory(c.id)))
-      .then((results) => {
-        const map = {};
-        categories.forEach((c, i) => { map[c.id] = results[i] || []; });
-        setSubsByCategory(map);
-      })
-      .catch(() => setSubsByCategory({}));
+    const subMap = {
+      "eva-soles": [
+        { id: "for-men", name: "For Men", slug: "for-men" },
+        { id: "for-women", name: "For Women", slug: "for-women" },
+        { id: "for-kids", name: "For Kids", slug: "for-kids" },
+      ],
+      "phylon-soles": [
+        { id: "for-men", name: "For Men", slug: "for-men" },
+        { id: "for-women", name: "For Women", slug: "for-women" },
+        { id: "for-kids", name: "For Kids", slug: "for-kids" },
+      ],
+      "semi-phylon-soles": [
+        { id: "for-men", name: "For Men", slug: "for-men" },
+        { id: "for-women", name: "For Women", slug: "for-women" },
+        { id: "for-kids", name: "For Kids", slug: "for-kids" },
+      ]
+    };
+    setSubsByCategory(subMap);
   }, [megaOpen, categories]);
 
   useEffect(() => {
@@ -116,8 +132,8 @@ export function Navbar() {
       ═══════════════════════════════════════════════════════ */}
       <header
         className={`fixed inset-x-0 z-50 transition-all duration-300 ${scrolled
-          ? "top-0 lg:top-[32px] h-[64px] bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-          : "top-0 lg:top-[32px] h-[64px] bg-black/20 backdrop-blur-[2px] border-b border-white/[0.06]"
+          ? "top-0 lg:top-[32px] h-[56px] bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+          : "top-0 lg:top-[32px] h-[56px] bg-transparent border-b border-white/[0.06]"
           }`}
       >
         {/* Gold accent line — only when scrolled */}
@@ -128,8 +144,34 @@ export function Navbar() {
         <div className="max-w-site mx-auto px-6 lg:px-10 h-full">
           <div className="flex items-center justify-between h-full gap-6">
 
-            {/* Left: Secondary Logo + divider + Primary Logo */}
-            <div className="flex items-center gap-4 shrink-0">
+            {/* Left: Primary Logo + divider + Secondary Logo */}
+            <div className="flex items-center gap-4 shrink-0 font-body">
+              <Link href="/" className="group relative">
+                <div className="absolute -inset-2 bg-[#F5B400]/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
+                {scrolled ? (
+                  <Image
+                    src="/logo.png"
+                    alt="Rajiv Phylon"
+                    width={150}
+                    height={150}
+                    className="w-auto h-7 lg:h-10 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/logo-w-lg.png"
+                    alt="Rajiv Phylon"
+                    width={150}
+                    height={150}
+                    className="w-auto h-8 lg:h-11 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    priority
+                  />
+                )}
+              </Link>
+
+              {/* Vertical Divider between logos — desktop only */}
+              <div className={`hidden lg:block h-8 w-[1px] ${scrolled ? "bg-gray-300" : "bg-white/40"}`} />
+
               {/* Secondary Logo — desktop only */}
               <div className="hidden lg:block relative group">
                 <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
@@ -139,7 +181,7 @@ export function Navbar() {
                     alt="Quality Mark"
                     width={150}
                     height={150}
-                    className="h-11 w-auto object-contain transition-all duration-500 relative"
+                    className="h-9 w-auto object-contain transition-all duration-500 relative"
                   />
                 ) : (
                   <Image
@@ -147,36 +189,10 @@ export function Navbar() {
                     alt="Quality Mark"
                     width={150}
                     height={150}
-                    className="h-11 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
+                    className="h-9 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
                   />
                 )}
               </div>
-
-              {/* Vertical Divider between logos — desktop only */}
-              <div className={`hidden lg:block h-10 w-px ${scrolled ? "bg-gray-200" : "bg-white/30"}`} />
-
-              <Link href="/" className="group relative">
-                <div className="absolute -inset-2 bg-[#F5B400]/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
-                {scrolled ? (
-                  <Image
-                    src="/logo.png"
-                    alt="Rajiv Phylon"
-                    width={150}
-                    height={150}
-                    className="w-auto h-8 lg:h-12 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
-                    priority
-                  />
-                ) : (
-                  <Image
-                    src="/logo-w-lg.png"
-                    alt="Rajiv Phylon"
-                    width={150}
-                    height={150}
-                    className="w-auto h-10 lg:h-14 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
-                    priority
-                  />
-                )}
-              </Link>
             </div>
 
             {/* Center: Desktop Navigation */}
@@ -364,13 +380,30 @@ export function Navbar() {
                 {categories.length > 0 && (
                   <div className="border-t border-gray-100 pt-5">
                     <p className="type-overline text-gray-400 mb-3 px-2">Categories</p>
-                    <div className="space-y-0.5">
-                      {categories.map((cat) => (
-                        <Link key={cat.id} href={`/category/${cat.slug}`} onClick={closeMobile} className="flex items-center justify-between py-2.5 px-2 rounded-xl text-[14px] font-body text-gray-600 hover:text-[#111111] hover:bg-gray-50 transition-all duration-150">
-                          {cat.name}
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#F5B400]" />
-                        </Link>
-                      ))}
+                    <div className="space-y-3">
+                      {categories.map((cat) => {
+                        const subs = subsByCategory[cat.id] || [];
+                        return (
+                          <div key={cat.id} className="space-y-1">
+                            <Link href={`/products?category=${cat.slug}`} onClick={closeMobile} className="flex items-center justify-between py-1.5 px-2 rounded-xl text-[14px] font-body text-gray-600 hover:text-[#111111] hover:bg-gray-50 transition-all">
+                              <span className="font-semibold text-gray-900">{cat.name}</span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#F5B400]" />
+                            </Link>
+                            <div className="pl-5 flex flex-col gap-1.5">
+                              {subs.map((s) => (
+                                <Link
+                                  key={s.id}
+                                  href={`/products?category=${cat.slug}&subcategory=${s.slug}`}
+                                  onClick={closeMobile}
+                                  className="text-[13px] text-gray-400 hover:text-[#F5B400] transition-colors block py-0.5"
+                                >
+                                  {s.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
