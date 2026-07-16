@@ -59,7 +59,7 @@ function StatBlock({ stat, isInView, index }) {
 
         <div className="font-display font-medium text-[clamp(2rem,3.5vw,3rem)] text-[#111111] leading-none mb-2 tabular-nums tracking-[-0.03em]">
           {count.toLocaleString()}
-          <span className="text-[#F5B400] group-hover:animate-pulse">{suffix}</span>
+          <span className="text-[#111111] group-hover:animate-pulse">{suffix}</span>
         </div>
         
         <p className="type-overline text-gray-400 text-center uppercase tracking-[0.12em] group-hover:text-gray-600 transition-colors duration-300">
@@ -91,7 +91,7 @@ export function CompanyStats() {
   }, []);
 
   return (
-    <section ref={ref} className="py-16 md:py-24 relative overflow-hidden bg-[#FAFAFA]">
+    <section ref={ref} className="py-10 md:py-16 relative overflow-hidden bg-[#FAFAFA]">
       {/* Industrial Texture Overlay */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '32px 32px' }} />

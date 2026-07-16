@@ -65,7 +65,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
           return (
             <div
               key={`${name}-${i}`}
-              className="shrink-0 flex items-center justify-center w-[120px] h-14 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none overflow-hidden p-2"
+              className="shrink-0 flex items-center justify-center w-[160px] h-20 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none overflow-hidden p-3"
             >
               {logoFile ? (
                 <div className="relative w-full h-full">
@@ -92,7 +92,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
 
 export function ClientLogos() {
   return (
-    <section className="py-16 md:py-24 bg-[#FAFAFA] border-b border-gray-100 overflow-hidden">
+    <section className="py-10 md:py-16 bg-[#FAFAFA] overflow-hidden">
       {/* Heading */}
       <div className="max-w-site mx-auto px-6 lg:px-10 mb-10 text-center">
         <motion.p

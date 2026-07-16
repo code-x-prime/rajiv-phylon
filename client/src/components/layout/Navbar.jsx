@@ -86,6 +86,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/products", label: "Products" },
+    { href: "/catalog", label: "Catalogue" },
     { href: "/about", label: "About" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },
@@ -173,7 +174,7 @@ export function Navbar() {
               <div className={`hidden lg:block h-8 w-[1px] ${scrolled ? "bg-gray-300" : "bg-white/40"}`} />
 
               {/* Secondary Logo — desktop only */}
-              <div className="hidden lg:block relative group">
+              <Link href="/" className="hidden lg:block relative group">
                 <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
                 {scrolled ? (
                   <Image
@@ -192,7 +193,7 @@ export function Navbar() {
                     className="h-9 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
                   />
                 )}
-              </div>
+              </Link>
             </div>
 
             {/* Center: Desktop Navigation */}

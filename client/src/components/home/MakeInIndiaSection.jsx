@@ -41,7 +41,7 @@ export function MakeInIndiaSection() {
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-site mx-auto px-6 lg:px-10 py-16 md:py-24">
+      <div className="relative z-10 max-w-site mx-auto px-6 lg:px-10 py-10 md:py-16">
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
           {/* Left — text content */}

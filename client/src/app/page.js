@@ -67,7 +67,10 @@ export default function HomePage() {
         <HighDemandFetcher />
       </Suspense>
 
-      {/* 7. About – static */}
+      {/* 7. Client Logos – static */}
+      <ClientLogos />
+
+      {/* 8. About – static */}
       <AboutSection />
 
       {/* 8. Why Choose Us – static */}
@@ -78,10 +81,7 @@ export default function HomePage() {
         <GalleryFetcher />
       </Suspense>
 
-      {/* 11. Client Logos – static */}
-      <ClientLogos />
-
-      {/* 12. Global Presence – static */}
+      {/* 11. Global Presence – static */}
       <GlobalPresenceSection />
 
       {/* 14. Make in India – static */}

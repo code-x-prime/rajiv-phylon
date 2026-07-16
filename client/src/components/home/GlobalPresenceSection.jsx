@@ -11,7 +11,7 @@ const STATS = [
 
 export function GlobalPresenceSection() {
   return (
-    <section className="py-16 md:py-24 bg-white border-b border-gray-100 overflow-hidden">
+    <section className="py-10 md:py-16 bg-white overflow-hidden">
       <div className="max-w-site mx-auto px-6 lg:px-10">
 
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
@@ -74,7 +74,7 @@ export function GlobalPresenceSection() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-display font-medium text-2xl text-foreground">{stat.value}</span>
+                      <span className="font-display font-medium text-3xl text-[#F5B400]">{stat.value}</span>
                       <span className="text-[13px] font-display font-medium text-gray-400">{stat.label}</span>
                     </div>
                     <p className="text-[13px] text-gray-400 font-body mt-0.5">{stat.desc}</p>
