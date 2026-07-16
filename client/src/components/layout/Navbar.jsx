@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getCategories, getSubCategoriesByCategory } from "@/lib/api";
+// import { getCategories, getSubCategoriesByCategory } from "@/lib/api";
 import { Menu, X, Search, Mail, ChevronDown, ArrowRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -146,51 +146,51 @@ export function Navbar() {
           <div className="flex items-center justify-between h-full gap-6">
 
             {/* Left: Primary Logo + divider + Secondary Logo */}
-            <div className="flex items-center gap-4 shrink-0 font-body">
+            <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0 font-body">
               <Link href="/" className="group relative">
                 <div className="absolute -inset-2 bg-[#F5B400]/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
                 {scrolled ? (
                   <Image
                     src="/logo.png"
                     alt="Rajiv Phylon"
-                    width={150}
-                    height={150}
-                    className="w-auto h-7 lg:h-10 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    width={180}
+                    height={180}
+                    className="w-auto h-8 sm:h-9 lg:h-10 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
                     priority
                   />
                 ) : (
                   <Image
                     src="/logo-w-lg.png"
                     alt="Rajiv Phylon"
-                    width={150}
-                    height={150}
-                    className="w-auto h-8 lg:h-11 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
+                    width={180}
+                    height={180}
+                    className="w-auto h-9 sm:h-10 lg:h-11 object-contain relative transition-transform duration-300 group-hover:scale-[1.02]"
                     priority
                   />
                 )}
               </Link>
 
-              {/* Vertical Divider between logos — desktop only */}
-              <div className={`hidden lg:block h-8 w-[1px] ${scrolled ? "bg-gray-300" : "bg-white/40"}`} />
+              {/* Vertical Divider between logos */}
+              <div className={`h-6 sm:h-7 lg:h-8 w-[1px] ${scrolled ? "bg-gray-300" : "bg-white/40"}`} />
 
-              {/* Secondary Logo — desktop only */}
-              <Link href="/" className="hidden lg:block relative group">
+              {/* Secondary Logo — visible on all screens */}
+              <Link href="/" className="relative group">
                 <div className="absolute -inset-2 bg-white/5 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300" />
                 {scrolled ? (
                   <Image
                     src="/sec-logo.png"
                     alt="Quality Mark"
-                    width={150}
-                    height={150}
-                    className="h-9 w-auto object-contain transition-all duration-500 relative"
+                    width={180}
+                    height={180}
+                    className="h-7 sm:h-8 lg:h-9 w-auto object-contain transition-all duration-500 relative"
                   />
                 ) : (
                   <Image
                     src="/sec-logo.png"
                     alt="Quality Mark"
-                    width={150}
-                    height={150}
-                    className="h-9 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
+                    width={180}
+                    height={180}
+                    className="h-7 sm:h-8 lg:h-9 w-auto object-contain brightness-0 invert opacity-90 transition-all duration-500 relative"
                   />
                 )}
               </Link>
