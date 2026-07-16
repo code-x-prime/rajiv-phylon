@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import BookPage from './BookPage';
 import { usePdf } from '@/hooks/usePdf';
 
-const PDF_URL = 'https://rajivphylon.com/catalog.pdf';
+const PDF_URL = 'https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/rajiv-phylon/2026%20CATALOGUE.pdf';
 
 interface BookViewerProps {
   currentPage: number;
