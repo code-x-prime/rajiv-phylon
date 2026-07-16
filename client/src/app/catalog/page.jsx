@@ -25,7 +25,7 @@ const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
 });
 
 const CATALOG_URL =
-  "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/rajiv-phylon/2026%20CATALOGUE.pdf";
+  "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf";
 
 export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
