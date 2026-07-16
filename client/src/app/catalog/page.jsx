@@ -1,12 +1,28 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
-import { usePdf } from "@/hooks/usePdf";
-import Book from "@/components/BookViewer/Book";
 import { Toolbar } from "@/components/BookViewer/Toolbar";
-import { Loader } from "@/components/BookViewer/Loader";
+
+const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col items-center justify-center min-h-[500px] w-full">
+      <div className="relative mb-6">
+        <div className="absolute inset-0 bg-[#F5B400]/10 rounded-full blur-2xl animate-pulse" />
+        <div className="relative w-16 h-16 border-4 border-t-[#F5B400] border-gray-800 rounded-full animate-spin" />
+      </div>
+      <h3 className="font-heading text-xl font-semibold text-white tracking-wide mb-2">
+        Preparing Premium Catalogue
+      </h3>
+      <p className="text-white/40 text-sm font-body max-w-xs mb-6 text-center">
+        Rendering pages for high-definition 3D experience.
+      </p>
+    </div>
+  ),
+});
 
 const CATALOG_URL =
   "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf";
@@ -17,8 +33,6 @@ export default function CatalogPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const viewerRef = useRef(null);
 
-  const { pdf, numPages, loading, error } = usePdf(CATALOG_URL);
-
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
   }, []);
@@ -28,8 +42,8 @@ export default function CatalogPage() {
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, numPages));
-  }, [numPages]);
+    setCurrentPage((prev) => Math.min(prev + 1, 1000));
+  }, []);
 
   const toggleFullscreen = useCallback(() => {
     if (!viewerRef.current) return;
@@ -110,48 +124,30 @@ export default function CatalogPage() {
         }`}
       >
         <div className="w-full max-w-[1400px] flex flex-col gap-6">
-          {loading ? (
-            <Loader progress={currentPage} total={numPages} />
-          ) : error ? (
-            <div className="p-8 text-center bg-red-950/20 border border-red-500/30 rounded-2xl">
-              <p className="text-red-400 font-semibold mb-2">Failed to load the catalogue</p>
-              <p className="text-xs text-white/60 mb-4">{error.message || "Unknown error"}</p>
-              <button 
-                onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl transition text-xs font-semibold"
-              >
-                Retry Loading
-              </button>
-            </div>
-          ) : (
-            <>
-              {/* Premium Book Canvas */}
-              <div className="flex-1 flex items-center justify-center min-h-[500px] overflow-hidden rounded-3xl border border-white/5 bg-[#0E0E0E] shadow-2xl relative">
-                {/* Visual accent background */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,180,0,0.02)_0%,transparent_70%)] pointer-events-none" />
-                
-                <Book
-                  pdf={pdf}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                  zoomScale={zoomScale}
-                />
-              </div>
+          {/* Premium Book Canvas */}
+          <div className="flex-1 flex items-center justify-center min-h-[500px] overflow-hidden rounded-3xl border border-white/5 bg-[#0E0E0E] shadow-2xl relative">
+            {/* Visual accent background */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,180,0,0.02)_0%,transparent_70%)] pointer-events-none" />
+            
+            <BookViewer
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              zoomScale={zoomScale}
+            />
+          </div>
 
-              {/* Glassmorphic Control Toolbar */}
-              <Toolbar
-                currentPage={currentPage}
-                totalPages={numPages}
-                zoomScale={zoomScale}
-                setZoomScale={setZoomScale}
-                isFullscreen={isFullscreen}
-                toggleFullscreen={toggleFullscreen}
-                pdfUrl={CATALOG_URL}
-                onPrev={handlePrev}
-                onNext={handleNext}
-              />
-            </>
-          )}
+          {/* Glassmorphic Control Toolbar */}
+          <Toolbar
+            currentPage={currentPage}
+            totalPages={1000}
+            zoomScale={zoomScale}
+            setZoomScale={setZoomScale}
+            isFullscreen={isFullscreen}
+            toggleFullscreen={toggleFullscreen}
+            pdfUrl={CATALOG_URL}
+            onPrev={handlePrev}
+            onNext={handleNext}
+          />
         </div>
       </section>
 

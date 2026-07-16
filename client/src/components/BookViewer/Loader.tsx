@@ -1,13 +1,19 @@
-import React from "react";
-import { Loader2 } from "lucide-react";
+'use client';
 
-export function Loader({ progress, total }) {
+import React from 'react';
+import { Loader2 } from 'lucide-react';
+
+interface LoaderProps {
+  progress: number;
+  total: number;
+}
+
+export function Loader({ progress, total }: LoaderProps) {
   const percentage = total > 0 ? Math.round((progress / total) * 100) : 0;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[500px] w-full bg-gradient-to-b from-[#121212] to-[#080808] rounded-2xl border border-white/5 p-8 text-center shadow-2xl">
       <div className="relative mb-6">
-        {/* Outer glowing effect */}
         <div className="absolute inset-0 bg-[#F5B400]/10 rounded-full blur-2xl animate-pulse" />
         <Loader2 className="h-16 w-16 text-[#F5B400] animate-spin relative z-10" />
       </div>
@@ -19,7 +25,6 @@ export function Loader({ progress, total }) {
         Rendering pages for high-definition 3D experience.
       </p>
 
-      {/* Progress Bar */}
       {total > 0 && (
         <div className="w-64">
           <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
