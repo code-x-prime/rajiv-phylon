@@ -3,6 +3,7 @@ import * as pdfjs from 'pdfjs-dist';
 
 if (typeof window !== 'undefined') {
   pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
+  console.log('[usePdf] Worker configured');
 }
 
 interface UsePdfReturn {
@@ -52,6 +53,7 @@ export function usePdf(url: string): UsePdfReturn {
 
     pdfjs.getDocument(url).promise
       .then((pdfDoc) => {
+        console.log('[usePdf] PDF loaded:', { numPages: pdfDoc.numPages });
         if (isMounted) {
           setPdf(pdfDoc);
           setNumPages(pdfDoc.numPages);
@@ -59,6 +61,7 @@ export function usePdf(url: string): UsePdfReturn {
         }
       })
       .catch((err) => {
+        console.error('[usePdf] Error loading PDF:', err);
         if (isMounted) {
           setError(err);
           setLoading(false);

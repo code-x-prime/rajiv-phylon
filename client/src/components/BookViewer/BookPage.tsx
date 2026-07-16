@@ -31,7 +31,9 @@ export const BookPage = memo(forwardRef<HTMLDivElement, BookPageProps>(
         try {
           setLoading(true);
           setError(null);
+          console.log('[BookPage] Rendering page:', pageNumber, 'pdf:', !!pdf);
           const page = await pdf.getPage(pageNumber);
+          console.log('[BookPage] Got page:', pageNumber);
           
           if (!isCurrent || !canvasRef.current) return;
 

@@ -25,10 +25,11 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
   const { pdf, numPages, loading, error, renderPageToCanvas } = usePdf(PDF_URL);
 
   useEffect(() => {
+    console.log('[BookViewer] pdf state:', { pdf: !!pdf, numPages, loading, error });
     if (pdf && numPages > 0) {
       setPdfReady(true);
     }
-  }, [pdf, numPages]);
+  }, [pdf, numPages, loading, error]);
 
   const updateDimensions = useCallback(() => {
     if (typeof window === 'undefined') return;
