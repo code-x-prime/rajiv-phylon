@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import BookPage from './BookPage';
 import { usePdf } from '@/hooks/usePdf';
 
-const PDF_URL = 'https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/rajiv-phylon/2026%20CATALOGUE.pdf';
+const PDF_URL = 'https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf';
 
 interface BookViewerProps {
   currentPage: number;
@@ -68,13 +68,13 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
 
   const renderPages = useMemo(() => {
     const pages: React.ReactElement[] = [];
-    
+
     for (let i = 1; i <= totalPages; i++) {
-      const isVisible = renderedPages.has(i) || 
-                        Math.abs(i - currentPage) <= 2 || 
-                        i === 1 || 
-                        i === totalPages;
-      
+      const isVisible = renderedPages.has(i) ||
+        Math.abs(i - currentPage) <= 2 ||
+        i === 1 ||
+        i === totalPages;
+
       pages.push(
         <BookPage
           key={i}
@@ -99,9 +99,9 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
 
     const initFlipBook = async () => {
       if (!containerRef.current || initialized) return;
-      
+
       const { HTMLFlipBook } = await import('page-flip');
-      
+
       if (flipBookRef.current) {
         flipBookRef.current.destroy();
       }
@@ -220,8 +220,8 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
           <div className="p-8 text-center bg-red-950/20 border border-red-500/30 rounded-2xl">
             <p className="text-red-400 font-semibold mb-2">Failed to load the catalogue</p>
             <p className="text-xs text-white/60 mb-4">{error.message || 'Unknown error'}</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl transition text-xs font-semibold"
             >
               Retry Loading
@@ -234,7 +234,7 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
 
   return (
     <div className="flex justify-center items-center select-none w-full">
-      <div 
+      <div
         className="relative py-8 md:py-12 px-4 md:px-8 bg-[#0D0D0D]/40 backdrop-blur-md rounded-[32px] border border-white/5 shadow-2xl w-full"
         style={{
           perspective: '1500px',
@@ -242,8 +242,8 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
       >
         <div className="absolute inset-x-8 bottom-4 h-6 bg-black/60 blur-xl rounded-full z-0 pointer-events-none" />
 
-        <div 
-          ref={containerRef} 
+        <div
+          ref={containerRef}
           className="relative z-10 flex"
           style={{
             width: isMobile ? `${dimensions.width}px` : `${dimensions.width * 2}px`,

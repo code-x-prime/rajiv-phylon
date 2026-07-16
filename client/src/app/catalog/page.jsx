@@ -25,7 +25,7 @@ const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
 });
 
 const CATALOG_URL =
-  "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/rajiv-phylon/2026%20CATALOGUE.pdf";
+  "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf";
 
 export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,7 +104,7 @@ export default function CatalogPage() {
                 Explore our full line of premium compressed EVA phylon soles, TPU/TPR/Rubber hybrid outsoles, and custom polymer compounds in high-fidelity 3D book-flip mode.
               </p>
             </div>
-            
+
             <a
               href={CATALOG_URL}
               download
@@ -117,18 +117,17 @@ export default function CatalogPage() {
       </section>
 
       {/* Main interactive section */}
-      <section 
+      <section
         ref={viewerRef}
-        className={`flex-1 flex flex-col justify-center items-center py-8 px-4 sm:px-6 lg:px-8 bg-[#070707] transition-all ${
-          isFullscreen ? "fixed inset-0 z-50 p-6 bg-black" : ""
-        }`}
+        className={`flex-1 flex flex-col justify-center items-center py-8 px-4 sm:px-6 lg:px-8 bg-[#070707] transition-all ${isFullscreen ? "fixed inset-0 z-50 p-6 bg-black" : ""
+          }`}
       >
         <div className="w-full max-w-[1400px] flex flex-col gap-6">
           {/* Premium Book Canvas */}
           <div className="flex-1 flex items-center justify-center min-h-[500px] overflow-hidden rounded-3xl border border-white/5 bg-[#0E0E0E] shadow-2xl relative">
             {/* Visual accent background */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,180,0,0.02)_0%,transparent_70%)] pointer-events-none" />
-            
+
             <BookViewer
               currentPage={currentPage}
               onPageChange={handlePageChange}
