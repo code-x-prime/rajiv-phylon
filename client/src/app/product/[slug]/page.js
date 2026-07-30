@@ -6,6 +6,8 @@ import { ProductDetailGallery } from "@/components/product/ProductDetailGallery"
 import { StickyEnquiryBox } from "@/components/product/StickyEnquiryBox";
 import { RelatedProductCard } from "@/components/product/RelatedProductCard";
 
+export const dynamic = "force-dynamic";
+
 /* ─── SEO ─────────────────────────────────────────────────── */
 export async function generateMetadata({ params }) {
   const slug = params.slug;

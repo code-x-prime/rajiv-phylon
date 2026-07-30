@@ -5,6 +5,8 @@ import { ChevronRight, Package } from "lucide-react";
 import { getSubcategoryBySlug, getProducts, getCategories, getSubCategoriesByCategory } from "@/lib/api";
 import { CatalogProductCard } from "@/components/catalog";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   try {
     const categories = await getCategories();

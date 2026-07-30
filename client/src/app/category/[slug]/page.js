@@ -6,6 +6,8 @@ import { getCategoryBySlug, getCategories, getSubCategoriesByCategory, getProduc
 import { CatalogProductCard } from "@/components/catalog";
 import { CategoryCard } from "@/components/ui";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   try {
     const categories = await getCategories();
