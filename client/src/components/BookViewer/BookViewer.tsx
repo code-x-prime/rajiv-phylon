@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import BookPage from './BookPage';
+import { Loader } from './Loader';
 import { usePdf } from '@/hooks/usePdf';
 
 const PDF_URL = 'https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf';
@@ -23,7 +24,7 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
   const [renderedPages, setRenderedPages] = useState<Set<number>>(new Set());
   const [pdfReady, setPdfReady] = useState(false);
 
-  const { pdf, numPages, loading, error, renderPageToCanvas } = usePdf(pdfUrl);
+  const { pdf, numPages, loading, error, progress } = usePdf(pdfUrl);
 
   useEffect(() => {
     console.log('[BookViewer] pdf state:', { pdf: !!pdf, numPages, loading, error });
@@ -103,22 +104,30 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
     const initFlipBook = async () => {
       if (!containerRef.current || initialized) return;
 
-      const { HTMLFlipBook } = await import('page-flip');
+      const pageFlipMod = await import('page-flip');
+      const PageFlipClass = pageFlipMod.PageFlip || (pageFlipMod as any).default?.PageFlip || (pageFlipMod as any).default;
+
+      if (!PageFlipClass) {
+        console.error('[BookViewer] Could not find PageFlip constructor class');
+        return;
+      }
 
       if (flipBookRef.current) {
-        flipBookRef.current.destroy();
+        try {
+          flipBookRef.current.destroy();
+        } catch (_) {}
       }
 
       const pageElements = containerRef.current.querySelectorAll('.page');
       if (pageElements.length === 0) return;
 
-      flipBookInstance = new HTMLFlipBook(containerRef.current, {
+      flipBookInstance = new PageFlipClass(containerRef.current, {
         width: dimensions.width,
         height: dimensions.height,
         size: 'fixed',
-        minWidth: 300,
+        minWidth: 260,
         maxWidth: 1200,
-        minHeight: 400,
+        minHeight: 360,
         maxHeight: 1600,
         drawShadow: true,
         showCover: true,
@@ -128,8 +137,8 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
         swipeDistance: 30,
         maxShadowOpacity: 0.4,
         showPageCorners: true,
-        cornerWidth: isMobile ? 60 : 80,
-        cornerHeight: isMobile ? 60 : 80,
+        cornerWidth: isMobile ? 40 : 80,
+        cornerHeight: isMobile ? 40 : 80,
       });
 
       flipBookInstance.loadFromHTML(pageElements);
@@ -192,26 +201,8 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px]">
-        <div className="w-full max-w-[1400px]">
-          <div className="flex flex-col items-center justify-center min-h-[500px] w-full bg-gradient-to-b from-[#121212] to-[#080808] rounded-2xl border border-white/5 p-8 text-center shadow-2xl">
-            <div className="relative mb-6">
-              <div className="absolute inset-0 bg-[#F5B400]/10 rounded-full blur-2xl animate-pulse" />
-              <div className="h-16 w-16 text-[#F5B400] animate-spin relative z-10">
-                <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle className="animate-spin" cx="12" cy="12" r="10" strokeOpacity="0.25" />
-                  <path className="animate-spin" strokeLinecap="round" d="M12 2a10 10 0 0 1 10 10" />
-                </svg>
-              </div>
-            </div>
-            <h3 className="font-heading text-xl font-semibold text-white tracking-wide mb-2">
-              Preparing Premium Catalogue
-            </h3>
-            <p className="text-white/40 text-sm font-body max-w-xs mb-6">
-              Rendering pages for high-definition 3D experience.
-            </p>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[400px] sm:min-h-[500px] w-full">
+        <Loader progress={progress.loaded} total={progress.total} />
       </div>
     );
   }

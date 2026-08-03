@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 
+export interface UsePdfProgress {
+  loaded: number;
+  total: number;
+}
+
 interface UsePdfReturn {
   pdf: PDFDocumentProxy | null;
   numPages: number;
   loading: boolean;
   error: Error | null;
+  progress: UsePdfProgress;
   loadPage: (pageNum: number) => Promise<PDFPageProxy>;
   renderPageToCanvas: (page: PDFPageProxy, canvas: HTMLCanvasElement, scale?: number) => Promise<void>;
 }
@@ -15,6 +21,7 @@ export function usePdf(url: string): UsePdfReturn {
   const [numPages, setNumPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [progress, setProgress] = useState<UsePdfProgress>({ loaded: 0, total: 0 });
 
   const loadPage = useCallback(async (pageNum: number): Promise<PDFPageProxy> => {
     if (!pdf) throw new Error('PDF not loaded');
@@ -58,6 +65,7 @@ export function usePdf(url: string): UsePdfReturn {
     let isMounted = true;
     setLoading(true);
     setError(null);
+    setProgress({ loaded: 0, total: 0 });
 
     (async () => {
       try {
@@ -75,17 +83,46 @@ export function usePdf(url: string): UsePdfReturn {
         let pdfDoc: PDFDocumentProxy | null = null;
         try {
           const loadingTask = pdfjs.getDocument(docParams);
+          loadingTask.onProgress = (data) => {
+            if (isMounted && data.total > 0) {
+              setProgress({ loaded: data.loaded, total: data.total });
+            }
+          };
           pdfDoc = await loadingTask.promise;
         } catch (directErr) {
           console.warn('[usePdf] Direct PDF getDocument failed, attempting fetch ArrayBuffer fallback:', directErr);
-          // Fallback: fetch ArrayBuffer directly and load viaUint8Array data
           const response = await fetch(targetUrl);
           if (!response.ok) {
             throw new Error(`Failed to fetch PDF catalog (HTTP ${response.status})`);
           }
-          const arrayBuffer = await response.arrayBuffer();
+          const contentLength = Number(response.headers.get('content-length') || 0);
+          const reader = response.body?.getReader();
+          let receivedBytes = 0;
+          const chunks: Uint8Array[] = [];
+
+          if (reader) {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              if (value) {
+                chunks.push(value);
+                receivedBytes += value.length;
+                if (isMounted) {
+                  setProgress({ loaded: receivedBytes, total: contentLength || receivedBytes });
+                }
+              }
+            }
+          }
+
+          const arrayBuffer = new Uint8Array(receivedBytes);
+          let position = 0;
+          for (const chunk of chunks) {
+            arrayBuffer.set(chunk, position);
+            position += chunk.length;
+          }
+
           const fallbackTask = pdfjs.getDocument({
-            data: new Uint8Array(arrayBuffer),
+            data: arrayBuffer,
             cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/cmaps/`,
             cMapPacked: true,
           });
@@ -112,5 +149,5 @@ export function usePdf(url: string): UsePdfReturn {
     };
   }, [url]);
 
-  return { pdf, numPages, loading, error, loadPage, renderPageToCanvas };
+  return { pdf, numPages, loading, error, progress, loadPage, renderPageToCanvas };
 }
