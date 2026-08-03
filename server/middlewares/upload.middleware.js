@@ -45,4 +45,19 @@ export const uploadBanner = multer({
     { name: "mobileImage", maxCount: 1 },
 ]);
 
-export default { uploadSingle, uploadMultiple, uploadGallery, uploadBanner };
+const pdfFilter = (req, file, cb) => {
+    if (file.mimetype === "application/pdf" || file.originalname.toLowerCase().endsWith(".pdf")) {
+        cb(null, true);
+    } else {
+        cb(new ApiError(400, "Only PDF documents are allowed"), false);
+    }
+};
+
+/** Single PDF file upload for Catalogue (field name: pdf or file) */
+export const uploadPdf = multer({
+    storage,
+    limits: { fileSize: 600 * 1024 * 1024 }, // 600MB max limit
+    fileFilter: pdfFilter,
+}).single("pdf");
+
+export default { uploadSingle, uploadMultiple, uploadGallery, uploadBanner, uploadPdf };

@@ -13,6 +13,7 @@ import {
   Menu,
   ChevronLeft,
   ImageIcon,
+  BookOpen,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/catalogue", label: "Catalogue PDF", icon: BookOpen },
   { to: "/banners", label: "Banners", icon: ImageIcon },
   { to: "/categories", label: "Categories", icon: FolderTree },
   { to: "/subcategories", label: "SubCategories", icon: Layers },
@@ -34,6 +36,7 @@ const nav = [
 
 function getPageTitle(pathname: string): string {
   if (pathname === "/") return "Dashboard";
+  if (pathname.startsWith("/catalogue")) return "Catalogue PDF";
   if (pathname.startsWith("/products/add")) return "Add Product";
   if (pathname.startsWith("/products/edit")) return "Edit Product";
   if (pathname.startsWith("/categories")) return "Categories";

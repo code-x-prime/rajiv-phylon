@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
@@ -23,13 +23,40 @@ const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
   ),
 });
 
-const CATALOG_URL =
-  "https://pub-58262d6d8d8f475fb5d97db5d155da43.r2.dev/2026%20CATALOGUE.pdf";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.rajivphylon.com/api";
 
 export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(238);
+  const [totalPages, setTotalPages] = useState(0);
+  const [catalogInfo, setCatalogInfo] = useState({
+    title: "Product Catalogue",
+    year: "",
+    pdfUrl: "",
+  });
   const viewerRef = useRef(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${API_BASE}/catalogue`)
+      .then((res) => res.json())
+      .then((resData) => {
+        const data = resData?.data || resData;
+        if (data && data.pdfUrl && isMounted) {
+          setCatalogInfo({
+            title: data.title || "Product Catalogue 2026",
+            year: data.year || "2026",
+            pdfUrl: data.pdfUrl,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("[CatalogPage] Fetch active catalogue error, using default:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
@@ -65,7 +92,17 @@ export default function CatalogPage() {
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-heading font-bold text-white tracking-tight leading-tight">
-                Product <span className="text-[#F5B400]">Catalogue</span> 2026
+                {catalogInfo.title.includes(catalogInfo.year) ? (
+                  <>
+                    {catalogInfo.title.split(catalogInfo.year)[0]}
+                    <span className="text-[#F5B400]">{catalogInfo.year}</span>
+                    {catalogInfo.title.split(catalogInfo.year)[1]}
+                  </>
+                ) : (
+                  <>
+                    {catalogInfo.title} <span className="text-[#F5B400]">{catalogInfo.year}</span>
+                  </>
+                )}
               </h1>
               <p className="text-xs sm:text-sm text-white/50 mt-2 max-w-xl">
                 Explore our full line of premium compressed EVA phylon soles, TPU/TPR/Rubber hybrid outsoles, and custom polymer compounds in high-fidelity interactive mode.
@@ -73,8 +110,10 @@ export default function CatalogPage() {
             </div>
 
             <a
-              href={CATALOG_URL}
+              href={catalogInfo.pdfUrl}
               download
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F5B400] text-black font-semibold text-xs uppercase tracking-wider px-5 py-3 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.25)] transition-all duration-300 w-full sm:w-auto text-center"
             >
               Download PDF Version
@@ -92,7 +131,7 @@ export default function CatalogPage() {
           <BookViewer
             currentPage={currentPage}
             onPageChange={handlePageChange}
-            pdfUrl={CATALOG_URL}
+            pdfUrl={catalogInfo.pdfUrl}
             onTotalPagesChange={setTotalPages}
           />
         </div>

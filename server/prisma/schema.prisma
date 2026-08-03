@@ -200,3 +200,19 @@ model ContactInquiry {
 
   @@map("contact_inquiries")
 }
+
+// -----------------------------------------------
+// Catalogue (Product Catalogue PDF)
+// -----------------------------------------------
+model Catalogue {
+  id          String   @id @default(cuid())
+  title       String   @default("Product Catalogue 2026")
+  year        String   @default("2026")
+  pdfUrl      String   @db.Text
+  fileSize    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("catalogues")
+}
