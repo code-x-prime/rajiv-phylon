@@ -29,6 +29,7 @@ const CATALOG_URL =
 
 export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(238);
   const [zoomScale, setZoomScale] = useState(1.0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const viewerRef = useRef(null);
@@ -42,8 +43,8 @@ export default function CatalogPage() {
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, 1000));
-  }, []);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  }, [totalPages]);
 
   const toggleFullscreen = useCallback(() => {
     if (!viewerRef.current) return;
@@ -134,13 +135,14 @@ export default function CatalogPage() {
               onPageChange={handlePageChange}
               zoomScale={zoomScale}
               pdfUrl={CATALOG_URL}
+              onTotalPagesChange={setTotalPages}
             />
           </div>
 
           {/* Glassmorphic Control Toolbar */}
           <Toolbar
             currentPage={currentPage}
-            totalPages={1000}
+            totalPages={totalPages}
             zoomScale={zoomScale}
             setZoomScale={setZoomScale}
             isFullscreen={isFullscreen}

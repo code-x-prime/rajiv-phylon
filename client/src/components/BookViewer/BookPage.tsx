@@ -19,21 +19,23 @@ export const BookPage = memo(forwardRef<HTMLDivElement, BookPageProps>(
     const [rendered, setRendered] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
+    const onRenderedRef = useRef(onRendered);
+    useEffect(() => {
+      onRenderedRef.current = onRendered;
+    }, [onRendered]);
+
     useEffect(() => {
       if (!isVisible || !pdf || !canvasRef.current) {
         return;
       }
 
       let isCurrent = true;
-      let animationFrame: number;
 
       const renderPage = async () => {
         try {
           setLoading(true);
           setError(null);
-          console.log('[BookPage] Rendering page:', pageNumber, 'pdf:', !!pdf);
           const page = await pdf.getPage(pageNumber);
-          console.log('[BookPage] Got page:', pageNumber);
           
           if (!isCurrent || !canvasRef.current) return;
 
@@ -54,7 +56,7 @@ export const BookPage = memo(forwardRef<HTMLDivElement, BookPageProps>(
           if (isCurrent) {
             setRendered(true);
             setLoading(false);
-            onRendered?.();
+            onRenderedRef.current?.();
           }
         } catch (err) {
           if (isCurrent) {
@@ -69,9 +71,8 @@ export const BookPage = memo(forwardRef<HTMLDivElement, BookPageProps>(
 
       return () => {
         isCurrent = false;
-        if (animationFrame) cancelAnimationFrame(animationFrame);
       };
-    }, [pdf, pageNumber, isVisible, scale, onRendered]);
+    }, [pdf, pageNumber, isVisible, scale]);
 
     const isCover = pageNumber === 1 || pageNumber === pdf?.numPages;
     const isLeftPage = pageNumber % 2 === 0;

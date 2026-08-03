@@ -13,9 +13,10 @@ interface BookViewerProps {
   onPageChange: (page: number) => void;
   zoomScale: number;
   pdfUrl?: string;
+  onTotalPagesChange?: (total: number) => void;
 }
 
-export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUrl = PDF_URL }: BookViewerProps) {
+export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUrl = PDF_URL, onTotalPagesChange }: BookViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const flipBookRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 500, height: 700 });
@@ -30,8 +31,9 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
     console.log('[BookViewer] pdf state:', { pdf: !!pdf, numPages, loading, error });
     if (pdf && numPages > 0) {
       setPdfReady(true);
+      onTotalPagesChange?.(numPages);
     }
-  }, [pdf, numPages, loading, error]);
+  }, [pdf, numPages, loading, error, onTotalPagesChange]);
 
   const updateDimensions = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -68,6 +70,15 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
     return () => window.removeEventListener('resize', updateDimensions);
   }, [updateDimensions]);
 
+  const handlePageRendered = useCallback((pageNum: number) => {
+    setRenderedPages(prev => {
+      if (prev.has(pageNum)) return prev;
+      const next = new Set(prev);
+      next.add(pageNum);
+      return next;
+    });
+  }, []);
+
   const totalPages = numPages || 0;
 
   const renderPages = useMemo(() => {
@@ -87,13 +98,13 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
           isVisible={isVisible}
           width={dimensions.width}
           height={dimensions.height}
-          onRendered={() => setRenderedPages(prev => new Set(prev).add(i))}
+          onRendered={() => handlePageRendered(i)}
           scale={2.0}
         />
       );
     }
     return pages;
-  }, [totalPages, currentPage, renderedPages, pdf, dimensions.width, dimensions.height]);
+  }, [totalPages, currentPage, renderedPages, pdf, dimensions.width, dimensions.height, handlePageRendered]);
 
   useEffect(() => {
     if (!containerRef.current || !pdfReady || !totalPages) return;
@@ -153,11 +164,9 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
       flipBookInstance.on('flipStart', (e: any) => {
         const pageIndex = e.data;
         const pageNum = pageIndex + 1;
-        if (!renderedPages.has(pageNum)) {
-          setRenderedPages(prev => new Set(prev).add(pageNum));
-        }
-        if (pageIndex + 1 < totalPages && !renderedPages.has(pageIndex + 2)) {
-          setRenderedPages(prev => new Set(prev).add(pageIndex + 2));
+        handlePageRendered(pageNum);
+        if (pageIndex + 1 < totalPages) {
+          handlePageRendered(pageIndex + 2);
         }
       });
     };
@@ -166,10 +175,12 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUr
 
     return () => {
       if (flipBookInstance) {
-        flipBookInstance.destroy();
+        try {
+          flipBookInstance.destroy();
+        } catch (_) {}
       }
     };
-  }, [pdfReady, totalPages, dimensions, isMobile, currentPage, renderedPages, onPageChange]);
+  }, [pdfReady, totalPages, dimensions, isMobile, onPageChange, handlePageRendered]);
 
   useEffect(() => {
     if (flipBookRef.current && pdfReady) {
