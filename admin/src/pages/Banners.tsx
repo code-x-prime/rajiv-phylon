@@ -216,14 +216,14 @@ export function Banners() {
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="w-24 h-14 bg-muted shrink-0 overflow-hidden">
+                <div className="w-28 aspect-[1920/900] bg-muted shrink-0 overflow-hidden rounded border border-border">
                   {img(b, false) ? (
                     <img src={img(b, false)!} alt={b.title} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-xs text-muted-foreground flex items-center justify-center h-full">Desktop</span>
                   )}
                 </div>
-                <div className="w-16 h-14 bg-muted shrink-0 overflow-hidden">
+                <div className="w-12 aspect-[4/5] bg-muted shrink-0 overflow-hidden rounded border border-border">
                   {img(b, true) ? (
                     <img src={img(b, true)!} alt={b.title} className="w-full h-full object-cover" />
                   ) : (
@@ -278,7 +278,7 @@ export function Banners() {
                 required={!editing}
               />
               {editing && (editing.desktopImageUrl || editing.desktopImage) && (
-                <img src={editing.desktopImageUrl || editing.desktopImage} alt="" className="mt-2 h-20 object-cover border border-border" />
+                <img src={editing.desktopImageUrl || editing.desktopImage} alt="" className="mt-2 w-64 aspect-[1920/900] object-cover rounded border border-border" />
               )}
             </div>
             <div>
@@ -294,7 +294,7 @@ export function Banners() {
                 required={!editing}
               />
               {editing && (editing.mobileImageUrl || editing.mobileImage) && (
-                <img src={editing.mobileImageUrl || editing.mobileImage} alt="" className="mt-2 h-20 object-cover border border-border w-20" />
+                <img src={editing.mobileImageUrl || editing.mobileImage} alt="" className="mt-2 w-24 aspect-[4/5] object-cover rounded border border-border" />
               )}
             </div>
             <div>

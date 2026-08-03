@@ -70,7 +70,7 @@ function BannerSlider({ banners }) {
 
   return (
     <section
-      className="relative w-full min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
+      className="relative w-full aspect-[4/5] md:aspect-[1920/900] flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -86,21 +86,18 @@ function BannerSlider({ banners }) {
           className="absolute inset-0 will-change-transform select-none"
           onContextMenu={(e) => e.preventDefault()}
         >
-          <picture>
+          <picture className="w-full h-full block">
             <source media="(max-width: 768px)" srcSet={mobileSrc || FB_MOBILE} />
-            <Image
+            <img
               src={desktopSrc || FB_DESK}
               alt={`Banner ${index + 1}`}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
+              className="w-full h-full object-cover object-center"
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
             />
           </picture>
           {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
@@ -187,7 +184,7 @@ function FallbackHero() {
 
   return (
     <section
-      className="relative w-full min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
+      className="relative w-full aspect-[4/5] md:aspect-[1920/900] flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseMove={handleMouseMove}
     >
       {/* Desktop bg image */}
