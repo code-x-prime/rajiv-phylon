@@ -17,17 +17,11 @@ export default defineConfig({
   preview: {
     port: 4173,
     host: "0.0.0.0",
-    allowedHosts: [
-      "admin.rajivphylon.com",
-      "www.admin.rajivphylon.com",
-    ],
+    allowedHosts: true,
   },
   // Add server configuration for development
   server: {
     host: "0.0.0.0",
-    allowedHosts: [
-      "admin.rajivphylon.com",
-      "www.admin.rajivphylon.com",
-    ],
+    allowedHosts: true,
   },
 })
