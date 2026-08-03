@@ -1,8 +1,4 @@
-import * as pdfjs from 'pdfjs-dist';
-
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
-}
+import type { PDFDocumentProxy, RenderParameters } from 'pdfjs-dist';
 
 export interface PDFPageImage {
   pageNumber: number;
@@ -16,13 +12,17 @@ export interface PDFDocumentInfo {
   pageImages: PDFPageImage[];
 }
 
-export async function loadPDFDocument(url: string): Promise<pdfjs.PDFDocumentProxy> {
+export async function loadPDFDocument(url: string): Promise<PDFDocumentProxy> {
+  const pdfjs = await import('pdfjs-dist');
+  if (typeof window !== 'undefined') {
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/pdf.worker.min.mjs`;
+  }
   const loadingTask = pdfjs.getDocument({ url, verbosity: 0 });
   return loadingTask.promise;
 }
 
 export async function renderPageToCanvas(
-  pdf: pdfjs.PDFDocumentProxy,
+  pdf: PDFDocumentProxy,
   pageNumber: number,
   scale: number = 2.0
 ): Promise<PDFPageImage> {
@@ -42,7 +42,7 @@ export async function renderPageToCanvas(
     ? [outputScale, 0, 0, outputScale, 0, 0] 
     : null;
   
-  const renderContext: pdfjs.RenderParameters = {
+  const renderContext: RenderParameters = {
     canvasContext: context,
     viewport: viewport,
     transform: transform,
@@ -59,7 +59,7 @@ export async function renderPageToCanvas(
 }
 
 export async function renderAllPagesToCanvas(
-  pdf: pdfjs.PDFDocumentProxy,
+  pdf: PDFDocumentProxy,
   scale: number = 2.0,
   onProgress?: (current: number, total: number) => void
 ): Promise<PDFPageImage[]> {

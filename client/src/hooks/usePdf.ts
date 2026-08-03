@@ -1,33 +1,28 @@
 import { useState, useEffect, useCallback } from 'react';
-import * as pdfjs from 'pdfjs-dist';
-
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
-  console.log('[usePdf] Worker configured');
-}
+import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 
 interface UsePdfReturn {
-  pdf: pdfjs.PDFDocumentProxy | null;
+  pdf: PDFDocumentProxy | null;
   numPages: number;
   loading: boolean;
   error: Error | null;
-  loadPage: (pageNum: number) => Promise<pdfjs.PDFPageProxy>;
-  renderPageToCanvas: (page: pdfjs.PDFPageProxy, canvas: HTMLCanvasElement, scale?: number) => Promise<void>;
+  loadPage: (pageNum: number) => Promise<PDFPageProxy>;
+  renderPageToCanvas: (page: PDFPageProxy, canvas: HTMLCanvasElement, scale?: number) => Promise<void>;
 }
 
 export function usePdf(url: string): UsePdfReturn {
-  const [pdf, setPdf] = useState<pdfjs.PDFDocumentProxy | null>(null);
+  const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const loadPage = useCallback(async (pageNum: number): Promise<pdfjs.PDFPageProxy> => {
+  const loadPage = useCallback(async (pageNum: number): Promise<PDFPageProxy> => {
     if (!pdf) throw new Error('PDF not loaded');
     return pdf.getPage(pageNum);
   }, [pdf]);
 
   const renderPageToCanvas = useCallback(
-    async (page: pdfjs.PDFPageProxy, canvas: HTMLCanvasElement, scale = 2.0): Promise<void> => {
+    async (page: PDFPageProxy, canvas: HTMLCanvasElement, scale = 2.0): Promise<void> => {
       const viewport = page.getViewport({ scale });
       const outputScale = window.devicePixelRatio || 1;
       
@@ -45,28 +40,36 @@ export function usePdf(url: string): UsePdfReturn {
   );
 
   useEffect(() => {
-    if (!url) return;
+    if (!url || typeof window === 'undefined') return;
 
     let isMounted = true;
     setLoading(true);
     setError(null);
 
-    pdfjs.getDocument(url).promise
-      .then((pdfDoc) => {
+    (async () => {
+      try {
+        const pdfjs = await import('pdfjs-dist');
+        if (typeof window !== 'undefined') {
+          pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/pdf.worker.min.mjs`;
+        }
+
+        const loadingTask = pdfjs.getDocument(url);
+        const pdfDoc = await loadingTask.promise;
+
         console.log('[usePdf] PDF loaded:', { numPages: pdfDoc.numPages });
         if (isMounted) {
           setPdf(pdfDoc);
           setNumPages(pdfDoc.numPages);
           setLoading(false);
         }
-      })
-      .catch((err) => {
+      } catch (err: any) {
         console.error('[usePdf] Error loading PDF:', err);
         if (isMounted) {
-          setError(err);
+          setError(err instanceof Error ? err : new Error(String(err)));
           setLoading(false);
         }
-      });
+      }
+    })();
 
     return () => {
       isMounted = false;
