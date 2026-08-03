@@ -45,9 +45,27 @@ export default async function CategoryPage({ params }) {
     ]);
   } catch { }
 
-  const categoryProducts = products.filter(
-    (p) => p.categories?.some((c) => c.id === category.id)
-  );
+  const targetSlug = (category.slug || slug)?.toLowerCase();
+  const categoryProducts = products.filter((p) => {
+    if (!p) return false;
+    if (p.categories?.some((c) => c.id === category.id || c.slug?.toLowerCase() === targetSlug)) return true;
+    if (p.categoryId === category.id || p.category?.id === category.id || p.category?.slug?.toLowerCase() === targetSlug) return true;
+    if (p.subCategories?.some((s) => s.id === category.id || s.slug?.toLowerCase() === targetSlug)) return true;
+
+    if (targetSlug === "for-men" || targetSlug === "men") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("men") && !matchText.includes("women");
+    }
+    if (targetSlug === "for-women" || targetSlug === "women") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("women");
+    }
+    if (targetSlug === "for-kids" || targetSlug === "kids") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("kid") || matchText.includes("child");
+    }
+    return false;
+  });
   const showSubCategories = subCategories.length > 0;
   const showProducts = !showSubCategories && categoryProducts.length > 0;
   const imageUrl = category.imageUrl || category.image || "/placeholder.png";

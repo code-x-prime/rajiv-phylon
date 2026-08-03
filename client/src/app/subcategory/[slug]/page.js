@@ -48,9 +48,32 @@ export default async function SubCategoryPage({ params }) {
     products = await getProducts();
   } catch {}
 
-  const subProducts = products.filter(
-    (p) => p.subCategories?.some((s) => s.id === subCategory.id)
-  );
+  const targetSlug = (subCategory.slug || slug)?.toLowerCase();
+  const subProducts = products.filter((p) => {
+    if (!p) return false;
+    // Direct subcategory match by ID or slug
+    if (p.subCategories?.some((s) => s.id === subCategory.id || s.slug?.toLowerCase() === targetSlug)) return true;
+    // Category match by ID or slug
+    if (p.categoryId === category?.id || p.category?.id === category?.id || p.category?.slug?.toLowerCase() === targetSlug) return true;
+    if (p.categories?.some((c) => c.id === category?.id || c.slug?.toLowerCase() === targetSlug)) return true;
+
+    // Special gender slug matching (for-men, for-women, for-kids)
+    if (targetSlug === "for-men" || targetSlug === "men") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("men") && !matchText.includes("women");
+    }
+    if (targetSlug === "for-women" || targetSlug === "women") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("women");
+    }
+    if (targetSlug === "for-kids" || targetSlug === "kids") {
+      const matchText = (JSON.stringify(p.subCategories || []) + JSON.stringify(p.categories || []) + (p.name || "") + (p.gender || "")).toLowerCase();
+      return matchText.includes("kid") || matchText.includes("child");
+    }
+
+    // If subcategory has no products directly assigned, return true if product list is fallback
+    return false;
+  });
 
   return (
     <div className="bg-white min-h-screen overflow-x-hidden">

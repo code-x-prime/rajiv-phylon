@@ -50,24 +50,38 @@ export function Navbar() {
 
   useEffect(() => {
     if (!megaOpen || categories.length === 0) return;
-    const subMap = {
-      "eva-soles": [
-        { id: "for-men", name: "For Men", slug: "for-men" },
-        { id: "for-women", name: "For Women", slug: "for-women" },
-        { id: "for-kids", name: "For Kids", slug: "for-kids" },
-      ],
-      "phylon-soles": [
-        { id: "for-men", name: "For Men", slug: "for-men" },
-        { id: "for-women", name: "For Women", slug: "for-women" },
-        { id: "for-kids", name: "For Kids", slug: "for-kids" },
-      ],
-      "semi-phylon-soles": [
-        { id: "for-men", name: "For Men", slug: "for-men" },
-        { id: "for-women", name: "For Women", slug: "for-women" },
-        { id: "for-kids", name: "For Kids", slug: "for-kids" },
-      ]
-    };
-    setSubsByCategory(subMap);
+    let isMounted = true;
+    async function fetchSubcategories() {
+      const subMap = {};
+      for (const cat of categories) {
+        try {
+          const subs = await getSubCategoriesByCategory(cat.id);
+          if (subs && subs.length > 0) {
+            subMap[cat.id] = subs;
+            subMap[cat.slug] = subs;
+          } else {
+            const defaults = [
+              { id: `for-men-${cat.id}`, name: "For Men", slug: "for-men" },
+              { id: `for-women-${cat.id}`, name: "For Women", slug: "for-women" },
+              { id: `for-kids-${cat.id}`, name: "For Kids", slug: "for-kids" },
+            ];
+            subMap[cat.id] = defaults;
+            subMap[cat.slug] = defaults;
+          }
+        } catch {
+          const defaults = [
+            { id: `for-men-${cat.id}`, name: "For Men", slug: "for-men" },
+            { id: `for-women-${cat.id}`, name: "For Women", slug: "for-women" },
+            { id: `for-kids-${cat.id}`, name: "For Kids", slug: "for-kids" },
+          ];
+          subMap[cat.id] = defaults;
+          subMap[cat.slug] = defaults;
+        }
+      }
+      if (isMounted) setSubsByCategory(subMap);
+    }
+    fetchSubcategories();
+    return () => { isMounted = false; };
   }, [megaOpen, categories]);
 
   useEffect(() => {
@@ -249,7 +263,7 @@ export function Navbar() {
                                     <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300" />
                                   </Link>
                                   <div className="mt-3 space-y-1.5">
-                                    {(subsByCategory[cat.id] || []).slice(0, 3).map((sub) => (
+                                    {(subsByCategory[cat.id] || subsByCategory[cat.slug] || []).slice(0, 3).map((sub) => (
                                       <Link
                                         key={sub.id}
                                         href={`/subcategory/${sub.slug}`}

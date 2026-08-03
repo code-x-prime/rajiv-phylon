@@ -42,7 +42,22 @@ export async function getCategoriesWithSubcategories() {
 
 export async function getCategoryBySlug(slug) {
   const categories = await getCategories();
-  return categories.find((c) => c.slug === slug) || null;
+  const found = categories.find((c) => c.slug === slug || c.slug?.toLowerCase() === slug?.toLowerCase());
+  if (found) return found;
+
+  // Check subcategories
+  for (const cat of categories) {
+    const subs = await getSubCategoriesByCategory(cat.id);
+    const subFound = subs.find((s) => s.slug === slug || s.slug?.toLowerCase() === slug?.toLowerCase());
+    if (subFound) return { id: subFound.id, name: subFound.name, slug: subFound.slug, isSubcategory: true };
+  }
+
+  // Fallback for gender / special slugs (for-men, for-women, for-kids)
+  if (slug === "for-men" || slug === "for-women" || slug === "for-kids") {
+    const nameMap = { "for-men": "For Men", "for-women": "For Women", "for-kids": "For Kids" };
+    return { id: slug, name: nameMap[slug], slug };
+  }
+  return null;
 }
 
 export async function getSubCategoriesByCategory(categoryId) {
@@ -52,10 +67,30 @@ export async function getSubCategoriesByCategory(categoryId) {
 
 export async function getSubcategoryBySlug(slug) {
   const categories = await getCategories();
+  // 1. Check subcategories across categories
   for (const cat of categories) {
     const subs = await getSubCategoriesByCategory(cat.id);
-    const found = subs.find((s) => s.slug === slug);
+    const found = subs.find((s) => s.slug === slug || s.slug?.toLowerCase() === slug?.toLowerCase());
     if (found) return { subcategory: found, category: cat };
+  }
+
+  // 2. Check if slug matches a top-level category (e.g. admin created "FOR MEN" category with slug "for-men")
+  const catFound = categories.find((c) => c.slug === slug || c.slug?.toLowerCase() === slug?.toLowerCase());
+  if (catFound) {
+    return {
+      subcategory: { id: catFound.id, name: catFound.name, slug: catFound.slug, isCategory: true },
+      category: catFound,
+    };
+  }
+
+  // 3. Fallback for gender / special slugs (for-men, for-women, for-kids) so user never gets 404
+  if (slug === "for-men" || slug === "for-women" || slug === "for-kids") {
+    const nameMap = { "for-men": "For Men", "for-women": "For Women", "for-kids": "For Kids" };
+    const dummyCat = categories[0] || { id: "all", name: "Products", slug: "products" };
+    return {
+      subcategory: { id: slug, name: nameMap[slug], slug },
+      category: dummyCat,
+    };
   }
   return null;
 }
