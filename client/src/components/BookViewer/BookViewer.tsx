@@ -12,6 +12,7 @@ import {
   FileText,
   Layers,
   Sparkles,
+  BookOpen,
 } from 'lucide-react';
 
 interface BookViewerProps {
@@ -146,6 +147,29 @@ export default function BookViewer({
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] sm:min-h-[500px] w-full">
         <Loader progress={progress.loaded} total={progress.total} />
+      </div>
+    );
+  }
+
+  // Graceful empty state when no PDF has been published yet from Admin
+  if (!pdfUrl || (!pdf && !error)) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[350px] sm:min-h-[450px] w-full p-6 sm:p-10 text-center bg-gradient-to-b from-[#121212] to-[#0A0A0A] rounded-3xl border border-white/10 shadow-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-[#F5B400]/10 border border-[#F5B400]/20 flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(245,180,0,0.15)]">
+          <BookOpen className="h-8 w-8 text-[#F5B400]" />
+        </div>
+        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-wide">
+          Catalogue Updating Soon
+        </h3>
+        <p className="text-xs sm:text-sm text-white/50 max-w-md mb-6 leading-relaxed">
+          Our 2026 Product Catalogue is currently being updated. Please check back shortly or get in touch with our sales team.
+        </p>
+        <a
+          href="/contact"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#F5B400] text-black font-semibold text-xs uppercase tracking-wider rounded-xl hover:bg-[#e0a300] hover:shadow-[0_4px_20px_rgba(245,180,0,0.3)] transition-all"
+        >
+          Contact Sales Team
+        </a>
       </div>
     );
   }

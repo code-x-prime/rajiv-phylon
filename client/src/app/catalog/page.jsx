@@ -65,7 +65,7 @@ export default function CatalogPage() {
   return (
     <div className="bg-[#0A0A0A] min-h-screen text-white flex flex-col font-sans">
       {/* Hero section */}
-      <section className="relative overflow-hidden border-b border-white/5 bg-gradient-to-b from-[#121212] to-[#0A0A0A] py-8 sm:py-16">
+      <section className="relative overflow-hidden border-b border-white/5 bg-gradient-to-b from-[#121212] to-[#0A0A0A] pt-24 sm:pt-32 pb-8 sm:pb-16">
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -92,7 +92,7 @@ export default function CatalogPage() {
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-heading font-bold text-white tracking-tight leading-tight">
-                {catalogInfo.title.includes(catalogInfo.year) ? (
+                {catalogInfo.title.includes(catalogInfo.year) && catalogInfo.year ? (
                   <>
                     {catalogInfo.title.split(catalogInfo.year)[0]}
                     <span className="text-[#F5B400]">{catalogInfo.year}</span>
@@ -100,7 +100,7 @@ export default function CatalogPage() {
                   </>
                 ) : (
                   <>
-                    {catalogInfo.title} <span className="text-[#F5B400]">{catalogInfo.year}</span>
+                    {catalogInfo.title} {catalogInfo.year ? <span className="text-[#F5B400]">{catalogInfo.year}</span> : null}
                   </>
                 )}
               </h1>
@@ -109,15 +109,17 @@ export default function CatalogPage() {
               </p>
             </div>
 
-            <a
-              href={catalogInfo.pdfUrl}
-              download
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F5B400] text-black font-semibold text-xs uppercase tracking-wider px-5 py-3 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.25)] transition-all duration-300 w-full sm:w-auto text-center"
-            >
-              Download PDF Version
-            </a>
+            {catalogInfo.pdfUrl ? (
+              <a
+                href={catalogInfo.pdfUrl}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F5B400] text-black font-semibold text-xs uppercase tracking-wider px-5 py-3 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.25)] transition-all duration-300 w-full sm:w-auto text-center"
+              >
+                Download PDF Version
+              </a>
+            ) : null}
           </div>
         </div>
       </section>

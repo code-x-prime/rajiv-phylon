@@ -55,10 +55,8 @@ export function usePdf(url: string): UsePdfReturn {
     }
 
     if (!targetUrl || typeof window === 'undefined') {
-      if (!targetUrl) {
-        setError(new Error('No valid PDF URL provided'));
-        setLoading(false);
-      }
+      setLoading(false);
+      setError(null);
       return;
     }
 
