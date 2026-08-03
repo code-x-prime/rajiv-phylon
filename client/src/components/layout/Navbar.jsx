@@ -86,7 +86,6 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/products", label: "Products" },
-    { href: "/catalog", label: "Catalogue" },
     { href: "/about", label: "About" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Tag, Package, Layers, Star, CheckCircle } from "lucide-react";
+import { ChevronRight, Tag, Package, Layers, Star, CheckCircle, FileText, ArrowUpRight } from "lucide-react";
 import { getProductBySlug, getRelatedProducts } from "@/lib/api";
 import { ProductDetailGallery } from "@/components/product/ProductDetailGallery";
 import { StickyEnquiryBox } from "@/components/product/StickyEnquiryBox";
@@ -257,6 +257,26 @@ export default async function ProductPage({ params }) {
                     </div>
                   </div>
                 )}
+
+                {/* Product Catalogue Banner / Link */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-[#0A0A0A] p-4 border border-gray-800 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#F5B400]/15 border border-[#F5B400]/30 text-[#F5B400] flex items-center justify-center shrink-0">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-heading font-bold text-white">Full Product Catalogue 2026</p>
+                      <p className="text-[11px] font-body text-gray-400">Explore complete range of soles & specifications</p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/catalog"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-[#F5B400] hover:bg-[#e0a300] text-black text-[12px] font-heading font-bold transition-all shadow-sm shrink-0"
+                  >
+                    View Catalogue
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
 
                 {/* Product Specifications (full table) */}
                 {specEntries.length > 0 && (
