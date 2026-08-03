@@ -31,6 +31,22 @@ const slideVariants = {
 /* ═══════════════════════════════════════════════════════════
    API BANNER SLIDER
 ══════════════════════════════════════════════════════════════ */
+function checkIsSingleBanner(b) {
+  if (!b) return true;
+  // Check API returned mode field if set
+  if (b.mode === "single" || b.bannerType === "single" || b.isSingle === true) return true;
+  if (b.mode === "dual" || b.bannerType === "dual" || b.isSingle === false) return false;
+
+  const d = (b.desktopImageUrl || b.desktopImage || "").trim();
+  const m = (b.mobileImageUrl || b.mobileImage || "").trim();
+
+  // If no mobile image, or mobile URL equals desktop URL, it's Option 2 (Single Banner)
+  if (!m || d === m) return true;
+
+  // Otherwise Option 1 (Dual Banner with separate mobile image)
+  return false;
+}
+
 function BannerSlider({ banners }) {
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
@@ -68,8 +84,8 @@ function BannerSlider({ banners }) {
   const mobileSrc = cur?.mobileImageUrl || cur?.mobileImage;
   const link = cur?.link?.trim() || "/products";
 
-  // Option 1 vs Option 2 check
-  const isSingleBanner = !mobileSrc || mobileSrc === desktopSrc;
+  // Option 1 vs Option 2 check from API object
+  const isSingleBanner = checkIsSingleBanner(cur);
 
   return (
     <section

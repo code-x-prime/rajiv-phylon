@@ -41,6 +41,7 @@ export function Banners() {
       form.append("link", link.trim());
       form.append("isActive", String(isActive));
       form.append("order", String(order));
+      form.append("mode", bannerMode);
       if (desktopFile) {
         form.append("desktopImage", desktopFile);
         if (bannerMode === "single" && !mobileFile) {
@@ -68,6 +69,7 @@ export function Banners() {
       form.append("link", link.trim());
       form.append("isActive", String(isActive));
       form.append("order", String(order));
+      form.append("mode", bannerMode);
       if (desktopFile) {
         form.append("desktopImage", desktopFile);
         if (bannerMode === "single" && !mobileFile) {
