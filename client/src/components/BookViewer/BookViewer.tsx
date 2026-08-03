@@ -312,11 +312,27 @@ function ScrollViewer({ pdf, totalPages, scale }: { pdf: any; totalPages: number
 }
 
 function ScrollCanvasPage({ pageNumber, pdf, scale, totalPages }: { pageNumber: number; pdf: any; scale: number; totalPages: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
-    if (!pdf || !canvasRef.current) return;
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { rootMargin: '300px' }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible || !pdf || !canvasRef.current || rendered) return;
     let isCurrent = true;
 
     const render = async () => {
@@ -351,16 +367,21 @@ function ScrollCanvasPage({ pageNumber, pdf, scale, totalPages }: { pageNumber: 
     return () => {
       isCurrent = false;
     };
-  }, [pdf, pageNumber, scale]);
+  }, [isVisible, pdf, pageNumber, scale, rendered]);
 
   return (
-    <div className="flex flex-col items-center gap-2 max-w-full">
+    <div ref={containerRef} className="flex flex-col items-center gap-2 max-w-full min-h-[350px]">
       <canvas
         ref={canvasRef}
         className={`rounded-xl shadow-xl border border-white/10 bg-white max-w-full transition-opacity duration-300 ${
-          rendered ? 'opacity-100' : 'opacity-20'
+          rendered ? 'opacity-100' : 'hidden'
         }`}
       />
+      {!rendered && (
+        <div className="w-[300px] sm:w-[600px] h-[400px] bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-white/30 text-xs font-mono animate-pulse">
+          Page {pageNumber} of {totalPages}
+        </div>
+      )}
       <span className="text-[10px] font-mono text-white/40 bg-white/5 px-2 py-0.5 rounded">
         Page {pageNumber} of {totalPages}
       </span>

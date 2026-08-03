@@ -78,6 +78,9 @@ export function usePdf(url: string): UsePdfReturn {
           url: targetUrl,
           cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/cmaps/`,
           cMapPacked: true,
+          disableAutoFetch: true,
+          disableStream: false,
+          rangeChunkSize: 65536,
         };
 
         let pdfDoc: PDFDocumentProxy | null = null;
@@ -90,43 +93,13 @@ export function usePdf(url: string): UsePdfReturn {
           };
           pdfDoc = await loadingTask.promise;
         } catch (directErr) {
-          console.warn('[usePdf] Direct PDF getDocument failed, attempting fetch ArrayBuffer fallback:', directErr);
-          const response = await fetch(targetUrl);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch PDF catalog (HTTP ${response.status})`);
-          }
-          const contentLength = Number(response.headers.get('content-length') || 0);
-          const reader = response.body?.getReader();
-          let receivedBytes = 0;
-          const chunks: Uint8Array[] = [];
-
-          if (reader) {
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              if (value) {
-                chunks.push(value);
-                receivedBytes += value.length;
-                if (isMounted) {
-                  setProgress({ loaded: receivedBytes, total: contentLength || receivedBytes });
-                }
-              }
-            }
-          }
-
-          const arrayBuffer = new Uint8Array(receivedBytes);
-          let position = 0;
-          for (const chunk of chunks) {
-            arrayBuffer.set(chunk, position);
-            position += chunk.length;
-          }
-
-          const fallbackTask = pdfjs.getDocument({
-            data: arrayBuffer,
+          console.warn('[usePdf] Direct range load failed, fetching stream fallback:', directErr);
+          const loadingTask = pdfjs.getDocument({
+            url: targetUrl,
             cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/cmaps/`,
             cMapPacked: true,
           });
-          pdfDoc = await fallbackTask.promise;
+          pdfDoc = await loadingTask.promise;
         }
 
         console.log('[usePdf] PDF loaded successfully:', { numPages: pdfDoc.numPages });
