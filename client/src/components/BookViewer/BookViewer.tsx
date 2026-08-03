@@ -11,9 +11,10 @@ interface BookViewerProps {
   currentPage: number;
   onPageChange: (page: number) => void;
   zoomScale: number;
+  pdfUrl?: string;
 }
 
-export default function BookViewer({ currentPage, onPageChange, zoomScale }: BookViewerProps) {
+export default function BookViewer({ currentPage, onPageChange, zoomScale, pdfUrl = PDF_URL }: BookViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const flipBookRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 500, height: 700 });
@@ -22,7 +23,7 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
   const [renderedPages, setRenderedPages] = useState<Set<number>>(new Set());
   const [pdfReady, setPdfReady] = useState(false);
 
-  const { pdf, numPages, loading, error, renderPageToCanvas } = usePdf(PDF_URL);
+  const { pdf, numPages, loading, error, renderPageToCanvas } = usePdf(pdfUrl);
 
   useEffect(() => {
     console.log('[BookViewer] pdf state:', { pdf: !!pdf, numPages, loading, error });
@@ -42,17 +43,19 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
     let bookHeight = 700;
 
     if (mobile) {
-      bookWidth = Math.min(width - 32, 420);
-      bookHeight = Math.round(bookWidth * 1.4);
+      // Calculate available width with padding considered (e.g. 24px total)
+      const availWidth = Math.min(width - 24, 400);
+      bookWidth = Math.max(availWidth, 260);
+      bookHeight = Math.round(bookWidth * 1.38);
     } else if (width < 1024) {
-      bookWidth = 380;
-      bookHeight = 520;
+      bookWidth = 360;
+      bookHeight = 500;
     } else if (width < 1440) {
-      bookWidth = 450;
-      bookHeight = 620;
+      bookWidth = 440;
+      bookHeight = 600;
     } else {
-      bookWidth = 550;
-      bookHeight = 760;
+      bookWidth = 520;
+      bookHeight = 720;
     }
 
     setDimensions({ width: bookWidth, height: bookHeight });
@@ -233,9 +236,9 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
   }
 
   return (
-    <div className="flex justify-center items-center select-none w-full">
+    <div className="flex justify-center items-center select-none w-full max-w-full overflow-hidden">
       <div
-        className="relative py-8 md:py-12 px-4 md:px-8 bg-[#0D0D0D]/40 backdrop-blur-md rounded-[32px] border border-white/5 shadow-2xl w-full"
+        className="relative py-4 md:py-12 px-2 md:px-8 bg-[#0D0D0D]/40 backdrop-blur-md rounded-2xl sm:rounded-[32px] border border-white/5 shadow-2xl w-full max-w-full flex items-center justify-center overflow-hidden"
         style={{
           perspective: '1500px',
         }}
@@ -244,7 +247,7 @@ export default function BookViewer({ currentPage, onPageChange, zoomScale }: Boo
 
         <div
           ref={containerRef}
-          className="relative z-10 flex"
+          className="relative z-10 flex justify-center items-center max-w-full"
           style={{
             width: isMobile ? `${dimensions.width}px` : `${dimensions.width * 2}px`,
             height: `${dimensions.height}px`,

@@ -17,7 +17,11 @@ export async function loadPDFDocument(url: string): Promise<PDFDocumentProxy> {
   if (typeof window !== 'undefined') {
     pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version || '4.0.379'}/pdf.worker.min.mjs`;
   }
-  const loadingTask = pdfjs.getDocument({ url, verbosity: 0 });
+  const targetUrl = typeof url === 'string' ? url : (url as any)?.url || '';
+  if (!targetUrl) {
+    throw new Error('No valid PDF URL provided');
+  }
+  const loadingTask = pdfjs.getDocument({ url: targetUrl, verbosity: 0 });
   return loadingTask.promise;
 }
 
