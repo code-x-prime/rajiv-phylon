@@ -288,56 +288,95 @@ export function Banners() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto p-6 sm:p-7">
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit" : "Add"} Banner</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">{editing ? "Edit Banner" : "Add New Banner"}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5 mt-2">
             {/* Banner Mode Selector */}
-            <div>
-              <Label className="mb-2 block font-medium text-xs text-muted-foreground uppercase tracking-wider">Select Banner Mode</Label>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                Choose Banner Type / Option *
+              </Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {/* Option 1 Button */}
                 <button
                   type="button"
                   onClick={() => setBannerMode("dual")}
-                  className={`p-3 rounded-lg border text-left transition-all ${
+                  className={`relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
                     bannerMode === "dual"
-                      ? "border-primary bg-primary/5 text-primary ring-1 ring-primary"
-                      : "border-border hover:bg-muted text-muted-foreground"
+                      ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
+                      : "border-border bg-card hover:border-border/80 hover:bg-muted/40 text-muted-foreground"
                   }`}
                 >
-                  <div className="text-[10px] font-bold uppercase tracking-wider mb-0.5">Option 1</div>
-                  <div className="text-sm font-semibold">Desktop + Mobile</div>
-                  <p className="text-[11px] opacity-75 mt-1 leading-tight">2 separate images for Desktop (1920x900) & Mobile (800x1000)</p>
+                  <div className="flex items-center justify-between w-full mb-2">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      bannerMode === "dual" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}>
+                      Option 1
+                    </span>
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                      bannerMode === "dual" ? "border-primary bg-primary" : "border-muted-foreground/40"
+                    }`}>
+                      {bannerMode === "dual" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-foreground">Desktop + Mobile</div>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                      2 separate images. Optimized separately for Desktop (1920×900) & Mobile (800×1000).
+                    </p>
+                  </div>
                 </button>
+
+                {/* Option 2 Button */}
                 <button
                   type="button"
                   onClick={() => setBannerMode("single")}
-                  className={`p-3 rounded-lg border text-left transition-all ${
+                  className={`relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
                     bannerMode === "single"
-                      ? "border-primary bg-primary/5 text-primary ring-1 ring-primary"
-                      : "border-border hover:bg-muted text-muted-foreground"
+                      ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
+                      : "border-border bg-card hover:border-border/80 hover:bg-muted/40 text-muted-foreground"
                   }`}
                 >
-                  <div className="text-[10px] font-bold uppercase tracking-wider mb-0.5">Option 2</div>
-                  <div className="text-sm font-semibold">Single Banner</div>
-                  <p className="text-[11px] opacity-75 mt-1 leading-tight">1 Desktop image used for both Desktop & Mobile (Auto fits)</p>
+                  <div className="flex items-center justify-between w-full mb-2">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      bannerMode === "single" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}>
+                      Option 2
+                    </span>
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                      bannerMode === "single" ? "border-primary bg-primary" : "border-muted-foreground/40"
+                    }`}>
+                      {bannerMode === "single" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-foreground">Single Banner</div>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                      1 Desktop image only. Automatically scales & fits on both Desktop & Mobile (16:4 / 16:7).
+                    </p>
+                  </div>
                 </button>
               </div>
             </div>
 
             <div>
-              <Label>Title *</Label>
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} required className="mt-1 border-border" />
+              <Label className="font-medium">Title *</Label>
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Summer Collection Offer" className="mt-1.5 border-border" />
             </div>
             <div>
-              <Label>Link (optional)</Label>
-              <Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." className="mt-1 border-border" />
+              <Label className="font-medium">Link URL (optional)</Label>
+              <Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." className="mt-1.5 border-border" />
             </div>
-            <div>
-              <Label>Desktop image {editing ? "(leave empty to keep current)" : "*"}</Label>
-              <p className="text-xs text-muted-foreground mt-0.5 mb-1">
-                Size: 1920 × 900 px · Ratio: 16:7 · Format: JPG / WEBP · Safe area: center
+
+            {/* Desktop Image */}
+            <div className="space-y-1.5">
+              <Label className="font-medium">
+                Desktop image {editing ? "(leave empty to keep current)" : "*"}
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Recommended Size: 1920 × 900 px · Ratio: 16:7 · Format: JPG / WEBP
               </p>
               <Input
                 type="file"
@@ -347,15 +386,21 @@ export function Banners() {
                 required={!editing}
               />
               {editing && (editing.desktopImageUrl || editing.desktopImage) && (
-                <img src={editing.desktopImageUrl || editing.desktopImage} alt="" className="mt-2 w-64 aspect-[1920/900] object-cover rounded border border-border" />
+                <div className="mt-2">
+                  <p className="text-[11px] font-medium text-muted-foreground mb-1">Current Desktop Image:</p>
+                  <img src={editing.desktopImageUrl || editing.desktopImage} alt="Desktop Preview" className="w-full max-w-xs aspect-[1920/900] object-cover rounded-lg border border-border shadow-sm" />
+                </div>
               )}
             </div>
 
+            {/* Mobile Image (Option 1 vs Option 2) */}
             {bannerMode === "dual" ? (
-              <div>
-                <Label>Mobile image {editing ? "(leave empty to keep current)" : "*"}</Label>
-                <p className="text-xs text-muted-foreground mt-0.5 mb-1">
-                  Size: 800 × 1000 px · Ratio: 4:5 · Format: JPG / WEBP · Safe area: center
+              <div className="space-y-1.5">
+                <Label className="font-medium">
+                  Mobile image {editing ? "(leave empty to keep current)" : "*"}
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Recommended Size: 800 × 1000 px · Ratio: 4:5 · Format: JPG / WEBP
                 </p>
                 <Input
                   type="file"
@@ -365,12 +410,19 @@ export function Banners() {
                   required={!editing}
                 />
                 {editing && (editing.mobileImageUrl || editing.mobileImage) && (
-                  <img src={editing.mobileImageUrl || editing.mobileImage} alt="" className="mt-2 w-24 aspect-[4/5] object-cover rounded border border-border" />
+                  <div className="mt-2">
+                    <p className="text-[11px] font-medium text-muted-foreground mb-1">Current Mobile Image:</p>
+                    <img src={editing.mobileImageUrl || editing.mobileImage} alt="Mobile Preview" className="w-24 aspect-[4/5] object-cover rounded-lg border border-border shadow-sm" />
+                  </div>
                 )}
               </div>
             ) : (
-              <div className="p-3 bg-muted/60 rounded border border-border text-xs text-muted-foreground">
-                ✨ <strong className="text-foreground">Option 2 Active:</strong> Desktop image will be automatically used for Mobile view as well. No separate mobile upload needed.
+              <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+                <span className="text-base shrink-0">✨</span>
+                <div>
+                  <strong className="font-semibold block mb-0.5">Option 2 (Single Banner) Active</strong>
+                  Desktop image will automatically be used for Mobile view as well. No separate mobile upload required.
+                </div>
               </div>
             )}
             <div>
