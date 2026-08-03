@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
-import { Toolbar } from "@/components/BookViewer/Toolbar";
 
 const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
   ssr: false,
@@ -18,7 +17,7 @@ const BookViewer = dynamic(() => import("@/components/BookViewer/BookViewer"), {
         Preparing Premium Catalogue
       </h3>
       <p className="text-white/40 text-sm font-body max-w-xs mb-6 text-center">
-        Rendering pages for high-definition 3D experience.
+        Rendering high-resolution product pages.
       </p>
     </div>
   ),
@@ -30,43 +29,10 @@ const CATALOG_URL =
 export default function CatalogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(238);
-  const [zoomScale, setZoomScale] = useState(1.0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const viewerRef = useRef(null);
 
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
-  }, []);
-
-  const handlePrev = useCallback(() => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  }, []);
-
-  const handleNext = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  }, [totalPages]);
-
-  const toggleFullscreen = useCallback(() => {
-    if (!viewerRef.current) return;
-
-    if (!document.fullscreenElement) {
-      viewerRef.current.requestFullscreen().then(() => {
-        setIsFullscreen(true);
-      }).catch((err) => {
-        console.error("Fullscreen error:", err);
-      });
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
   return (
@@ -102,7 +68,7 @@ export default function CatalogPage() {
                 Product <span className="text-[#F5B400]">Catalogue</span> 2026
               </h1>
               <p className="text-xs sm:text-sm text-white/50 mt-2 max-w-xl">
-                Explore our full line of premium compressed EVA phylon soles, TPU/TPR/Rubber hybrid outsoles, and custom polymer compounds in high-fidelity 3D book-flip mode.
+                Explore our full line of premium compressed EVA phylon soles, TPU/TPR/Rubber hybrid outsoles, and custom polymer compounds in high-fidelity interactive mode.
               </p>
             </div>
 
@@ -120,36 +86,14 @@ export default function CatalogPage() {
       {/* Main interactive section */}
       <section
         ref={viewerRef}
-        className={`flex-1 flex flex-col justify-center items-center py-4 sm:py-8 px-2 sm:px-6 lg:px-8 bg-[#070707] transition-all max-w-full overflow-hidden ${
-          isFullscreen ? "fixed inset-0 z-50 p-2 sm:p-6 bg-black" : ""
-        }`}
+        className="flex-1 flex flex-col justify-center items-center py-4 sm:py-8 px-2 sm:px-6 lg:px-8 bg-[#070707] transition-all max-w-full overflow-hidden"
       >
         <div className="w-full max-w-[1400px] flex flex-col gap-4 sm:gap-6 max-w-full">
-          {/* Premium Book Canvas */}
-          <div className="flex-1 flex items-center justify-center min-h-[360px] sm:min-h-[500px] overflow-hidden rounded-2xl sm:rounded-3xl border border-white/5 bg-[#0E0E0E] shadow-2xl relative p-1 sm:p-4 max-w-full">
-            {/* Visual accent background */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,180,0,0.02)_0%,transparent_70%)] pointer-events-none" />
-
-            <BookViewer
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              zoomScale={zoomScale}
-              pdfUrl={CATALOG_URL}
-              onTotalPagesChange={setTotalPages}
-            />
-          </div>
-
-          {/* Glassmorphic Control Toolbar */}
-          <Toolbar
+          <BookViewer
             currentPage={currentPage}
-            totalPages={totalPages}
-            zoomScale={zoomScale}
-            setZoomScale={setZoomScale}
-            isFullscreen={isFullscreen}
-            toggleFullscreen={toggleFullscreen}
+            onPageChange={handlePageChange}
             pdfUrl={CATALOG_URL}
-            onPrev={handlePrev}
-            onNext={handleNext}
+            onTotalPagesChange={setTotalPages}
           />
         </div>
       </section>
