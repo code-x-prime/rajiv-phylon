@@ -55,7 +55,8 @@ const MOQ_PRESETS = [
 
 /* ── Spec & Trade templates ───────────────────────────── */
 const SPEC_TEMPLATES = [
-  { label: "Footwear / Shoes", rows: ["Material", "Technique", "Color", "Size", "Brand", "Packaging Type", "Country of Origin"] },
+  { label: "Footwear / Shoes", rows: ["Article No.", "Product Type/Construction", "Size Range", "Gender", "Color", "MOQ", "Country of Origin"] },
+  { label: "Standard Specs", rows: ["Article No.", "Product Type/Construction", "Size Range", "Gender", "Color", "MOQ", "Country of Origin"] },
   { label: "Textile / Fabric", rows: ["Material", "Color", "Pattern", "Width", "Weight (GSM)", "Finish", "Country of Origin"] },
   { label: "Plastic / Rubber", rows: ["Material", "Color", "Grade", "Hardness", "Thickness", "Application"] },
   { label: "Metal / Hardware", rows: ["Material", "Finish", "Size", "Weight", "Grade", "Surface Treatment"] },
@@ -100,9 +101,10 @@ function KVEditor({ label, description, pairs, onChange, templates }: {
     onChange(next);
   };
   const applyTemplate = (rows: string[]) => {
-    const existingKeys = new Set(pairs.map((p) => p.key));
+    const validPairs = pairs.filter((p) => p.key.trim() !== "" || p.value.trim() !== "");
+    const existingKeys = new Set(validPairs.map((p) => p.key));
     const newRows = rows.filter((r) => !existingKeys.has(r)).map((r) => ({ key: r, value: "" }));
-    onChange([...pairs, ...newRows]);
+    onChange([...validPairs, ...newRows]);
     setTemplateOpen(false);
   };
 
