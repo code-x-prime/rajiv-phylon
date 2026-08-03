@@ -157,10 +157,10 @@ function BannerSlider({ banners }) {
       )}
 
       {/* ── Slide counter ── */}
-      <div className="absolute top-5 right-5 z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 px-3 py-1.5">
-        <span className="font-display font-medium text-sm text-white">{String(index + 1).padStart(2, "0")}</span>
-        <span className="text-white/30 text-xs">/</span>
-        <span className="font-display font-medium text-xs text-white/50">{String(banners.length).padStart(2, "0")}</span>
+      <div className="absolute bottom-6 right-6 md:bottom-7 md:right-8 z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/15 px-3.5 py-1.5 shadow-lg select-none">
+        <span className="font-display font-semibold text-xs tracking-wider text-white">{String(index + 1).padStart(2, "0")}</span>
+        <span className="text-white/40 text-[10px] font-light">/</span>
+        <span className="font-display font-medium text-[11px] tracking-wider text-white/50">{String(banners.length).padStart(2, "0")}</span>
       </div>
     </section>
   );
