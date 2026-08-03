@@ -26,6 +26,7 @@ export function Banners() {
   const [order, setOrder] = useState(0);
   const [desktopFile, setDesktopFile] = useState<File | null>(null);
   const [mobileFile, setMobileFile] = useState<File | null>(null);
+  const [bannerMode, setBannerMode] = useState<"dual" | "single">("dual");
   const [deleteTarget, setDeleteTarget] = useState<Banner | null>(null);
 
   const { data: list = [], isLoading, isError } = useQuery({
@@ -40,8 +41,15 @@ export function Banners() {
       form.append("link", link.trim());
       form.append("isActive", String(isActive));
       form.append("order", String(order));
-      if (desktopFile) form.append("desktopImage", desktopFile);
-      if (mobileFile) form.append("mobileImage", mobileFile);
+      if (desktopFile) {
+        form.append("desktopImage", desktopFile);
+        if (bannerMode === "single" && !mobileFile) {
+          form.append("mobileImage", desktopFile);
+        }
+      }
+      if (bannerMode === "dual" && mobileFile) {
+        form.append("mobileImage", mobileFile);
+      }
       return bannersApi.create(form);
     },
     onSuccess: () => {
@@ -60,8 +68,15 @@ export function Banners() {
       form.append("link", link.trim());
       form.append("isActive", String(isActive));
       form.append("order", String(order));
-      if (desktopFile) form.append("desktopImage", desktopFile);
-      if (mobileFile) form.append("mobileImage", mobileFile);
+      if (desktopFile) {
+        form.append("desktopImage", desktopFile);
+        if (bannerMode === "single" && !mobileFile) {
+          form.append("mobileImage", desktopFile);
+        }
+      }
+      if (bannerMode === "dual" && mobileFile) {
+        form.append("mobileImage", mobileFile);
+      }
       return bannersApi.update(id, form);
     },
     onSuccess: () => {
@@ -109,6 +124,7 @@ export function Banners() {
     setOrder(list.length);
     setDesktopFile(null);
     setMobileFile(null);
+    setBannerMode("dual");
   }
 
   function openAdd() {
@@ -125,6 +141,15 @@ export function Banners() {
     setOrder(b.order);
     setDesktopFile(null);
     setMobileFile(null);
+
+    const dUrl = b.desktopImageUrl || b.desktopImage;
+    const mUrl = b.mobileImageUrl || b.mobileImage;
+    if (!mUrl || mUrl === dUrl) {
+      setBannerMode("single");
+    } else {
+      setBannerMode("dual");
+    }
+
     setDialogOpen(true);
   }
 
@@ -134,8 +159,12 @@ export function Banners() {
     if (editing) {
       updateMutation.mutate(editing.id);
     } else {
-      if (!desktopFile || !mobileFile) {
-        toast.error("Desktop and mobile images are required");
+      if (!desktopFile) {
+        toast.error("Desktop image is required");
+        return;
+      }
+      if (bannerMode === "dual" && !mobileFile) {
+        toast.error("Mobile image is required for Option 1 (Dual Image mode)");
         return;
       }
       createMutation.mutate();
@@ -231,7 +260,14 @@ export function Banners() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{b.title}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium truncate">{b.title}</p>
+                    {(!img(b, true) || img(b, true) === img(b, false)) ? (
+                      <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/10 text-amber-600 border border-amber-500/20 shrink-0">Option 2 (Single)</span>
+                    ) : (
+                      <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-500/10 text-blue-600 border border-blue-500/20 shrink-0">Option 1 (Dual)</span>
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground">
                     Order: {b.order} · {b.isActive ? "Active" : "Inactive"}
                   </p>
@@ -252,11 +288,44 @@ export function Banners() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit" : "Add"} Banner</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Banner Mode Selector */}
+            <div>
+              <Label className="mb-2 block font-medium text-xs text-muted-foreground uppercase tracking-wider">Select Banner Mode</Label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setBannerMode("dual")}
+                  className={`p-3 rounded-lg border text-left transition-all ${
+                    bannerMode === "dual"
+                      ? "border-primary bg-primary/5 text-primary ring-1 ring-primary"
+                      : "border-border hover:bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-0.5">Option 1</div>
+                  <div className="text-sm font-semibold">Desktop + Mobile</div>
+                  <p className="text-[11px] opacity-75 mt-1 leading-tight">2 separate images for Desktop (1920x900) & Mobile (800x1000)</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBannerMode("single")}
+                  className={`p-3 rounded-lg border text-left transition-all ${
+                    bannerMode === "single"
+                      ? "border-primary bg-primary/5 text-primary ring-1 ring-primary"
+                      : "border-border hover:bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-0.5">Option 2</div>
+                  <div className="text-sm font-semibold">Single Banner</div>
+                  <p className="text-[11px] opacity-75 mt-1 leading-tight">1 Desktop image used for both Desktop & Mobile (Auto fits)</p>
+                </button>
+              </div>
+            </div>
+
             <div>
               <Label>Title *</Label>
               <Input value={title} onChange={(e) => setTitle(e.target.value)} required className="mt-1 border-border" />
@@ -281,22 +350,29 @@ export function Banners() {
                 <img src={editing.desktopImageUrl || editing.desktopImage} alt="" className="mt-2 w-64 aspect-[1920/900] object-cover rounded border border-border" />
               )}
             </div>
-            <div>
-              <Label>Mobile image {editing ? "(leave empty to keep current)" : "*"}</Label>
-              <p className="text-xs text-muted-foreground mt-0.5 mb-1">
-                Size: 800 × 1000 px · Ratio: 4:5 · Format: JPG / WEBP · Safe area: center
-              </p>
-              <Input
-                type="file"
-                accept="image/jpeg,image/jpg,image/webp"
-                onChange={(e) => setMobileFile(e.target.files?.[0] ?? null)}
-                className="mt-1 border-border"
-                required={!editing}
-              />
-              {editing && (editing.mobileImageUrl || editing.mobileImage) && (
-                <img src={editing.mobileImageUrl || editing.mobileImage} alt="" className="mt-2 w-24 aspect-[4/5] object-cover rounded border border-border" />
-              )}
-            </div>
+
+            {bannerMode === "dual" ? (
+              <div>
+                <Label>Mobile image {editing ? "(leave empty to keep current)" : "*"}</Label>
+                <p className="text-xs text-muted-foreground mt-0.5 mb-1">
+                  Size: 800 × 1000 px · Ratio: 4:5 · Format: JPG / WEBP · Safe area: center
+                </p>
+                <Input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/webp"
+                  onChange={(e) => setMobileFile(e.target.files?.[0] ?? null)}
+                  className="mt-1 border-border"
+                  required={!editing}
+                />
+                {editing && (editing.mobileImageUrl || editing.mobileImage) && (
+                  <img src={editing.mobileImageUrl || editing.mobileImage} alt="" className="mt-2 w-24 aspect-[4/5] object-cover rounded border border-border" />
+                )}
+              </div>
+            ) : (
+              <div className="p-3 bg-muted/60 rounded border border-border text-xs text-muted-foreground">
+                ✨ <strong className="text-foreground">Option 2 Active:</strong> Desktop image will be automatically used for Mobile view as well. No separate mobile upload needed.
+              </div>
+            )}
             <div>
               <Label>Order</Label>
               <Input type="number" value={order} onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)} min={0} className="mt-1 border-border w-24" />

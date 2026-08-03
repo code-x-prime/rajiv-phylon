@@ -68,9 +68,16 @@ function BannerSlider({ banners }) {
   const mobileSrc = cur?.mobileImageUrl || cur?.mobileImage;
   const link = cur?.link?.trim() || "/products";
 
+  // Option 1 vs Option 2 check
+  const isSingleBanner = !mobileSrc || mobileSrc === desktopSrc;
+
   return (
     <section
-      className="relative w-full aspect-[4/5] md:aspect-[1920/900] flex items-center overflow-hidden bg-[#0A0A0A]"
+      className={`relative w-full flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300 ${
+        isSingleBanner
+          ? "aspect-[16/8] sm:aspect-[16/6] md:aspect-[1920/900]"
+          : "aspect-[4/5] md:aspect-[1920/900]"
+      }`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -87,10 +94,12 @@ function BannerSlider({ banners }) {
           onContextMenu={(e) => e.preventDefault()}
         >
           <picture className="w-full h-full block">
-            <source media="(max-width: 768px)" srcSet={mobileSrc || FB_MOBILE} />
+            {mobileSrc && mobileSrc !== desktopSrc && (
+              <source media="(max-width: 768px)" srcSet={mobileSrc} />
+            )}
             <img
               src={desktopSrc || FB_DESK}
-              alt={`Banner ${index + 1}`}
+              alt={cur?.title || `Banner ${index + 1}`}
               className="w-full h-full object-cover object-center"
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
