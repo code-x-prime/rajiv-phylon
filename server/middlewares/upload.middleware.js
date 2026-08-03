@@ -56,7 +56,7 @@ const pdfFilter = (req, file, cb) => {
 /** Single PDF file upload for Catalogue (field name: pdf or file) */
 export const uploadPdf = multer({
     storage,
-    limits: { fileSize: 600 * 1024 * 1024 }, // 600MB max limit
+    limits: { fileSize: 2048 * 1024 * 1024 }, // 2GB max limit
     fileFilter: pdfFilter,
 }).single("pdf");
 
