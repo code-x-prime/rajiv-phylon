@@ -100,6 +100,15 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/banners", bannerRoutes);
 
+// Root endpoint
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "Rajiv Phylon API Server is active",
+        timestamp: new Date().toISOString(),
+    });
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
     res.status(200).json({
