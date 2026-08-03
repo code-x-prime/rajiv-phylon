@@ -178,5 +178,4 @@ export function Toolbar({
       </div>
     </div>
   );
-  );
 }
