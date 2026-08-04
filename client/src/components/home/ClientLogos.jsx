@@ -58,14 +58,14 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
       <motion.div
         animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
-        className="flex shrink-0 gap-3 md:gap-4"
+        className="flex shrink-0 gap-2 sm:gap-3 md:gap-4"
       >
         {items.map((name, i) => {
           const logoFile = BRAND_LOGO_MAP[name];
           return (
             <div
               key={`${name}-${i}`}
-              className="shrink-0 flex items-center justify-center w-[140px] h-20 md:w-[160px] lg:w-[180px] lg:h-24 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none overflow-hidden p-3 md:p-4"
+              className="shrink-0 flex items-center justify-center w-[100px] h-14 sm:w-[120px] sm:h-16 md:w-[160px] md:h-20 lg:w-[180px] lg:h-24 rounded-lg md:rounded-xl border border-gray-200 bg-white shadow-sm hover:border-[#F5B400]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default select-none overflow-hidden p-2 sm:p-3 md:p-4"
             >
               {logoFile ? (
                 <div className="relative w-full h-full">
@@ -74,7 +74,7 @@ function MarqueeRow({ items, reverse = false, duration = 35 }) {
                     alt={name}
                     fill
                     className="object-contain"
-                    sizes="(max-width: 768px) 140px, (max-width: 1024px) 160px, 180px"
+                    sizes="(max-width: 640px) 100px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 180px"
                   />
                 </div>
               ) : (

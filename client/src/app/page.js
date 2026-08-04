@@ -44,8 +44,11 @@ export default function HomePage() {
       {/* Core Technology Segments */}
       <CoreTechnology />
 
-      {/* Mission & Narrative Segment */}
-      <MissionNarrative />
+
+      {/* 7. Client Logos – static */}
+      <ClientLogos />
+
+
 
       {/* 3. Top Categories – shows TopCategoriesSkeleton only while loading */}
       <Suspense fallback={<TopCategoriesSkeleton />}>
@@ -67,11 +70,11 @@ export default function HomePage() {
         <HighDemandFetcher />
       </Suspense>
 
-      {/* 7. Client Logos – static */}
-      <ClientLogos />
 
       {/* 8. About – static */}
       <AboutSection />
+      {/* Mission & Narrative Segment */}
+      <MissionNarrative />
 
       {/* 8. Why Choose Us – static */}
       <WhyChooseUs />
