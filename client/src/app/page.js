@@ -42,6 +42,10 @@ export default function HomePage() {
       {/* 2. Company Stats – static, renders immediately */}
       <CompanyStats />
 
+
+      {/* 7b. Video Carousel – shows VideoCarouselSkeleton while loading */}
+      <VideoCarousel />
+
       {/* Core Technology Segments */}
       <CoreTechnology />
 
@@ -49,8 +53,7 @@ export default function HomePage() {
       {/* 7. Client Logos – static */}
       <ClientLogos />
 
-      {/* 7b. Video Carousel – shows VideoCarouselSkeleton while loading */}
-      <VideoCarousel />
+
 
 
 
