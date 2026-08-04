@@ -222,20 +222,6 @@ export function VideoCarousel() {
 
         {/* Carousel */}
         <div className="relative group/carousel">
-          {/* Nav buttons */}
-          <button
-            onClick={scrollPrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-5 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center transition-all duration-200 opacity-0 group-hover/carousel:opacity-100"
-          >
-            <ChevronLeft className="h-5 w-5 text-gray-700" />
-          </button>
-          <button
-            onClick={scrollNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-5 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 flex items-center justify-center transition-all duration-200 opacity-0 group-hover/carousel:opacity-100"
-          >
-            <ChevronRight className="h-5 w-5 text-gray-700" />
-          </button>
-
           {/* Embla viewport */}
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex -ml-4">
@@ -253,22 +239,43 @@ export function VideoCarousel() {
             </div>
           </div>
 
-          {/* Dots */}
-          {videos.length > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
-              {videos.map((_, index) => (
+          {/* Bottom row: dots + nav buttons */}
+          <div className="flex items-center justify-between mt-4">
+            {/* Dots */}
+            {videos.length > 1 ? (
+              <div className="flex justify-center gap-2">
+                {videos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => emblaApi?.scrollTo(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === selectedIndex
+                        ? "bg-[#F5B400] w-8"
+                        : "bg-gray-300 hover:bg-gray-400 w-2"
+                    }`}
+                  />
+                ))}
+              </div>
+            ) : <div />}
+
+            {/* Nav buttons - bottom right */}
+            {videos.length > 1 && (
+              <div className="flex items-center gap-2">
                 <button
-                  key={index}
-                  onClick={() => emblaApi?.scrollTo(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === selectedIndex
-                      ? "bg-[#F5B400] w-8"
-                      : "bg-gray-300 hover:bg-gray-400 w-2"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+                  onClick={scrollPrev}
+                  className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md hover:shadow-lg hover:border-[#F5B400] flex items-center justify-center transition-all duration-200"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700" />
+                </button>
+                <button
+                  onClick={scrollNext}
+                  className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md hover:shadow-lg hover:border-[#F5B400] flex items-center justify-center transition-all duration-200"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
