@@ -11,7 +11,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 function VideoSkeleton() {
   return (
     <div className="w-full">
-      <div className="aspect-video bg-gray-200 rounded-2xl animate-pulse" />
+      <div className="h-[200px] bg-gray-200 rounded-2xl animate-pulse" />
       <div className="mt-3 space-y-2">
         <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
         <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
@@ -101,7 +101,7 @@ function VideoModal({ video, isOpen, onClose }) {
             <video
               ref={modalVideoRef}
               src={video.videoUrlResolved || video.videoUrl}
-              className="w-full max-h-[80vh] object-contain bg-black"
+              className="w-full max-h-[75vh] object-contain bg-black"
               loop
               muted={isMuted}
               playsInline
@@ -203,11 +203,11 @@ function VideoCard({ video, isActive }) {
 
   return (
     <>
-      <div className="relative group rounded-2xl overflow-hidden bg-black shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div className="relative group rounded-2xl bg-black shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
         <video
           ref={videoRef}
           src={video.videoUrlResolved || video.videoUrl}
-          className="w-full aspect-video object-contain bg-black"
+          className="w-full max-h-[320px] object-contain bg-black"
           loop
           muted={isMuted}
           playsInline
