@@ -188,6 +188,56 @@ export const productsApi = {
   deleteImage: (productId: string, imageId: string) => api.delete<ApiResponse<null>>(`/products/${productId}/images/${imageId}`).then(unwrap),
 };
 
+// Videos
+export type Video = {
+  id: string;
+  title: string;
+  description: string | null;
+  videoUrl: string;
+  videoUrlResolved?: string | null;
+  thumbnail?: string | null;
+  thumbnailResolved?: string | null;
+  isActive: boolean;
+  order: number;
+  createdAt: string;
+};
+
+export const videosApi = {
+  getAll: () => api.get<ApiResponse<Video[]>>("/videos/all").then(unwrap).then((r) => r.data ?? []),
+  getActive: () => api.get<ApiResponse<Video[]>>("/videos").then(unwrap).then((r) => r.data ?? []),
+  create: (data: { title: string; description?: string; isActive?: boolean; order?: number }, videoFile: File, onProgress?: (pct: number) => void) => {
+    const form = new FormData();
+    form.append("video", videoFile);
+    form.append("title", data.title);
+    if (data.description) form.append("description", data.description);
+    if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
+    if (data.order !== undefined) form.append("order", String(data.order));
+    return api.post<ApiResponse<Video>>("/videos", form, {
+      headers: { "Content-Type": undefined },
+      onUploadProgress: (e) => {
+        if (e.total && onProgress) onProgress(Math.round((e.loaded * 100) / e.total));
+      },
+    }).then(unwrap);
+  },
+  update: (id: string, data: { title?: string; description?: string; isActive?: boolean; order?: number }, videoFile?: File, onProgress?: (pct: number) => void) => {
+    const form = new FormData();
+    if (data.title) form.append("title", data.title);
+    if (data.description !== undefined) form.append("description", data.description ?? "");
+    if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
+    if (data.order !== undefined) form.append("order", String(data.order));
+    if (videoFile) form.append("video", videoFile);
+    return api.put<ApiResponse<Video>>(`/videos/${id}`, form, {
+      headers: { "Content-Type": undefined },
+      onUploadProgress: (e) => {
+        if (e.total && onProgress) onProgress(Math.round((e.loaded * 100) / e.total));
+      },
+    }).then(unwrap);
+  },
+  reorder: (orderedIds: string[]) => api.patch<ApiResponse<Video[]>>("/videos/reorder", { orderedIds }).then(unwrap),
+  toggleActive: (id: string) => api.patch<ApiResponse<Video>>(`/videos/${id}/toggle-active`).then(unwrap),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/videos/${id}`).then(unwrap),
+};
+
 // Gallery
 export type GalleryItem = { id: string; image: string; imageUrl?: string; title: string | null };
 

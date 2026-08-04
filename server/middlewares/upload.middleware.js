@@ -60,4 +60,23 @@ export const uploadPdf = multer({
     fileFilter: pdfFilter,
 }).single("pdf");
 
-export default { uploadSingle, uploadMultiple, uploadGallery, uploadBanner, uploadPdf };
+const videoFilter = (req, file, cb) => {
+    const allowed = [
+        "video/mp4", "video/webm", "video/quicktime", "video/x-m4v",
+        "video/avi", "video/x-msvideo", "video/x-matroska",
+    ];
+    if (allowed.includes(file.mimetype) || file.originalname.match(/\.(mp4|webm|mov|avi|mkv|m4v)$/i)) {
+        cb(null, true);
+    } else {
+        cb(new ApiError(400, "Only MP4, WebM, MOV, AVI, MKV video files are allowed"), false);
+    }
+};
+
+/** Single video upload for Video carousel (field name: video, max 2GB) */
+export const uploadVideo = multer({
+    storage,
+    limits: { fileSize: 2048 * 1024 * 1024 }, // 2GB
+    fileFilter: videoFilter,
+}).single("video");
+
+export default { uploadSingle, uploadMultiple, uploadGallery, uploadBanner, uploadPdf, uploadVideo };

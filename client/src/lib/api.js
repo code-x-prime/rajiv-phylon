@@ -173,3 +173,8 @@ export async function submitContactInquiry(body) {
 export async function submitProductEnquiry(body) {
   return submitContactInquiry({ ...body, source: body.source || "product-detail" });
 }
+
+export async function getVideos() {
+  const res = await fetchApi("/videos");
+  return res.data || [];
+}

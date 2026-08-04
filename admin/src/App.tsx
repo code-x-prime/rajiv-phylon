@@ -15,6 +15,7 @@ import { Gallery } from "@/pages/Gallery";
 import { Contact } from "@/pages/Contact";
 import { Banners } from "@/pages/Banners";
 import { CataloguePage } from "@/pages/Catalogue";
+import { Videos } from "@/pages/Videos";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,7 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="banners" element={<Banners />} />
+              <Route path="videos" element={<Videos />} />
               <Route path="catalogue" element={<CataloguePage />} />
               <Route path="categories" element={<Categories />} />
               <Route path="subcategories" element={<SubCategories />} />

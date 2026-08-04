@@ -9,6 +9,7 @@ import galleryRoutes from "./routes/gallery.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import bannerRoutes from "./routes/banner.routes.js";
 import catalogueRoutes from "./routes/catalogue.routes.js";
+import videoRoutes from "./routes/video.routes.js";
 
 import {
     errorHandler,
@@ -101,6 +102,7 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/catalogue", catalogueRoutes);
+app.use("/api/videos", videoRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {

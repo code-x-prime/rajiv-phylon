@@ -216,3 +216,20 @@ model Catalogue {
 
   @@map("catalogues")
 }
+
+// -----------------------------------------------
+// Video (home carousel – uploaded via admin)
+// -----------------------------------------------
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  videoUrl    String   @db.Text  // R2 public URL
+  thumbnail   String?  @db.Text  // Optional thumbnail URL
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("videos")
+}

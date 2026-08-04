@@ -12,6 +12,7 @@ import {
   HomeCta,
   CoreTechnology,
   MissionNarrative,
+  VideoCarousel,
 } from "@/components/home";
 import {
   BannersFetcher,
@@ -47,6 +48,9 @@ export default function HomePage() {
 
       {/* 7. Client Logos – static */}
       <ClientLogos />
+
+      {/* 7b. Video Carousel – shows VideoCarouselSkeleton while loading */}
+      <VideoCarousel />
 
 
 

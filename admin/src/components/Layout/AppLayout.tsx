@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ImageIcon,
   BookOpen,
+  Video,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,6 +28,7 @@ const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/catalogue", label: "Catalogue PDF", icon: BookOpen },
   { to: "/banners", label: "Banners", icon: ImageIcon },
+  { to: "/videos", label: "Videos", icon: Video },
   { to: "/categories", label: "Categories", icon: FolderTree },
   { to: "/subcategories", label: "SubCategories", icon: Layers },
   { to: "/products", label: "Products", icon: Package },
@@ -45,6 +47,7 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith("/gallery")) return "Gallery";
   if (pathname.startsWith("/contact")) return "Contact Inquiries";
   if (pathname.startsWith("/banners")) return "Banners";
+  if (pathname.startsWith("/videos")) return "Videos";
   return "Admin";
 }
 
