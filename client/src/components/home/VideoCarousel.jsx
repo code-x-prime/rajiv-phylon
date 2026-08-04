@@ -20,7 +20,7 @@ function VideoSkeleton() {
   );
 }
 
-function VideoCard({ video, isActive }) {
+function VideoCard({ video, isVisible }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
@@ -28,13 +28,13 @@ function VideoCard({ video, isActive }) {
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    if (isActive) {
+    if (isVisible) {
       el.play().catch(() => setIsPlaying(false));
     } else {
       el.pause();
       el.currentTime = 0;
     }
-  }, [isActive]);
+  }, [isVisible]);
 
   const togglePlay = (e) => {
     e.stopPropagation();
@@ -66,7 +66,7 @@ function VideoCard({ video, isActive }) {
         loop
         muted={isMuted}
         playsInline
-        preload="metadata"
+        preload="auto"
       />
 
       {/* Center play/pause button */}
@@ -140,6 +140,7 @@ export function VideoCarousel() {
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [visibleSlides, setVisibleSlides] = useState([]);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -149,6 +150,7 @@ export function VideoCarousel() {
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
+    setVisibleSlides(emblaApi.slidesInView());
     setCanScrollPrev(emblaApi.canScrollPrev());
     setCanScrollNext(emblaApi.canScrollNext());
   }, [emblaApi]);
@@ -158,9 +160,11 @@ export function VideoCarousel() {
     onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
+    emblaApi.on("slidesInView", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
+      emblaApi.off("slidesInView", onSelect);
     };
   }, [emblaApi, onSelect]);
 
@@ -232,7 +236,7 @@ export function VideoCarousel() {
                 >
                   <VideoCard
                     video={video}
-                    isActive={index === selectedIndex}
+                    isVisible={visibleSlides.includes(index)}
                   />
                 </div>
               ))}
