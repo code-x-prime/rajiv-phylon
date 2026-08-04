@@ -13,7 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, CheckSquare, Square, Tag } from "lucide-react";
+import { toast } from "sonner";
 
 type Category = { id: string; name: string };
 type SubCategory = { id: string; name: string; categoryId: string };
@@ -37,6 +38,13 @@ export function Products() {
   const [showOnHome, setShowOnHome] = useState(false);
   const [isActive, setIsActive] = useState(true);
 
+  // Bulk assign
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkCategoryId, setBulkCategoryId] = useState("");
+  const [bulkSubCategoryId, setBulkSubCategoryId] = useState("");
+  const [bulkSubCategories, setBulkSubCategories] = useState<SubCategory[]>([]);
+  const [bulkAssigning, setBulkAssigning] = useState(false);
+
   useEffect(() => {
     categoriesApi.getAll().then(setCategories).catch(() => setCategories([]));
   }, []);
@@ -49,6 +57,15 @@ export function Products() {
     }
     subCategoriesApi.getByCategory(categoryId).then(setSubCategories).catch(() => setSubCategories([]));
   }, [categoryId]);
+
+  useEffect(() => {
+    if (!bulkCategoryId) {
+      setBulkSubCategories([]);
+      setBulkSubCategoryId("");
+      return;
+    }
+    subCategoriesApi.getByCategory(bulkCategoryId).then(setBulkSubCategories).catch(() => setBulkSubCategories([]));
+  }, [bulkCategoryId]);
 
   const load = () => {
     setLoading(true);
@@ -157,6 +174,54 @@ export function Products() {
     setShowOnHome(p.showOnHome ?? false);
     setIsActive(p.isActive !== false);
   };
+
+  // Bulk selection
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === list.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(list.map((p) => p.id)));
+    }
+  };
+
+  const handleBulkAssign = async () => {
+    if (!bulkCategoryId) {
+      toast.error("Select a category first");
+      return;
+    }
+    if (selectedIds.size === 0) {
+      toast.error("Select products first");
+      return;
+    }
+    setBulkAssigning(true);
+    try {
+      const result = await productsApi.bulkAssignCategories(
+        Array.from(selectedIds),
+        [bulkCategoryId],
+        bulkSubCategoryId ? [bulkSubCategoryId] : []
+      );
+      toast.success(`Updated ${result.data?.updated || selectedIds.size} products`);
+      setSelectedIds(new Set());
+      setBulkCategoryId("");
+      setBulkSubCategoryId("");
+      load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to assign categories");
+    } finally {
+      setBulkAssigning(false);
+    }
+  };
+
+  const hasUncategorized = list.some((p) => !p.categories?.length);
 
   return (
     <div>
@@ -267,9 +332,69 @@ export function Products() {
           </form>
         </CardContent>
       </Card>
+
+      {/* Bulk Assign Panel */}
+      {hasUncategorized && (
+        <Card className="mb-6 border-amber-200 bg-amber-50/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-700">
+              <Tag className="h-5 w-5" />
+              Bulk Category Assignment
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-amber-600 mb-3">
+              Some products have no categories assigned. Select products and assign categories below.
+            </p>
+            <div className="flex flex-wrap gap-3 items-end">
+              <div className="flex-1 min-w-[200px]">
+                <Label className="text-xs">Category *</Label>
+                <select
+                  className="flex h-9 w-full border border-amber-300 bg-white px-3 py-1.5 text-sm mt-1"
+                  value={bulkCategoryId}
+                  onChange={(e) => setBulkCategoryId(e.target.value)}
+                >
+                  <option value="">Select category</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1 min-w-[200px]">
+                <Label className="text-xs">SubCategory (optional)</Label>
+                <select
+                  className="flex h-9 w-full border border-amber-300 bg-white px-3 py-1.5 text-sm mt-1"
+                  value={bulkSubCategoryId}
+                  onChange={(e) => setBulkSubCategoryId(e.target.value)}
+                >
+                  <option value="">None</option>
+                  {bulkSubCategories.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+              <Button
+                onClick={handleBulkAssign}
+                disabled={!bulkCategoryId || selectedIds.size === 0 || bulkAssigning}
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                {bulkAssigning ? "Assigning..." : `Assign to ${selectedIds.size || "..."} products`}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle>All Products</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>All Products</CardTitle>
+            {selectedIds.size > 0 && (
+              <span className="text-sm text-muted-foreground">
+                {selectedIds.size} selected
+              </span>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -278,6 +403,15 @@ export function Products() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10">
+                    <button onClick={toggleSelectAll} className="text-muted-foreground hover:text-foreground">
+                      {selectedIds.size === list.length && list.length > 0 ? (
+                        <CheckSquare className="h-4 w-4" />
+                      ) : (
+                        <Square className="h-4 w-4" />
+                      )}
+                    </button>
+                  </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Slug</TableHead>
                   <TableHead>Category</TableHead>
@@ -287,10 +421,29 @@ export function Products() {
               </TableHeader>
               <TableBody>
                 {list.map((p) => (
-                  <TableRow key={p.id}>
+                  <TableRow key={p.id} className={selectedIds.has(p.id) ? "bg-amber-50/50" : ""}>
+                    <TableCell>
+                      <button onClick={() => toggleSelect(p.id)} className="text-muted-foreground hover:text-foreground">
+                        {selectedIds.has(p.id) ? (
+                          <CheckSquare className="h-4 w-4 text-amber-600" />
+                        ) : (
+                          <Square className="h-4 w-4" />
+                        )}
+                      </button>
+                    </TableCell>
                     <TableCell>{p.name}</TableCell>
                     <TableCell>{p.slug}</TableCell>
-                    <TableCell>{p.categories?.[0]?.name ?? "—"}</TableCell>
+                    <TableCell>
+                      {p.categories?.length ? (
+                        <div className="flex flex-wrap gap-1">
+                          {p.categories.map((c) => (
+                            <span key={c.id} className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">{c.name}</span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground italic">No category</span>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {p.isFeatured && <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded">Featured</span>}
