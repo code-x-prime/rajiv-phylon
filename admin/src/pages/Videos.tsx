@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { videosApi, type Video } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,6 @@ import {
   Upload,
   Trash2,
   GripVertical,
-  Play,
-  Pause,
   Eye,
   EyeOff,
   Video as VideoIcon,
@@ -22,12 +20,6 @@ function formatFileSize(bytes?: number) {
   if (!bytes) return "";
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function formatDuration(seconds: number) {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 export function Videos() {
@@ -232,7 +224,7 @@ export function Videos() {
         onOpenChange={(o) => { if (!o) setDeleteId(null); }}
         title="Delete Video"
         description="This will permanently delete the video from the server and R2 storage."
-        onConfirm={() => deleteId && deleteMutation.mutate(deleteId)}
+        onConfirm={() => { if (deleteId) deleteMutation.mutate(deleteId); }}
         loading={deleteMutation.isPending}
       />
     </div>
