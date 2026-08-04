@@ -223,7 +223,7 @@ model Catalogue {
 // -----------------------------------------------
 model Video {
   id          String   @id @default(cuid())
-  title       String
+  title       String?
   description String?  @db.Text
   videoUrl    String   @db.Text  // R2 public URL
   thumbnail   String?  @db.Text  // Optional thumbnail URL
