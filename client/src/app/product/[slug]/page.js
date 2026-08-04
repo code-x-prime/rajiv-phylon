@@ -158,7 +158,7 @@ export default async function ProductPage({ params }) {
               </>)}
               {primarySub && (<>
                 <ChevronRight className="h-3 w-3 shrink-0" />
-                <Link href={`/subcategory/${primarySub.slug}`} className="hover:text-white transition-colors">{primarySub.name}</Link>
+                <Link href={`/subcategory/${primarySub.slug}?cat=${primaryCat?.slug || ""}`} className="hover:text-white transition-colors">{primarySub.name}</Link>
               </>)}
               <ChevronRight className="h-3 w-3 shrink-0" />
               <span className="text-white font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
@@ -199,12 +199,16 @@ export default async function ProductPage({ params }) {
                       <Tag className="h-3 w-3" />{c.name}
                     </Link>
                   ))}
-                  {subCategories.map((s) => (
-                    <Link key={s.id} href={`/subcategory/${s.slug}`}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-heading font-semibold bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-500 hover:text-white transition-all">
-                      <Layers className="h-3 w-3" />{s.name}
-                    </Link>
-                  ))}
+                  {subCategories.map((s) => {
+                    const parentCat = categories.find((c) => s.categoryId === c.id) || categories[0];
+                    return (
+                      <Link key={s.id} href={`/subcategory/${s.slug}?cat=${parentCat?.slug || ""}`}
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-heading font-semibold bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-500 hover:text-white transition-all">
+                        <Layers className="h-3 w-3" />{s.name}
+                        {parentCat && <span className="text-blue-400 ml-0.5">· {parentCat.name}</span>}
+                      </Link>
+                    );
+                  })}
                 </div>
 
                 {/* Title + Short Description & Sole Details */}

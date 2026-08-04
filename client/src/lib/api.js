@@ -65,16 +65,27 @@ export async function getSubCategoriesByCategory(categoryId) {
   return res.data || [];
 }
 
-export async function getSubcategoryBySlug(slug) {
+export async function getSubcategoryBySlug(slug, catSlug) {
   const categories = await getCategories();
-  // 1. Check subcategories across categories
+
+  // If catSlug provided, resolve within that specific category first
+  if (catSlug) {
+    const targetCat = categories.find((c) => c.slug === catSlug || c.slug?.toLowerCase() === catSlug?.toLowerCase());
+    if (targetCat) {
+      const subs = await getSubCategoriesByCategory(targetCat.id);
+      const found = subs.find((s) => s.slug === slug || s.slug?.toLowerCase() === slug?.toLowerCase());
+      if (found) return { subcategory: found, category: targetCat };
+    }
+  }
+
+  // 1. Check subcategories across categories — return first match
   for (const cat of categories) {
     const subs = await getSubCategoriesByCategory(cat.id);
     const found = subs.find((s) => s.slug === slug || s.slug?.toLowerCase() === slug?.toLowerCase());
     if (found) return { subcategory: found, category: cat };
   }
 
-  // 2. Check if slug matches a top-level category (e.g. admin created "FOR MEN" category with slug "for-men")
+  // 2. Check if slug matches a top-level category
   const catFound = categories.find((c) => c.slug === slug || c.slug?.toLowerCase() === slug?.toLowerCase());
   if (catFound) {
     return {
@@ -83,7 +94,7 @@ export async function getSubcategoryBySlug(slug) {
     };
   }
 
-  // 3. Fallback for gender / special slugs (for-men, for-women, for-kids) so user never gets 404
+  // 3. Fallback for gender / special slugs
   if (slug === "for-men" || slug === "for-women" || slug === "for-kids") {
     const nameMap = { "for-men": "For Men", "for-women": "For Women", "for-kids": "For Kids" };
     const dummyCat = categories[0] || { id: "all", name: "Products", slug: "products" };

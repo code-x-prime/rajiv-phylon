@@ -64,7 +64,7 @@ export function ProductFiltersSidebar({ categoriesWithSubs = [], productCount })
   );
 
   const handleCategory    = (slug) => { updateParams({ category: slug || undefined, subcategory: undefined }); setMobileOpen(false); };
-  const handleSubcategory = (slug) => { updateParams({ subcategory: slug || undefined }); setMobileOpen(false); };
+  const handleSubcategory = (catSlug, subSlug) => { updateParams({ category: catSlug || undefined, subcategory: subSlug || undefined }); setMobileOpen(false); };
   const handleSort        = (val)  => { updateParams({ sort: val === "newest" ? undefined : val }); setMobileOpen(false); };
   const handleReset       = () => { setMobileOpen(false); const next = new URLSearchParams(); router.push(pathname, { scroll: false }); };
 
@@ -104,9 +104,9 @@ export function ProductFiltersSidebar({ categoriesWithSubs = [], productCount })
           <div>
             <SectionLabel>Sub-category</SectionLabel>
             <div className="flex flex-wrap gap-2">
-              <Pill active={!subcategorySlug} onClick={() => { handleSubcategory(""); onClose?.(); }}>All</Pill>
+              <Pill active={!subcategorySlug} onClick={() => { handleSubcategory(categorySlug, ""); onClose?.(); }}>All</Pill>
               {subcategories.map((s) => (
-                <Pill key={s.id} active={subcategorySlug === s.slug} onClick={() => { handleSubcategory(s.slug); onClose?.(); }}>
+                <Pill key={s.id} active={subcategorySlug === s.slug} onClick={() => { handleSubcategory(categorySlug, s.slug); onClose?.(); }}>
                   {s.name}
                 </Pill>
               ))}

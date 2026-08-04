@@ -164,7 +164,7 @@ export default async function CategoryPage({ params }) {
                 <CategoryCard
                   key={sub.id}
                   category={sub}
-                  href={`/subcategory/${sub.slug}`}
+                  href={`/subcategory/${sub.slug}?cat=${category.slug}`}
                 />
               ))}
             </div>

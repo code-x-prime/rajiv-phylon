@@ -207,7 +207,7 @@ export async function Footer() {
                           {cat.subCategories.map((sub) => (
                             <li key={sub.id || sub.slug}>
                               <Link
-                                href={`/subcategory/${sub.slug}`}
+                                href={`/subcategory/${sub.slug}?cat=${cat.slug}`}
                                 className="text-[13px] font-body text-gray-500 hover:text-[#F5B400] transition-colors duration-200"
                               >
                                 {sub.name}

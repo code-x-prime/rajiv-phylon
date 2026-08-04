@@ -247,7 +247,7 @@ export function Navbar() {
                                     {(subsByCategory[cat.id] || subsByCategory[cat.slug] || []).slice(0, 3).map((sub) => (
                                       <Link
                                         key={sub.id}
-                                        href={`/subcategory/${sub.slug}`}
+                                        href={`/subcategory/${sub.slug}?cat=${cat.slug}`}
                                         className="text-[13px] text-gray-400 hover:text-black hover:translate-x-1 transition-all duration-200 block"
                                         onClick={() => setMegaOpen(false)}
                                       >
@@ -388,7 +388,7 @@ export function Navbar() {
                               {subs.map((s) => (
                                 <Link
                                   key={s.id}
-                                  href={`/products?category=${cat.slug}&subcategory=${s.slug}`}
+                                  href={`/subcategory/${s.slug}?cat=${cat.slug}`}
                                   onClick={closeMobile}
                                   className="text-[13px] text-gray-400 hover:text-[#F5B400] transition-colors block py-0.5"
                                 >
