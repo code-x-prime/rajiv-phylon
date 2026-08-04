@@ -3,10 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// import { getCategories, getSubCategoriesByCategory } from "@/lib/api";
 import { Menu, X, Search, Mail, ChevronDown, ArrowRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
 function NavLink({ href, children, onClick, scrolled }) {
   const pathname = usePathname();
@@ -40,49 +41,29 @@ export function Navbar() {
   const megaTimeout = useRef(null);
 
   useEffect(() => {
-    const mapped = [
-      { id: "eva-soles", name: "EVA Soles", slug: "eva-soles" },
-      { id: "phylon-soles", name: "Phylon Soles", slug: "phylon-soles" },
-      { id: "semi-phylon-soles", name: "Semi Phylon Soles", slug: "semi-phylon-soles" }
-    ];
-    setCategories(mapped);
-  }, []);
-
-  useEffect(() => {
-    if (!megaOpen || categories.length === 0) return;
-    let isMounted = true;
-    async function fetchSubcategories() {
-      const subMap = {};
-      for (const cat of categories) {
-        try {
-          const subs = await getSubCategoriesByCategory(cat.id);
-          if (subs && subs.length > 0) {
-            subMap[cat.id] = subs;
-            subMap[cat.slug] = subs;
-          } else {
-            const defaults = [
-              { id: `for-men-${cat.id}`, name: "For Men", slug: "for-men" },
-              { id: `for-women-${cat.id}`, name: "For Women", slug: "for-women" },
-              { id: `for-kids-${cat.id}`, name: "For Kids", slug: "for-kids" },
-            ];
-            subMap[cat.id] = defaults;
-            subMap[cat.slug] = defaults;
-          }
-        } catch {
-          const defaults = [
-            { id: `for-men-${cat.id}`, name: "For Men", slug: "for-men" },
-            { id: `for-women-${cat.id}`, name: "For Women", slug: "for-women" },
-            { id: `for-kids-${cat.id}`, name: "For Kids", slug: "for-kids" },
-          ];
-          subMap[cat.id] = defaults;
-          subMap[cat.slug] = defaults;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/categories/with-subcategories`);
+        const data = await res.json();
+        if (!cancelled && data.data) {
+          const cats = data.data.map((c) => ({ id: c.id, name: c.name, slug: c.slug }));
+          setCategories(cats);
+          const subMap = {};
+          data.data.forEach((c) => {
+            if (c.subCategories && c.subCategories.length > 0) {
+              subMap[c.id] = c.subCategories.map((s) => ({ id: s.id, name: s.name, slug: s.slug }));
+              subMap[c.slug] = subMap[c.id];
+            }
+          });
+          setSubsByCategory(subMap);
         }
+      } catch {
+        // API unavailable — leave empty
       }
-      if (isMounted) setSubsByCategory(subMap);
-    }
-    fetchSubcategories();
-    return () => { isMounted = false; };
-  }, [megaOpen, categories]);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
