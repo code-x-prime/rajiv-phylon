@@ -101,7 +101,7 @@ function VideoModal({ video, isOpen, onClose }) {
             <video
               ref={modalVideoRef}
               src={video.videoUrlResolved || video.videoUrl}
-              className="w-full aspect-video object-cover"
+              className="w-full max-h-[80vh] object-contain bg-black"
               loop
               muted={isMuted}
               playsInline
@@ -207,7 +207,7 @@ function VideoCard({ video, isActive }) {
         <video
           ref={videoRef}
           src={video.videoUrlResolved || video.videoUrl}
-          className="w-full aspect-video object-cover"
+          className="w-full aspect-video object-contain bg-black"
           loop
           muted={isMuted}
           playsInline
