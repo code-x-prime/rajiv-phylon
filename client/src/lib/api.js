@@ -106,8 +106,13 @@ export async function getSubcategoryBySlug(slug, catSlug) {
   return null;
 }
 
-export async function getProducts() {
-  const res = await fetchApi("/products");
+export async function getProducts(categorySlug, subcategorySlug) {
+  const params = new URLSearchParams();
+  if (categorySlug) params.set("categorySlug", categorySlug);
+  if (subcategorySlug) params.set("subcategorySlug", subcategorySlug);
+  const qs = params.toString();
+  const path = qs ? `/products?${qs}` : "/products";
+  const res = await fetchApi(path);
   return res.data || [];
 }
 

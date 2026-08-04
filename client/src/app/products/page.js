@@ -8,15 +8,18 @@ export const metadata = {
   description: "Browse our full range of B2B industrial products. Export-grade polymer footwear components.",
 };
 
-// Build time par API call na ho (VPS par API often unavailable during build).
 export const dynamic = "force-dynamic";
 
-export default async function ProductsPage() {
+export default async function ProductsPage({ searchParams }) {
+  const params = await searchParams;
+  const categorySlug = params?.category || "";
+  const subcategorySlug = params?.subcategory || "";
+
   let products = [];
   let categoriesWithSubs = [];
   try {
     [products, categoriesWithSubs] = await Promise.all([
-      getProducts(),
+      getProducts(categorySlug, subcategorySlug),
       getCategoriesWithSubcategories(),
     ]);
   } catch (e) {

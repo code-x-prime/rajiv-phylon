@@ -186,6 +186,8 @@ export const productsApi = {
   },
   delete: (id: string) => api.delete<ApiResponse<null>>(`/products/${id}`).then(unwrap),
   deleteImage: (productId: string, imageId: string) => api.delete<ApiResponse<null>>(`/products/${productId}/images/${imageId}`).then(unwrap),
+  bulkAssignCategories: (productIds: string[], categoryIds: string[], subCategoryIds?: string[]) =>
+    api.post<ApiResponse<{ updated: number }>>("/products/bulk-assign-categories", { productIds, categoryIds, subCategoryIds }).then(unwrap),
 };
 
 // Videos

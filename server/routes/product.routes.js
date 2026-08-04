@@ -14,6 +14,7 @@ router.get("/by-id/:id", verifyAdmin, asyncHandler(productController.getById));
 router.get("/feature/:tag", asyncHandler(productController.getByFeature)); // public
 router.get("/:slug", asyncHandler(productController.getOne)); // public
 router.post("/", verifyAdmin, uploadMultiple(4), asyncHandler(productController.create));
+router.post("/bulk-assign-categories", verifyAdmin, asyncHandler(productController.bulkAssignCategories));
 router.put("/:id", verifyAdmin, uploadMultiple(4), asyncHandler(productController.update));
 router.delete("/:id", verifyAdmin, asyncHandler(productController.remove));
 router.delete("/:id/images/:imageId", verifyAdmin, asyncHandler(productController.removeImage));

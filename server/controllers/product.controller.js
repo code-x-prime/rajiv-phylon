@@ -320,7 +320,43 @@ export const removeImage = asyncHandler(async (req, res) => {
 });
 
 export const getAll = asyncHandler(async (req, res) => {
+    const { categorySlug, subcategorySlug } = req.query;
+
+    let categoryIds = null;
+    let subCategoryIds = null;
+
+    if (categorySlug) {
+        const cats = await prisma.category.findMany({
+            where: { slug: categorySlug },
+        });
+        if (cats.length === 0) {
+            return res.status(200).json(new ApiResponsive(200, [], "Success"));
+        }
+        categoryIds = cats.map((c) => c.id);
+    }
+
+    if (subcategorySlug) {
+        const subWhere = { slug: subcategorySlug };
+        if (categoryIds) {
+            subWhere.categoryId = { in: categoryIds };
+        }
+        const subs = await prisma.subCategory.findMany({ where: subWhere });
+        if (subs.length === 0) {
+            return res.status(200).json(new ApiResponsive(200, [], "Success"));
+        }
+        subCategoryIds = subs.map((s) => s.id);
+    }
+
+    const where = {};
+    if (categoryIds) {
+        where.productCategories = { some: { categoryId: { in: categoryIds } } };
+    }
+    if (subCategoryIds) {
+        where.productSubCategories = { some: { subCategoryId: { in: subCategoryIds } } };
+    }
+
     const products = await prisma.product.findMany({
+        where,
         orderBy: { createdAt: "desc" },
         include: {
             images: { orderBy: { position: "asc" } },
@@ -402,6 +438,49 @@ export const getByFeature = asyncHandler(async (req, res) => {
         console.log("[Products getByFeature]", { tag: upper, count: data.length, ids: data.map((p) => p.id) });
     }
     res.status(200).json(new ApiResponsive(200, data, "Success"));
+});
+
+export const bulkAssignCategories = asyncHandler(async (req, res) => {
+    const { productIds, categoryIds, subCategoryIds } = req.body;
+
+    if (!Array.isArray(productIds) || !productIds.length) {
+        throw new ApiError(400, "productIds array is required");
+    }
+    if (!Array.isArray(categoryIds) || !categoryIds.length) {
+        throw new ApiError(400, "categoryIds array is required");
+    }
+
+    const cats = await prisma.category.findMany({ where: { id: { in: categoryIds } } });
+    if (cats.length !== categoryIds.length) throw new ApiError(404, "One or more categories not found");
+
+    let validSubIds = [];
+    if (subCategoryIds?.length) {
+        const subs = await prisma.subCategory.findMany({ where: { id: { in: subCategoryIds } } });
+        if (subs.length !== subCategoryIds.length) throw new ApiError(400, "One or more subcategories not found");
+        validSubIds = subs.map((s) => s.id);
+    }
+
+    const results = [];
+    for (const pid of productIds) {
+        const product = await prisma.product.findUnique({ where: { id: pid } });
+        if (!product) continue;
+
+        await prisma.productCategory.deleteMany({ where: { productId: pid } });
+        await prisma.productCategory.createMany({
+            data: categoryIds.map((categoryId) => ({ productId: pid, categoryId })),
+        });
+
+        await prisma.productSubCategory.deleteMany({ where: { productId: pid } });
+        if (validSubIds.length) {
+            await prisma.productSubCategory.createMany({
+                data: validSubIds.map((subCategoryId) => ({ productId: pid, subCategoryId })),
+            });
+        }
+
+        results.push(pid);
+    }
+
+    res.status(200).json(new ApiResponsive(200, { updated: results.length }, `Updated ${results.length} products`));
 });
 
 function mapProductResponse(product) {
