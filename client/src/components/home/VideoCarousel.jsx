@@ -201,7 +201,7 @@ export function VideoCarousel() {
   if (!videos.length) return null;
 
   return (
-    <section className="py-10 md:py-16 bg-white overflow-hidden">
+    <section className="py-10 md:py-16 bg-white">
       <div className="max-w-site mx-auto px-6 lg:px-10">
         {/* Heading */}
         <motion.div
