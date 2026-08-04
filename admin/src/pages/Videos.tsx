@@ -273,7 +273,6 @@ function VideoForm({ video, onSuccess, onCancel }: { video?: Video; onSuccess: (
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) { toast.error("Title is required"); return; }
     if (!isEdit && !videoFile) { toast.error("Please select a video file"); return; }
     setProgress(0);
     if (isEdit) updateMutation.mutate();
@@ -374,8 +373,7 @@ function VideoForm({ video, onSuccess, onCancel }: { video?: Video; onSuccess: (
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Video title"
-            required
+            placeholder="Video title (optional)"
           />
         </div>
         <div className="space-y-2">

@@ -41,9 +41,7 @@ export const create = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Video file is required");
     }
 
-    const title = (req.body.title || "").trim();
-    if (!title) throw new ApiError(400, "Title is required");
-
+    const title = (req.body.title || "").trim() || null;
     const description = (req.body.description || "").trim() || null;
     const isActive = req.body.isActive !== "false" && req.body.isActive !== false;
     const order = parseInt(req.body.order, 10) || 0;
