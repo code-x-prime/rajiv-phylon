@@ -240,7 +240,7 @@ export function VideoCarousel() {
           </div>
 
           {/* Bottom row: dots + nav buttons */}
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-6">
             {/* Dots */}
             {videos.length > 1 ? (
               <div className="flex justify-center gap-2">
