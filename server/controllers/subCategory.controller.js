@@ -14,8 +14,11 @@ export const create = asyncHandler(async (req, res) => {
     if (!category) throw new ApiError(404, "Category not found");
 
     const slug = createSlug(name);
-    const existing = await prisma.subCategory.findUnique({ where: { slug } });
-    if (existing) throw new ApiError(409, "SubCategory with this slug already exists");
+    // Check uniqueness WITHIN this category (not globally)
+    const existing = await prisma.subCategory.findUnique({
+        where: { categoryId_slug: { categoryId, slug } },
+    });
+    if (existing) throw new ApiError(409, "SubCategory with this name already exists in this category");
 
     let imageUrl = null;
     if (req.file) {
@@ -36,9 +39,20 @@ export const update = asyncHandler(async (req, res) => {
     if (!subCategory) throw new ApiError(404, "SubCategory not found");
 
     const data = {};
+    const targetCategoryId = categoryId || subCategory.categoryId;
+
     if (name?.trim()) {
         data.name = name.trim();
         data.slug = createSlug(name);
+        // Check uniqueness within the target category (excluding self)
+        const existing = await prisma.subCategory.findFirst({
+            where: {
+                categoryId: targetCategoryId,
+                slug: data.slug,
+                id: { not: id },
+            },
+        });
+        if (existing) throw new ApiError(409, "SubCategory with this name already exists in this category");
     }
     if (categoryId) {
         const cat = await prisma.category.findUnique({ where: { id: categoryId } });

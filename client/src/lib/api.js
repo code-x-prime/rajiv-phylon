@@ -125,6 +125,11 @@ export async function getCategoriesHome(opts = {}) {
   return res.data || [];
 }
 
+export async function getCategoriesWithSubs() {
+  const res = await fetchApi("/categories/with-subcategories");
+  return res.data || [];
+}
+
 export async function getProductsFeatured(opts = {}) {
   const res = await fetchApi("/products/featured", opts);
   return res.data || [];

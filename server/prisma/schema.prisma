@@ -48,7 +48,7 @@ model Category {
 model SubCategory {
   id                    String                 @id @default(cuid())
   name                  String
-  slug                  String                 @unique
+  slug                  String                 // NOT unique globally — unique per category (see compound index)
   image                 String?                // R2 key or URL
   categoryId            String
   category              Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -56,6 +56,7 @@ model SubCategory {
   updatedAt             DateTime               @updatedAt
   productSubCategories  ProductSubCategory[]
 
+  @@unique([categoryId, slug])
   @@map("sub_categories")
 }
 

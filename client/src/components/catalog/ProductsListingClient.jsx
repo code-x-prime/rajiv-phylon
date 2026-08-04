@@ -90,63 +90,33 @@ export function ProductsListingClient({ products = [], categoriesWithSubs = [] }
   const page = Math.max(1, parseInt(searchParams?.get("page") || "1", 10));
 
   const mappedCategoriesWithSubs = useMemo(() => {
-    return [
-      {
-        id: "eva-soles",
-        name: "EVA Soles",
-        slug: "eva-soles",
-        subCategories: [
-          { id: "for-men", name: "For Men", slug: "for-men" },
-          { id: "for-women", name: "For Women", slug: "for-women" },
-          { id: "for-kids", name: "For Kids", slug: "for-kids" },
-        ],
-      },
-      {
-        id: "phylon-soles",
-        name: "Phylon Soles",
-        slug: "phylon-soles",
-        subCategories: [
-          { id: "for-men", name: "For Men", slug: "for-men" },
-          { id: "for-women", name: "For Women", slug: "for-women" },
-          { id: "for-kids", name: "For Kids", slug: "for-kids" },
-        ],
-      },
-      {
-        id: "semi-phylon-soles",
-        name: "Semi Phylon Soles",
-        slug: "semi-phylon-soles",
-        subCategories: [
-          { id: "for-men", name: "For Men", slug: "for-men" },
-          { id: "for-women", name: "For Women", slug: "for-women" },
-          { id: "for-kids", name: "For Kids", slug: "for-kids" },
-        ],
-      },
-    ];
-  }, []);
+    // Use real API data if available, otherwise fallback
+    if (categoriesWithSubs.length > 0) {
+      return categoriesWithSubs.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        subCategories: (c.subCategories || []).map((s) => ({
+          id: s.id,
+          name: s.name,
+          slug: s.slug,
+        })),
+      }));
+    }
+    return [];
+  }, [categoriesWithSubs]);
 
   /* Filter + sort */
   const filtered = useMemo(() => {
     let list = [...products];
     if (categorySlug) {
       list = list.filter((p) =>
-        p.categories?.some((c) => {
-          const s = c.slug.toLowerCase();
-          if (categorySlug === "eva-soles") return s.includes("eva");
-          if (categorySlug === "phylon-soles") return s.includes("phylon") && !s.includes("semi");
-          if (categorySlug === "semi-phylon-soles") return s.includes("semi");
-          return s === categorySlug;
-        })
+        p.categories?.some((c) => c.slug?.toLowerCase() === categorySlug)
       );
     }
     if (subcategorySlug) {
       list = list.filter((p) =>
-        p.subCategories?.some((s) => {
-          const sub = s.slug.toLowerCase();
-          if (subcategorySlug === "for-men") return sub.includes("men");
-          if (subcategorySlug === "for-women") return sub.includes("women");
-          if (subcategorySlug === "for-kids") return sub.includes("kid") || sub.includes("child");
-          return sub === subcategorySlug;
-        })
+        p.subCategories?.some((s) => s.slug?.toLowerCase() === subcategorySlug)
       );
     }
     if (searchQuery) list = list.filter((p) =>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCategories } from "@/lib/api";
+import { getCategories, getCategoriesWithSubs } from "@/lib/api";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
@@ -40,7 +40,13 @@ const socialLinks = [
 // Modernized footer layout with 3 columns and chevron list items
 export async function Footer() {
   let categories = [];
-  try { categories = await getCategories(); } catch { categories = []; }
+  let categoriesWithSubs = [];
+  try {
+    [categories, categoriesWithSubs] = await Promise.all([
+      getCategories(),
+      getCategoriesWithSubs(),
+    ]);
+  } catch { categories = []; categoriesWithSubs = []; }
 
   return (
     <footer className="mt-auto border-t border-gray-900">
@@ -181,38 +187,50 @@ export async function Footer() {
               </Link>
             </div>
 
-            {/* Col 3 — Solutions / Navigation in Chevron-List Style */}
+            {/* Col 3 — Industry Solutions with subcategories */}
             <div className="flex flex-col md:pl-10 lg:pl-16">
               <h3 className="text-white font-heading font-bold text-[14px] uppercase tracking-[0.2em] mb-8 border-l-2 border-[#F5B400] pl-3">
-                Product Lines
+                Industry Solutions
               </h3>
-              <div className="divide-y divide-white/5 border-t border-b border-white/5">
-                {categories.length > 0 ? (
-                  categories.slice(0, 6).map((cat) => (
-                    <Link
-                      key={cat.id || cat.slug}
-                      href={`/category/${cat.slug}`}
-                      className="py-4 flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200"
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-[15px] font-body font-medium text-gray-300 group-hover:text-[#F5B400] transition-colors duration-200">
-                          {cat.name}
-                        </span>
-                        <span className="text-[11px] text-gray-500 font-heading tracking-wider mt-1 uppercase">
-                          Premium Footwear Soles
-                        </span>
-                      </div>
-                      <span className="text-gray-600 group-hover:text-[#F5B400] transition-all duration-300 transform group-hover:translate-x-1 text-sm font-bold">
-                        &gt;
-                      </span>
-                    </Link>
+              <div className="space-y-6">
+                {categoriesWithSubs.length > 0 ? (
+                  categoriesWithSubs.slice(0, 6).map((cat) => (
+                    <div key={cat.id || cat.slug}>
+                      <Link
+                        href={`/category/${cat.slug}`}
+                        className="text-[15px] font-body font-semibold text-white hover:text-[#F5B400] transition-colors duration-200"
+                      >
+                        {cat.name}
+                      </Link>
+                      {cat.subCategories && cat.subCategories.length > 0 && (
+                        <ul className="mt-2 space-y-1.5 ml-1">
+                          {cat.subCategories.map((sub) => (
+                            <li key={sub.id || sub.slug}>
+                              <Link
+                                href={`/subcategory/${sub.slug}`}
+                                className="text-[13px] font-body text-gray-500 hover:text-[#F5B400] transition-colors duration-200"
+                              >
+                                {sub.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   ))
                 ) : (
-                  <div className="py-4 text-[14px] text-gray-500 italic opacity-60">
+                  <div className="text-[14px] text-gray-500 italic opacity-60">
                     Inventory syncing...
                   </div>
                 )}
               </div>
+              <Link
+                href="/catalog"
+                className="mt-8 inline-flex items-center gap-1.5 text-[12px] font-heading font-semibold text-gray-500 hover:text-[#F5B400] transition-colors"
+              >
+                View Catalog
+                <span className="text-[#F5B400]">&gt;</span>
+              </Link>
             </div>
 
           </div>
