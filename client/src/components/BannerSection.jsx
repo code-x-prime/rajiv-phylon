@@ -121,97 +121,78 @@ function BannerSlider({ banners }) {
               onDragStart={(e) => e.preventDefault()}
             />
           </picture>
-          {/* Dark gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/65 to-black/30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Floating accent orbs ── */}
-      <motion.div
-        animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none z-10"
-        aria-hidden
-      />
-      <motion.div
-        animate={{ y: [0, 14, 0], x: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none z-10"
-        aria-hidden
-      />
+      {/* ── Content overlay (rendered ONLY if title/subtitle/description is explicitly provided in API banner object) ── */}
+      {(cur?.title || cur?.subtitle || cur?.description || cur?.heading) && (
+        <div className="relative z-20 max-w-site mx-auto px-6 lg:px-10 w-full pt-16 pb-14 md:pt-28 md:pb-24 pointer-events-none">
+          <div className="max-w-3xl pointer-events-auto">
+            {/* Label */}
+            {(cur?.subtitle || cur?.label) && (
+              <motion.div
+                key={`label-${index}`}
+                initial={{ opacity: 0, x: -24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-flex items-center gap-3 mb-4 md:mb-6"
+              >
+                <div className="h-px w-10 bg-[#F5B400]" />
+                <span className="type-overline text-[#F5B400]">
+                  {cur.subtitle || cur.label}
+                </span>
+              </motion.div>
+            )}
 
-      {/* ── Content overlay ── */}
-      <div className="relative z-20 max-w-site mx-auto px-6 lg:px-10 w-full pt-16 pb-14 md:pt-28 md:pb-24 pointer-events-none">
-        <div className="max-w-3xl pointer-events-auto">
-          {/* Label */}
-          <motion.div
-            key={`label-${index}`}
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-3 mb-4 md:mb-6"
-          >
-            <div className="h-px w-10 bg-[#F5B400]" />
-            <span className="type-overline text-[#F5B400]">
-              {cur?.subtitle || cur?.label || "Trusted B2B & OEM Partner"}
-            </span>
-          </motion.div>
+            {/* Heading */}
+            {cur?.title && (
+              <div className="overflow-hidden mb-4 md:mb-6">
+                <motion.h1
+                  key={`title-${index}`}
+                  initial={{ opacity: 0, y: 60 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  className="font-display text-[clamp(2.2rem,5vw,5.2rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
+                >
+                  {cur.title}
+                </motion.h1>
+              </div>
+            )}
 
-          {/* Heading */}
-          <div className="overflow-hidden mb-4 md:mb-6">
-            <motion.h1
-              key={`title-${index}`}
-              initial={{ opacity: 0, y: 60 }}
+            {/* Subtitle / Description */}
+            {(cur?.description || cur?.text) && (
+              <motion.p
+                key={`desc-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="text-lg md:text-2xl text-white/70 font-body leading-relaxed max-w-xl mb-8 md:mb-10"
+              >
+                {cur.description || cur.text}
+              </motion.p>
+            )}
+
+            {/* CTAs */}
+            <motion.div
+              key={`cta-${index}`}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.2rem,5vw,5.2rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-wrap items-center gap-4 relative z-30"
             >
-              {cur?.title ? (
-                cur.title
-              ) : (
-                <>
-                  High performance <span className="text-[#F5B400]">polymer soles</span>
-                </>
-              )}
-            </motion.h1>
+              <Link
+                href={link}
+                className="inline-flex items-center gap-2.5 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300 z-30 relative"
+              >
+                Explore Products
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
           </div>
-
-          {/* Subtitle / Description */}
-          <motion.p
-            key={`desc-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-2xl text-white/70 font-body leading-relaxed max-w-xl mb-8 md:mb-10"
-          >
-            {cur?.description || cur?.subtitle || "Trusted B2B & OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale."}
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            key={`cta-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center gap-4 relative z-30"
-          >
-            <Link
-              href={link}
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300 z-30 relative"
-            >
-              Explore Products
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2.5 rounded-xl border border-white/20 text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:border-white/50 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm z-30 relative"
-            >
-              Request a Quote
-            </Link>
-          </motion.div>
         </div>
-      </div>
+      )}
 
       {/* ── Clickable full link ── */}
       <Link href={link} className="absolute inset-0 z-10" aria-label="View offer" />
