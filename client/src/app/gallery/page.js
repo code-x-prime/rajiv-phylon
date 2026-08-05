@@ -8,8 +8,8 @@ export const metadata = {
   description: "Our infrastructure, manufacturing, and product gallery. Export-grade manufacturing showcase.",
 };
 
-// Build time par API call na ho (VPS par API often unavailable during build).
-export const dynamic = "force-dynamic";
+/* ISR: revalidate every 60 seconds instead of forcing dynamic on every visit */
+export const revalidate = 60;
 
 export default async function GalleryPage() {
   let items = [];
@@ -21,10 +21,8 @@ export default async function GalleryPage() {
 
   return (
     <div className="bg-white overflow-x-hidden">
-      {/* Hero */}
       <GalleryHero count={items.length} />
 
-      {/* Grid */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
           {items.length === 0 ? (

@@ -4,10 +4,9 @@ import Image from "next/image";
 
 /**
  * Wraps Next/Image and blocks right-click save and drag.
- * Image dikhai deti hai, lekin save/download asani se nahi ho sakta.
- * wrapperClassName = outer div (e.g. "relative w-full h-full"), className = Image class.
+ * Adds lazy loading by default for better performance.
  */
-export function ProtectedImage({ wrapperClassName = "", className, onContextMenu, onDragStart, ...imageProps }) {
+export function ProtectedImage({ wrapperClassName = "", className, onContextMenu, onDragStart, loading, ...imageProps }) {
   return (
     <div
       className={`select-none ${wrapperClassName}`.trim()}
@@ -18,6 +17,7 @@ export function ProtectedImage({ wrapperClassName = "", className, onContextMenu
     >
       <Image
         {...imageProps}
+        loading={loading ?? "lazy"}
         className={className}
         draggable={false}
         onDragStart={(e) => {

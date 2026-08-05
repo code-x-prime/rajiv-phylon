@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Search, Mail, ChevronDown, ArrowRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { HeaderSearch } from "./HeaderSearch";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
@@ -437,32 +438,7 @@ export function Navbar() {
             >
               <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden">
                 <div className="p-4">
-                  <div className="flex items-center gap-3">
-                    <Search className="h-5 w-5 text-gray-400 shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="Search products, categories, solutions..."
-                      className="flex-1 text-[15px] font-body text-[#111111] placeholder:text-gray-400 focus:outline-none bg-transparent"
-                      autoFocus
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setSearchOpen(false)}
-                      className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50">
-                  <p className="text-[11px] font-body font-semibold uppercase tracking-[0.1em] text-gray-400 mb-2">Popular Searches</p>
-                  <div className="flex flex-wrap gap-2">
-                    {["Polymer Soles", "TPR Soles", "EVA Soles", "Safety Footwear", "Custom Solutions"].map((term) => (
-                      <span key={term} className="text-[12px] font-body text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-1.5 hover:border-[#F5B400] hover:text-[#111111] cursor-pointer transition-colors">
-                        {term}
-                      </span>
-                    ))}
-                  </div>
+                  <HeaderSearch variant="dialog" onClose={() => setSearchOpen(false)} />
                 </div>
               </div>
             </motion.div>
@@ -491,32 +467,7 @@ export function Navbar() {
             >
               <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
                 <div className="p-4">
-                  <div className="flex items-center gap-3">
-                    <Search className="h-5 w-5 text-gray-400 shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="Search products..."
-                      className="flex-1 text-[15px] font-body text-[#111111] placeholder:text-gray-400 focus:outline-none bg-transparent"
-                      autoFocus
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setSearchOpen(false)}
-                      className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50">
-                  <p className="text-[11px] font-body font-semibold uppercase tracking-[0.1em] text-gray-400 mb-2">Popular</p>
-                  <div className="flex flex-wrap gap-2">
-                    {["Polymer Soles", "TPR Soles", "EVA Soles"].map((term) => (
-                      <span key={term} className="text-[12px] font-body text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-1.5 hover:border-[#F5B400] hover:text-[#111111] cursor-pointer transition-colors">
-                        {term}
-                      </span>
-                    ))}
-                  </div>
+                  <HeaderSearch variant="dialog" onClose={() => setSearchOpen(false)} />
                 </div>
               </div>
             </motion.div>

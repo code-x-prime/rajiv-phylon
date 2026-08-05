@@ -28,17 +28,14 @@ export function GalleryGrid({ items }) {
 
   return (
     <>
-      {/* Masonry grid */}
+      {/* Masonry grid — CSS fade-in instead of framer-motion per item */}
       <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
         {items.map((item, i) => (
-          <motion.button
+          <button
             key={item.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.55, delay: (i % 8) * 0.06, ease: [0.22, 1, 0.36, 1] }}
             type="button"
-            className="block w-full break-inside-avoid rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 hover:border-[#F5B400]/40 hover:shadow-xl transition-all duration-400 text-left group cursor-zoom-in"
+            className="block w-full break-inside-avoid rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 hover:border-[#F5B400]/40 hover:shadow-xl transition-all duration-400 text-left group cursor-zoom-in gallery-item-fade-in"
+            style={{ animationDelay: `${(i % 12) * 60}ms` }}
             onClick={() => openLightbox(i)}
           >
             <div className="relative overflow-hidden bg-gray-100 select-none" style={{ aspectRatio: i % 5 === 0 ? "3/4" : i % 3 === 0 ? "16/9" : "4/3" }} onContextMenu={(e) => e.preventDefault()}>
@@ -69,11 +66,11 @@ export function GalleryGrid({ items }) {
               {/* Bottom yellow bar */}
               <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#F5B400] group-hover:w-full transition-all duration-500 ease-out" aria-hidden />
             </div>
-          </motion.button>
+          </button>
         ))}
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox — keep framer-motion only here for modal animation */}
       <AnimatePresence>
         {lightboxIndex !== null && (
           <motion.div

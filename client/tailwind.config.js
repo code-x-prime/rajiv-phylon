@@ -65,12 +65,17 @@ module.exports = {
           "50%": { transform: "scale(1.05) translate(-1%, -1%)" },
           "100%": { transform: "scale(1) translate(0, 0)" },
         },
+        "gallery-fade-in": {
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "banner-progress": "banner-progress linear forwards",
         "float-slow": "float-slow 8s ease-in-out infinite",
         "float-slower": "float-slower 10s ease-in-out infinite",
         "ken-burns": "ken-burns 20s ease-in-out infinite",
+        "gallery-fade-in": "gallery-fade-in 0.55s ease-out both",
       },
     },
   },
