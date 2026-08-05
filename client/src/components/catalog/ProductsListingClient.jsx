@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/ui/ProductCard";
 import { ProductFiltersSidebar } from "./ProductFiltersSidebar";
 import { CatalogEmptyState } from "./CatalogEmptyState";
 
-const PER_PAGE = 12;
+const PER_PAGE = 20;
 
 /* ── Pagination component ──────────────────────────── */
 function Pagination({ page, totalPages, onPage }) {
