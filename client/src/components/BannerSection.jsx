@@ -167,7 +167,7 @@ function BannerSlider({ banners }) {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="font-display text-[clamp(2.2rem,5.5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
             >
-              {cur?.title ? (
+              {cur?.title && cur.title.trim().toLowerCase() !== "banner" ? (
                 cur.title
               ) : (
                 <>
