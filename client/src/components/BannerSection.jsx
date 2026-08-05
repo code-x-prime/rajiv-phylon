@@ -89,9 +89,9 @@ function BannerSlider({ banners }) {
 
   return (
     <section
-      className={`relative w-full flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300 ${
+      className={`relative w-full flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300 min-h-[480px] sm:min-h-[560px] md:min-h-[640px] ${
         isSingleBanner
-          ? "aspect-[16/8] sm:aspect-[16/6] md:aspect-[1920/900]"
+          ? "aspect-[4/5] sm:aspect-[16/6] md:aspect-[1920/900]"
           : "aspect-[4/5] md:aspect-[1920/900]"
       }`}
       onMouseEnter={() => setPaused(true)}
@@ -131,18 +131,18 @@ function BannerSlider({ banners }) {
       <motion.div
         animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none z-10"
+        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none z-10 hidden md:block"
         aria-hidden
       />
       <motion.div
         animate={{ y: [0, 14, 0], x: [0, -8, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none z-10"
+        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none z-10 hidden md:block"
         aria-hidden
       />
 
-      {/* ── Hero Text Overlay (Matches photo 100%) ── */}
-      <div className="relative z-20 max-w-site mx-auto px-6 lg:px-10 w-full pt-16 pb-14 md:pt-28 md:pb-24 pointer-events-none">
+      {/* ── Hero Text Overlay (100% Mobile Responsive) ── */}
+      <div className="relative z-20 max-w-site mx-auto px-5 sm:px-6 lg:px-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-16 md:pt-36 md:pb-24 pointer-events-none">
         <div className="max-w-3xl pointer-events-auto">
           {/* Label */}
           <motion.div
@@ -150,22 +150,22 @@ function BannerSlider({ banners }) {
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-3 mb-4 md:mb-6"
+            className="inline-flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-4 md:mb-6"
           >
-            <div className="h-px w-10 bg-[#F5B400]" />
-            <span className="type-overline text-[#F5B400]">
+            <div className="h-px w-6 sm:w-10 bg-[#F5B400]" />
+            <span className="type-overline text-[#F5B400] text-[10px] sm:text-xs tracking-wider uppercase font-semibold">
               {cur?.subtitle || cur?.label || "Trusted B2B & OEM Partner"}
             </span>
           </motion.div>
 
           {/* Heading */}
-          <div className="overflow-hidden mb-4 md:mb-6">
+          <div className="overflow-hidden mb-3 sm:mb-4 md:mb-6">
             <motion.h1
               key={`title-${index}`}
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.2rem,5.5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
+              className="font-display text-[clamp(1.75rem,4.5vw,4.5rem)] sm:text-[clamp(2.2rem,5vw,5rem)] font-medium text-white tracking-[-0.03em] leading-[1.1]"
             >
               {cur?.title && cur.title.trim().toLowerCase() !== "banner" ? (
                 cur.title
@@ -183,7 +183,7 @@ function BannerSlider({ banners }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-2xl text-white/70 font-body leading-relaxed max-w-xl mb-8 md:mb-10"
+            className="text-xs sm:text-lg md:text-xl text-white/75 font-body leading-relaxed max-w-xl mb-6 sm:mb-8 md:mb-10 line-clamp-3 sm:line-clamp-none"
           >
             {cur?.description || cur?.text || "Trusted B2B & OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale."}
           </motion.p>
@@ -194,18 +194,18 @@ function BannerSlider({ banners }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center gap-4 relative z-30"
+            className="flex flex-wrap items-center gap-2.5 sm:gap-4 relative z-30"
           >
             <Link
               href={link}
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300 z-30 relative"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[11px] sm:text-[13px] uppercase tracking-[0.08em] sm:tracking-[0.1em] px-5 py-2.5 sm:px-7 sm:py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300 z-30 relative"
             >
               Explore Products
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2.5 rounded-xl border border-white/20 text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:border-white/50 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm z-30 relative"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/20 text-white font-display font-medium text-[11px] sm:text-[13px] uppercase tracking-[0.08em] sm:tracking-[0.1em] px-5 py-2.5 sm:px-7 sm:py-3.5 hover:border-white/50 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm z-30 relative"
             >
               Request a Quote
             </Link>
@@ -296,7 +296,7 @@ function FallbackHero() {
 
   return (
     <section
-      className="relative w-full aspect-[4/5] md:aspect-[1920/900] flex items-center overflow-hidden bg-[#0A0A0A]"
+      className="relative w-full aspect-[4/5] md:aspect-[1920/900] min-h-[480px] sm:min-h-[560px] md:min-h-[640px] flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseMove={handleMouseMove}
     >
       {/* Desktop bg image */}
@@ -320,18 +320,18 @@ function FallbackHero() {
       <motion.div
         animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none"
+        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none hidden md:block"
         aria-hidden
       />
       <motion.div
         animate={{ y: [0, 14, 0], x: [0, -8, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none"
+        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none hidden md:block"
         aria-hidden
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-site mx-auto px-6 lg:px-10 w-full pt-32 pb-24 md:pt-36 md:pb-28">
+      <div className="relative z-10 max-w-site mx-auto px-5 sm:px-6 lg:px-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-16 md:pt-36 md:pb-28">
         <div className="max-w-3xl">
 
           {/* Label */}
@@ -339,21 +339,21 @@ function FallbackHero() {
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-3 mb-6"
+            className="inline-flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-4 md:mb-6"
           >
-            <div className="h-px w-10 bg-[#F5B400]" />
-            <span className="type-overline text-[#F5B400]">
+            <div className="h-px w-6 sm:w-10 bg-[#F5B400]" />
+            <span className="type-overline text-[#F5B400] text-[10px] sm:text-xs tracking-wider uppercase font-semibold">
               Trusted B2B & OEM Partner
             </span>
           </motion.div>
 
           {/* Heading */}
-          <div className="overflow-hidden mb-6">
+          <div className="overflow-hidden mb-3 sm:mb-4 md:mb-6">
             <motion.h1
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.5rem,5.5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.05]"
+              className="font-display text-[clamp(1.75rem,4.5vw,4.5rem)] sm:text-[clamp(2.2rem,5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.1]"
             >
               High performance <span className="text-[#F5B400]">polymer soles</span>
             </motion.h1>
@@ -364,7 +364,7 @@ function FallbackHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl md:text-2xl text-white/55 font-body leading-relaxed max-w-xl mb-10"
+            className="text-xs sm:text-lg md:text-2xl text-white/75 font-body leading-relaxed max-w-xl mb-6 sm:mb-8 md:mb-10 line-clamp-3 sm:line-clamp-none"
           >
             Trusted B2B &amp; OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
           </motion.p>
@@ -374,18 +374,18 @@ function FallbackHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center gap-4"
+            className="flex flex-wrap items-center gap-2.5 sm:gap-4"
           >
             <Link
               href="/products"
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[11px] sm:text-[13px] uppercase tracking-[0.08em] sm:tracking-[0.1em] px-5 py-2.5 sm:px-7 sm:py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300"
             >
               Explore Products
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2.5 rounded-xl border border-white/20 text-white font-display font-medium text-[13px] uppercase tracking-[0.1em] px-7 py-3.5 hover:border-white/50 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/20 text-white font-display font-medium text-[11px] sm:text-[13px] uppercase tracking-[0.08em] sm:tracking-[0.1em] px-5 py-2.5 sm:px-7 sm:py-3.5 hover:border-white/50 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm"
             >
               Request a Quote
             </Link>
