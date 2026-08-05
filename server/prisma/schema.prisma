@@ -96,6 +96,14 @@ enum ProductFeature {
 }
 
 // -----------------------------------------------
+// Product status (draft / published)
+// -----------------------------------------------
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// -----------------------------------------------
 // Product (many categories, many subcategories)
 // -----------------------------------------------
 model Product {
@@ -113,6 +121,7 @@ model Product {
   isHighDemand         Boolean               @default(false)
   showOnHome           Boolean               @default(false)
   isActive             Boolean               @default(true)
+  status               ProductStatus         @default(PUBLISHED)
   moq                  String?               // Minimum Order Quantity, e.g. "1200-2400 Pairs"
   specifications       String?               @db.Text  // JSON string: { "Material": "TPR", "Color": "Brown" }
   tradeInfo            String?               @db.Text  // JSON string: { "Payment Terms": "T/T", "Supply Ability": "100000 per day" }

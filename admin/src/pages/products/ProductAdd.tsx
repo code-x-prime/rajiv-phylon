@@ -2,17 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import JoditEditor from "jodit-react";
-import { categoriesApi, subCategoriesApi, productsApi, type ProductFeatureTag } from "@/lib/api";
+import { categoriesApi, subCategoriesApi, productsApi } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageUploadZone } from "@/components/ImageUploadZone";
 import { toast } from "sonner";
 import { getApiError } from "@/lib/axios";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronDown, ChevronRight, Plus, Trash2, Wand2 } from "lucide-react";
 
 /* ── Jodit config ─────────────────────────────────────── */
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+
 const JODIT_CONFIG = {
   height: 450,
   minHeight: 350,
@@ -40,7 +41,16 @@ const JODIT_CONFIG = {
   ],
   pasteFromWordRemoveFontStyles: true,
   pasteFromWordRemoveStyles: true,
-  uploader: { insertImageAsBase64URI: true },
+  uploader: {
+    insertImageAsBase64URI: false,
+    url: `${API_BASE}/products/upload-description-image`,
+    method: "POST",
+    filesVariableName: "image",
+    format: "json",
+    isSuccess: (resp: any) => resp?.success === true,
+    getMessage: (resp: any) => resp?.message || "Upload failed",
+    processFileName: () => "image",
+  },
   style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "15px", lineHeight: 1.7 },
 };
 
@@ -198,17 +208,14 @@ function MoqInput({ value, onChange }: { value: string; onChange: (v: string) =>
 
   return (
     <div className="space-y-2">
-      <Select value={selectValue} onValueChange={handleSelect}>
-        <SelectTrigger className="border-border w-full">
-          <SelectValue placeholder="Select MOQ or choose Custom..." />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="__none__">— No MOQ set —</SelectItem>
-          {MOQ_PRESETS.map((p) => (
-            <SelectItem key={p} value={p}>{p}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <select value={selectValue} onChange={(e) => handleSelect(e.target.value)}
+        className="w-full border border-border rounded px-3 py-2 bg-card text-foreground text-sm">
+        <option value="__none__">— No MOQ set —</option>
+        {MOQ_PRESETS.map((p) => (
+          <option key={p} value={p}>{p}</option>
+        ))}
+        <option value="Custom...">Custom...</option>
+      </select>
       {showCustom && (
         <Input
           value={value}
@@ -240,12 +247,12 @@ export function ProductAdd() {
   const [tradePairs, setTradePairs] = useState<KVPair[]>(
     TRADE_DEFAULTS.map((k) => ({ key: k, value: "" }))
   );
-  const [featureTag, setFeatureTag] = useState<ProductFeatureTag>(null);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isNewArrival, setIsNewArrival] = useState(false);
   const [isHighDemand, setIsHighDemand] = useState(false);
   const [showOnHome, setShowOnHome] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("PUBLISHED");
   const [seoOpen, setSeoOpen] = useState(false);
   const [metaTitle, setMetaTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
@@ -257,14 +264,6 @@ export function ProductAdd() {
     queryFn: () => subCategoriesApi.getByCategories(categoryIds),
     enabled: categoryIds.length > 0,
   });
-
-  const handleFeatureTagChange = (v: string) => {
-    const tag = v === "__none__" ? null : (v as ProductFeatureTag);
-    setFeatureTag(tag);
-    setIsNewArrival(tag === "NEW_ARRIVAL");
-    setIsFeatured(tag === "BEST_SELLER");
-    setIsHighDemand(tag === "TRENDING");
-  };
 
   const createMutation = useMutation({
     mutationFn: () => {
@@ -279,8 +278,7 @@ export function ProductAdd() {
           tradeInfo: Object.keys(tradeObj).length ? tradeObj : undefined,
           categoryIds,
           subCategoryIds: subCategoryIds.length ? subCategoryIds : [],
-          featureTag: featureTag || undefined,
-          isFeatured, isNewArrival, isHighDemand, showOnHome, isActive,
+          isFeatured, isNewArrival, isHighDemand, showOnHome, isActive, status,
           metaTitle: metaTitle.trim() || undefined,
           metaDescription: metaDescription.trim() || undefined,
           metaKeywords: metaKeywords.trim() || undefined,
@@ -403,33 +401,24 @@ export function ProductAdd() {
         {/* ── Flags ── */}
         <section className="border border-border bg-card p-6 rounded-lg space-y-5">
           <h2 className="font-semibold text-base border-b border-border pb-3">Home Page & Visibility</h2>
-          <div>
-            <Label>Feature Tag (Home Sections)</Label>
-            <p className="text-xs text-muted-foreground mb-2">Sets the section this product appears in on the home page.</p>
-            <Select value={featureTag ?? "__none__"} onValueChange={handleFeatureTagChange}>
-              <SelectTrigger className="mt-1 border-border w-full max-w-xs">
-                <SelectValue placeholder="None" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">None</SelectItem>
-                <SelectItem value="NEW_ARRIVAL">New Arrival</SelectItem>
-                <SelectItem value="TRENDING">Trending (High Demand)</SelectItem>
-                <SelectItem value="BEST_SELLER">Best Seller (Featured)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <p className="text-xs text-muted-foreground">You can select multiple sections — a product can appear in more than one home section.</p>
           <div className="grid sm:grid-cols-2 gap-3">
-            <CheckboxRow label="New Arrival" checked={isNewArrival}
-              onChange={(v) => { setIsNewArrival(v); if (v) { setFeatureTag("NEW_ARRIVAL"); setIsFeatured(false); setIsHighDemand(false); } else if (featureTag === "NEW_ARRIVAL") setFeatureTag(null); }}
+            <CheckboxRow label="New Arrival" checked={isNewArrival} onChange={setIsNewArrival}
               description="Shows in New Arrivals section on home" />
-            <CheckboxRow label="High Demand / Trending" checked={isHighDemand}
-              onChange={(v) => { setIsHighDemand(v); if (v) { setFeatureTag("TRENDING"); setIsFeatured(false); setIsNewArrival(false); } else if (featureTag === "TRENDING") setFeatureTag(null); }}
+            <CheckboxRow label="High Demand / Trending" checked={isHighDemand} onChange={setIsHighDemand}
               description="Shows in Trending section on home" />
-            <CheckboxRow label="Featured / Best Seller" checked={isFeatured}
-              onChange={(v) => { setIsFeatured(v); if (v) { setFeatureTag("BEST_SELLER"); setIsNewArrival(false); setIsHighDemand(false); } else if (featureTag === "BEST_SELLER") setFeatureTag(null); }}
+            <CheckboxRow label="Featured / Best Seller" checked={isFeatured} onChange={setIsFeatured}
               description="Shows in Featured Products section" />
             <CheckboxRow label="Show on Home" checked={showOnHome} onChange={setShowOnHome} description="Pinned to home page listing" />
             <CheckboxRow label="Active" checked={isActive} onChange={setIsActive} description="Inactive products are hidden from the website" />
+            <div>
+              <Label>Status</Label>
+              <select value={status} onChange={(e) => setStatus(e.target.value as "DRAFT" | "PUBLISHED")}
+                className="mt-1 w-full border border-border rounded px-3 py-2 bg-card text-foreground text-sm">
+                <option value="DRAFT">Draft (hidden from website)</option>
+                <option value="PUBLISHED">Published (live on website)</option>
+              </select>
+            </div>
           </div>
         </section>
 

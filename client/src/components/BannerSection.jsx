@@ -292,7 +292,7 @@ function FallbackHero() {
 
   return (
     <section
-      className="relative w-full aspect-[4/5] sm:aspect-[16/6] md:aspect-none min-h-[480px] sm:min-h-[560px] md:h-screen md:min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
+      className="relative w-full h-screen min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseMove={handleMouseMove}
     >
       {/* Desktop bg image */}

@@ -94,6 +94,9 @@ export const create = asyncHandler(async (req, res) => {
             isHighDemand: req.body.isHighDemand === true || req.body.isHighDemand === "true",
             showOnHome: req.body.showOnHome === true || req.body.showOnHome === "true",
             isActive: req.body.isActive !== false && req.body.isActive !== "false",
+            status: ["DRAFT", "PUBLISHED"].includes(String(req.body.status || "").toUpperCase())
+                ? String(req.body.status).toUpperCase()
+                : "PUBLISHED",
         },
     });
 
@@ -183,15 +186,9 @@ export const update = asyncHandler(async (req, res) => {
     if (req.body.isHighDemand !== undefined) data.isHighDemand = req.body.isHighDemand === true || req.body.isHighDemand === "true";
     if (req.body.showOnHome !== undefined) data.showOnHome = req.body.showOnHome === true || req.body.showOnHome === "true";
     if (req.body.isActive !== undefined) data.isActive = req.body.isActive !== false && req.body.isActive !== "false";
-    if (req.body.featureTag !== undefined) {
-        const tag = String(req.body.featureTag || "").trim().toUpperCase();
-        const validTag = ["NEW_ARRIVAL", "TRENDING", "BEST_SELLER", ""].includes(tag)
-            ? (tag || null)
-            : null;
-        data.featureTag = validTag;
-        data.isNewArrival = validTag === "NEW_ARRIVAL";
-        data.isFeatured = validTag === "BEST_SELLER";
-        data.isHighDemand = validTag === "TRENDING";
+    if (req.body.status !== undefined) {
+        const statusVal = String(req.body.status).toUpperCase();
+        data.status = ["DRAFT", "PUBLISHED"].includes(statusVal) ? statusVal : "PUBLISHED";
     }
 
     await prisma.product.update({ where: { id }, data });
@@ -347,7 +344,7 @@ export const getAll = asyncHandler(async (req, res) => {
         subCategoryIds = subs.map((s) => s.id);
     }
 
-    const where = {};
+    const where = { status: "PUBLISHED" };
     if (categoryIds) {
         where.productCategories = { some: { categoryId: { in: categoryIds } } };
     }
@@ -370,7 +367,7 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getOne = asyncHandler(async (req, res) => {
     const { slug } = req.params;
     const product = await prisma.product.findUnique({
-        where: { slug },
+        where: { slug, status: "PUBLISHED" },
         include: {
             images: { orderBy: { position: "asc" } },
             productCategories: { include: { category: true } },
@@ -399,7 +396,7 @@ const VALID_FEATURE_TAGS = ["NEW_ARRIVAL", "TRENDING", "BEST_SELLER"];
 
 function getProductsByFlag(flag) {
     return asyncHandler(async (req, res) => {
-        const where = { isActive: true, [flag]: true };
+        const where = { isActive: true, status: "PUBLISHED", [flag]: true };
         const products = await prisma.product.findMany({
             where,
             orderBy: { createdAt: "desc" },
@@ -425,7 +422,7 @@ export const getByFeature = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid feature tag");
     }
     const products = await prisma.product.findMany({
-        where: { featureTag: upper },
+        where: { featureTag: upper, status: "PUBLISHED" },
         orderBy: { createdAt: "desc" },
         include: {
             images: { orderBy: { position: "asc" } },

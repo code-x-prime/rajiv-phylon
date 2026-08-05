@@ -11,6 +11,7 @@ export function ProductList() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"all" | "DRAFT" | "PUBLISHED">("all");
 
   const { data: list = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -27,7 +28,10 @@ export function ProductList() {
     onError: (e) => toast.error(getApiError(e)),
   });
 
-  const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+  const filtered = statusFilter === "all"
+    ? list
+    : list.filter((p) => (p.status || "PUBLISHED") === statusFilter);
+  const sorted = [...filtered].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
 
   const columns = [
     {
@@ -46,6 +50,19 @@ export function ProductList() {
     { id: "category", header: "Categories", cell: (row: Product) => (row.categories?.length ? row.categories.map((c) => c.name).join(", ") : "—") },
     { id: "subcategory", header: "SubCategories", cell: (row: Product) => (row.subCategories?.length ? row.subCategories.map((s) => s.name).join(", ") : "—") },
     {
+      id: "status",
+      header: "Status",
+      sortKey: "status" as const,
+      cell: (row: Product) => {
+        const isDraft = (row.status || "PUBLISHED") === "DRAFT";
+        return (
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${isDraft ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}`}>
+            {isDraft ? "Draft" : "Published"}
+          </span>
+        );
+      },
+    },
+    {
       id: "createdAt",
       header: "Created",
       sortKey: "createdAt" as const,
@@ -55,6 +72,16 @@ export function ProductList() {
 
   return (
     <>
+      <div className="mb-4 flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">Filter:</span>
+        {(["all", "PUBLISHED", "DRAFT"] as const).map((opt) => (
+          <button key={opt} onClick={() => setStatusFilter(opt)}
+            className={`px-3 py-1 text-sm rounded border ${statusFilter === opt ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted"}`}>
+            {opt === "all" ? "All" : opt === "DRAFT" ? "Drafts" : "Published"}
+          </button>
+        ))}
+      </div>
+
       <DataTable<Product>
         data={sorted}
         columns={columns}

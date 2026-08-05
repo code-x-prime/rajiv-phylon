@@ -77,6 +77,7 @@ export type ProductImage = { id: string; url: string; position: number };
 export type CategoryRef = { id: string; name: string; slug?: string };
 export type SubCategoryRef = { id: string; name: string; slug?: string };
 export type ProductFeatureTag = "NEW_ARRIVAL" | "TRENDING" | "BEST_SELLER" | null;
+export type ProductStatus = "DRAFT" | "PUBLISHED";
 export type Product = {
   id: string;
   name: string;
@@ -91,6 +92,7 @@ export type Product = {
   isHighDemand?: boolean;
   showOnHome?: boolean;
   isActive?: boolean;
+  status?: ProductStatus;
   createdAt: string;
   images: ProductImage[];
   categories: CategoryRef[];
@@ -123,6 +125,7 @@ export const productsApi = {
     isHighDemand?: boolean;
     showOnHome?: boolean;
     isActive?: boolean;
+    status?: ProductStatus;
   }, images?: File[]) => {
     const form = new FormData();
     form.append("name", data.name);
@@ -141,6 +144,7 @@ export const productsApi = {
     form.append("isHighDemand", String(data.isHighDemand ?? false));
     form.append("showOnHome", String(data.showOnHome ?? false));
     form.append("isActive", String(data.isActive ?? true));
+    form.append("status", data.status ?? "PUBLISHED");
     images?.forEach((f) => form.append("images", f));
     return api.post<ApiResponse<Product>>("/products", form, { headers: { "Content-Type": undefined } }).then(unwrap);
   },
@@ -162,6 +166,7 @@ export const productsApi = {
     isHighDemand: boolean;
     showOnHome: boolean;
     isActive: boolean;
+    status: ProductStatus;
   }>, images?: File[]) => {
     const form = new FormData();
     form.append("name", data.name ?? "");
@@ -174,12 +179,12 @@ export const productsApi = {
     form.append("metaTitle", data.metaTitle ?? "");
     form.append("metaDescription", data.metaDescription ?? "");
     form.append("metaKeywords", data.metaKeywords ?? "");
-    form.append("featureTag", data.featureTag ?? "");
     form.append("isFeatured", String(data.isFeatured ?? false));
     form.append("isNewArrival", String(data.isNewArrival ?? false));
     form.append("isHighDemand", String(data.isHighDemand ?? false));
     form.append("showOnHome", String(data.showOnHome ?? false));
     form.append("isActive", String(data.isActive ?? true));
+    form.append("status", data.status ?? "PUBLISHED");
     form.append("existingImages", JSON.stringify(data.images ?? []));
     images?.forEach((f) => form.append("images", f));
     return api.put<ApiResponse<Product>>(`/products/${id}`, form, { headers: { "Content-Type": undefined } }).then(unwrap);
