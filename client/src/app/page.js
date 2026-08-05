@@ -1,19 +1,7 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { BannerSkeleton, ProductSliderSkeleton } from "@/components/ui";
 import { TopCategoriesSkeleton } from "@/components/TopCategoriesSection";
-import {
-  CompanyStats,
-  AboutSection,
-  WhyChooseUs,
-  GlobalPresenceSection,
-  ExportCountries,
-  MakeInIndiaSection,
-  ClientLogos,
-  HomeCta,
-  CoreTechnology,
-  MissionNarrative,
-  VideoCarousel,
-} from "@/components/home";
 import {
   BannersFetcher,
   CategoriesFetcher,
@@ -23,84 +11,68 @@ import {
   GalleryFetcher,
 } from "@/components/home/HomeFetchComponents";
 
-// Force dynamic so build does not call API (VPS build often has no API available).
-export const dynamic = "force-dynamic";
+/* Lazy-load heavy below-fold components (code-split + deferred) */
+const CompanyStats = dynamic(() => import("@/components/home").then(m => m.CompanyStats), { ssr: true });
+const CoreTechnology = dynamic(() => import("@/components/home").then(m => m.CoreTechnology), { ssr: true });
+const ClientLogos = dynamic(() => import("@/components/home").then(m => m.ClientLogos), { ssr: true });
+const VideoCarousel = dynamic(() => import("@/components/home").then(m => m.VideoCarousel), { ssr: false });
+const AboutSection = dynamic(() => import("@/components/home").then(m => m.AboutSection), { ssr: true });
+const MissionNarrative = dynamic(() => import("@/components/home").then(m => m.MissionNarrative), { ssr: true });
+const WhyChooseUs = dynamic(() => import("@/components/home").then(m => m.WhyChooseUs), { ssr: true });
+const GlobalPresenceSection = dynamic(() => import("@/components/home").then(m => m.GlobalPresenceSection), { ssr: true });
+const MakeInIndiaSection = dynamic(() => import("@/components/home").then(m => m.MakeInIndiaSection), { ssr: true });
+const ExportCountries = dynamic(() => import("@/components/home").then(m => m.ExportCountries), { ssr: true });
+const HomeCta = dynamic(() => import("@/components/home").then(m => m.HomeCta), { ssr: true });
 
-// Not async — page renders immediately.
-// Each dynamic section fetches its own data; only that section shows a skeleton.
-// Static sections (CompanyStats, WhyChooseUs, etc.) render with zero delay.
+export const dynamic_route = "force-dynamic";
+
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* 1. Hero Banner – shows BannerSkeleton only while banners load */}
       <Suspense fallback={<BannerSkeleton />}>
         <BannersFetcher />
       </Suspense>
 
-
-
-      {/* 2. Company Stats – static, renders immediately */}
       <CompanyStats />
 
-
-      {/* 7b. Video Carousel – shows VideoCarouselSkeleton while loading */}
       <VideoCarousel />
 
-      {/* Core Technology Segments */}
       <CoreTechnology />
 
-
-      {/* 7. Client Logos – static */}
       <ClientLogos />
 
-
-
-
-
-      {/* 3. Top Categories – shows TopCategoriesSkeleton only while loading */}
       <Suspense fallback={<TopCategoriesSkeleton />}>
         <CategoriesFetcher />
       </Suspense>
 
-      {/* 4. Featured Products – shows ProductSliderSkeleton only while loading */}
       <Suspense fallback={<ProductSliderSkeleton />}>
         <FeaturedProductsFetcher />
       </Suspense>
 
-      {/* 5. New Arrivals – shows ProductSliderSkeleton only while loading */}
       <Suspense fallback={<ProductSliderSkeleton />}>
         <NewArrivalsFetcher />
       </Suspense>
 
-      {/* 6. High Demand Products – shows ProductSliderSkeleton only while loading */}
       <Suspense fallback={<ProductSliderSkeleton />}>
         <HighDemandFetcher />
       </Suspense>
 
-
-      {/* 8. About – static */}
       <AboutSection />
-      {/* Mission & Narrative Segment */}
+
       <MissionNarrative />
 
-      {/* 8. Why Choose Us – static */}
       <WhyChooseUs />
 
-      {/* 9 & 10. Infrastructure + Gallery – shares gallery API data */}
       <Suspense fallback={<div className="py-16 bg-white" />}>
         <GalleryFetcher />
       </Suspense>
 
-      {/* 11. Global Presence – static */}
       <GlobalPresenceSection />
 
-      {/* 14. Make in India – static */}
       <MakeInIndiaSection />
 
-      {/* 13. Export Countries – static */}
       <ExportCountries />
 
-      {/* 15. Global Enquiry CTA – static */}
       <HomeCta />
     </div>
   );

@@ -47,6 +47,31 @@ module.exports = {
       transitionTimingFunction: {
         premium: "ease",
       },
+      keyframes: {
+        "banner-progress": {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0) translateX(0)" },
+          "50%": { transform: "translateY(-18px) translateX(10px)" },
+        },
+        "float-slower": {
+          "0%, 100%": { transform: "translateY(0) translateX(0)" },
+          "50%": { transform: "translateY(14px) translateX(-8px)" },
+        },
+        "ken-burns": {
+          "0%": { transform: "scale(1) translate(0, 0)" },
+          "50%": { transform: "scale(1.05) translate(-1%, -1%)" },
+          "100%": { transform: "scale(1) translate(0, 0)" },
+        },
+      },
+      animation: {
+        "banner-progress": "banner-progress linear forwards",
+        "float-slow": "float-slow 8s ease-in-out infinite",
+        "float-slower": "float-slower 10s ease-in-out infinite",
+        "ken-burns": "ken-burns 20s ease-in-out infinite",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

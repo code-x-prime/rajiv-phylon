@@ -1,15 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useTransform,
-  useSpring,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 /* ── Fallback image paths ────────────────────────────────── */
@@ -18,78 +12,58 @@ const FB_MOBILE = "/mobile-banner.png";
 
 /* ── Slide transition variants ──────────────────────────── */
 const slideVariants = {
-  enter: (dir) => ({ opacity: 0, x: dir > 0 ? 80 : -80, scale: 1.04 }),
-  center: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  enter: (dir) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
   exit: (dir) => ({
-    opacity: 0, x: dir > 0 ? -80 : 80, scale: 0.96,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    opacity: 0, x: dir > 0 ? -80 : 80,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
   }),
 };
 
-
+const INTERVAL = 5000;
 
 /* ═══════════════════════════════════════════════════════════
    API BANNER SLIDER
-══════════════════════════════════════════════════════════════ */
-function checkIsSingleBanner(b) {
-  if (!b) return true;
-  // Check API returned mode field if set
-  if (b.mode === "single" || b.bannerType === "single" || b.isSingle === true) return true;
-  if (b.mode === "dual" || b.bannerType === "dual" || b.isSingle === false) return false;
-
-  const d = (b.desktopImageUrl || b.desktopImage || "").trim();
-  const m = (b.mobileImageUrl || b.mobileImage || "").trim();
-
-  // If no mobile image, or mobile URL equals desktop URL, it's Option 2 (Single Banner)
-  if (!m || d === m) return true;
-
-  // Otherwise Option 1 (Dual Banner with separate mobile image)
-  return false;
-}
-
+   ══════════════════════════════════════════════════════════════ */
 function BannerSlider({ banners }) {
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const INTERVAL = 5000;
+  const indexRef = useRef(0);
+  const timerRef = useRef(null);
 
   const go = useCallback((next) => {
-    setDir(next > index ? 1 : -1);
+    setDir(next > indexRef.current ? 1 : -1);
+    indexRef.current = next;
     setIndex(next);
-    setProgress(0);
-  }, [index]);
+  }, []);
 
-  const prev = (e) => { e.stopPropagation(); go((index - 1 + banners.length) % banners.length); };
-  const next = (e) => { e.stopPropagation(); go((index + 1) % banners.length); };
+  const prev = (e) => { e.stopPropagation(); go((indexRef.current - 1 + banners.length) % banners.length); };
+  const next = (e) => { e.stopPropagation(); go((indexRef.current + 1) % banners.length); };
 
-  /* Progress bar + auto-advance */
+  /* Auto-advance with stable timer — no re-renders */
   useEffect(() => {
-    if (banners.length <= 1 || paused) return;
-    const step = 100 / (INTERVAL / 50);
-    const t = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) {
-          go((index + 1) % banners.length);
-          return 0;
-        }
-        return p + step;
-      });
-    }, 50);
-    return () => clearInterval(t);
-  }, [banners.length, index, paused, go]);
+    if (banners.length <= 1 || paused) {
+      clearInterval(timerRef.current);
+      return;
+    }
+    timerRef.current = setInterval(() => {
+      go((indexRef.current + 1) % banners.length);
+    }, INTERVAL);
+    return () => clearInterval(timerRef.current);
+  }, [banners.length, paused, go]);
 
   const cur = banners[index];
   const desktopSrc = cur?.desktopImageUrl || cur?.desktopImage;
   const mobileSrc = cur?.mobileImageUrl || cur?.mobileImage;
   const link = cur?.link?.trim() || "/products";
 
-  // Option 1 vs Option 2 check from API object
-  const isSingleBanner = checkIsSingleBanner(cur);
+  /* Determine if we should show separate mobile image */
+  const hasSeparateMobile = mobileSrc && mobileSrc !== desktopSrc;
 
   return (
     <section
-      className="relative w-full h-screen min-h-screen flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300"
+      className="relative w-full h-screen min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -105,10 +79,26 @@ function BannerSlider({ banners }) {
           className="absolute inset-0 will-change-transform select-none"
           onContextMenu={(e) => e.preventDefault()}
         >
-          <picture className="w-full h-full block">
-            {mobileSrc && mobileSrc !== desktopSrc && (
-              <source media="(max-width: 768px)" srcSet={mobileSrc} />
-            )}
+          {hasSeparateMobile ? (
+            <>
+              {/* Desktop image */}
+              <img
+                src={desktopSrc || FB_DESK}
+                alt={cur?.title || `Banner ${index + 1}`}
+                className="w-full h-full object-cover object-center hidden md:block"
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+              />
+              {/* Mobile image */}
+              <img
+                src={mobileSrc}
+                alt={cur?.title || `Banner ${index + 1}`}
+                className="w-full h-full object-cover object-center md:hidden"
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+              />
+            </>
+          ) : (
             <img
               src={desktopSrc || FB_DESK}
               alt={cur?.title || `Banner ${index + 1}`}
@@ -116,28 +106,18 @@ function BannerSlider({ banners }) {
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
             />
-          </picture>
+          )}
           {/* Dark gradient overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/65 to-black/30 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Floating accent orbs ── */}
-      <motion.div
-        animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none z-10 hidden md:block"
-        aria-hidden
-      />
-      <motion.div
-        animate={{ y: [0, 14, 0], x: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none z-10 hidden md:block"
-        aria-hidden
-      />
+      {/* ── Floating accent orbs (CSS only, no framer-motion) ── */}
+      <div className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none z-10 hidden md:block animate-float-slow" aria-hidden />
+      <div className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none z-10 hidden md:block animate-float-slower" aria-hidden />
 
-      {/* ── Hero Text Overlay (100% Mobile Responsive) ── */}
+      {/* ── Hero Text Overlay ── */}
       <div className="relative z-20 max-w-site mx-auto px-5 sm:px-6 lg:px-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-16 md:pt-36 md:pb-24 pointer-events-none">
         <div className="max-w-3xl pointer-events-auto">
           {/* Label */}
@@ -212,12 +192,13 @@ function BannerSlider({ banners }) {
       {/* ── Clickable full link ── */}
       <Link href={link} className="absolute inset-0 z-10" aria-label="View offer" />
 
-      {/* ── Progress bar ── */}
+      {/* ── Progress bar (CSS animation, no JS re-renders) ── */}
       {banners.length > 1 && (
         <div className="absolute bottom-0 inset-x-0 z-30 h-[3px] bg-white/10">
-          <motion.div
-            className="h-full bg-[#F5B400]"
-            style={{ width: `${progress}%` }}
+          <div
+            key={`progress-${index}`}
+            className="h-full bg-[#F5B400] banner-progress-bar"
+            style={{ animationDuration: `${INTERVAL}ms` }}
           />
         </div>
       )}
@@ -276,35 +257,21 @@ function BannerSlider({ banners }) {
 
 /* ═══════════════════════════════════════════════════════════
    FALLBACK HERO — shown when no API banners
-══════════════════════════════════════════════════════════════ */
+   Uses CSS animations instead of framer-motion springs
+   ══════════════════════════════════════════════════════════════ */
 function FallbackHero() {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 40, damping: 18 });
-  const springY = useSpring(mouseY, { stiffness: 40, damping: 18 });
-  const bgX = useTransform(springX, [-0.5, 0.5], ["-10px", "10px"]);
-  const bgY = useTransform(springY, [-0.5, 0.5], ["-10px", "10px"]);
-
-  const handleMouseMove = (e) => {
-    mouseX.set(e.clientX / window.innerWidth - 0.5);
-    mouseY.set(e.clientY / window.innerHeight - 0.5);
-  };
-
   return (
-    <section
-      className="relative w-full h-screen min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
-      onMouseMove={handleMouseMove}
-    >
+    <section className="relative w-full h-screen min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]">
       {/* Desktop bg image */}
-      <motion.div
-        className="absolute inset-[-12px] bg-cover bg-center will-change-transform hidden md:block"
-        style={{ backgroundImage: `url(${FB_DESK})`, x: bgX, y: bgY }}
+      <div
+        className="absolute inset-[-12px] bg-cover bg-center hidden md:block animate-ken-burns"
+        style={{ backgroundImage: `url(${FB_DESK})` }}
         aria-hidden
       />
       {/* Mobile bg image */}
-      <motion.div
-        className="absolute inset-[-12px] bg-cover bg-center will-change-transform md:hidden"
-        style={{ backgroundImage: `url(${FB_MOBILE})`, x: bgX, y: bgY }}
+      <div
+        className="absolute inset-[-12px] bg-cover bg-center md:hidden animate-ken-burns"
+        style={{ backgroundImage: `url(${FB_MOBILE})` }}
         aria-hidden
       />
 
@@ -312,66 +279,31 @@ function FallbackHero() {
       <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/65 to-black/30" aria-hidden />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" aria-hidden />
 
-      {/* Floating accent orbs */}
-      <motion.div
-        animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none hidden md:block"
-        aria-hidden
-      />
-      <motion.div
-        animate={{ y: [0, 14, 0], x: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none hidden md:block"
-        aria-hidden
-      />
+      {/* Floating accent orbs (CSS only) */}
+      <div className="absolute top-[15%] right-[18%] w-64 h-64 rounded-full bg-[#F5B400]/6 blur-3xl pointer-events-none hidden md:block animate-float-slow" aria-hidden />
+      <div className="absolute bottom-[20%] right-[30%] w-96 h-96 rounded-full bg-[#F5B400]/4 blur-3xl pointer-events-none hidden md:block animate-float-slower" aria-hidden />
 
       {/* Content */}
       <div className="relative z-10 max-w-site mx-auto px-5 sm:px-6 lg:px-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-16 md:pt-36 md:pb-28">
         <div className="max-w-3xl">
-
-          {/* Label */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-4 md:mb-6"
-          >
+          <div className="inline-flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-4 md:mb-6">
             <div className="h-px w-6 sm:w-10 bg-[#F5B400]" />
             <span className="type-overline text-[#F5B400] text-[10px] sm:text-xs tracking-wider uppercase font-semibold">
               Trusted B2B & OEM Partner
             </span>
-          </motion.div>
-
-          {/* Heading */}
-          <div className="overflow-hidden mb-3 sm:mb-4 md:mb-6">
-            <motion.h1
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(1.75rem,4.5vw,4.5rem)] sm:text-[clamp(2.2rem,5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.1]"
-            >
-              High performance <span className="text-[#F5B400]">polymer soles</span>
-            </motion.h1>
           </div>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xs sm:text-lg md:text-2xl text-white/75 font-body leading-relaxed max-w-xl mb-6 sm:mb-8 md:mb-10 line-clamp-3 sm:line-clamp-none"
-          >
-            Trusted B2B &amp; OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
-          </motion.p>
+          <div className="overflow-hidden mb-3 sm:mb-4 md:mb-6">
+            <h1 className="font-display text-[clamp(1.75rem,4.5vw,4.5rem)] sm:text-[clamp(2.2rem,5vw,5.5rem)] font-medium text-white tracking-[-0.03em] leading-[1.1]">
+              High performance <span className="text-[#F5B400]">polymer soles</span>
+            </h1>
+          </div>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center gap-2.5 sm:gap-4"
-          >
+          <p className="text-xs sm:text-lg md:text-2xl text-white/75 font-body leading-relaxed max-w-xl mb-6 sm:mb-8 md:mb-10 line-clamp-3 sm:line-clamp-none">
+            Trusted B2B &amp; OEM partner for global footwear brands. Precision molded. Export-grade. Built for scale.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
             <Link
               href="/products"
               className="inline-flex items-center gap-2 rounded-xl bg-[#F5B400] text-white font-display font-medium text-[11px] sm:text-[13px] uppercase tracking-[0.08em] sm:tracking-[0.1em] px-5 py-2.5 sm:px-7 sm:py-3.5 hover:bg-[#e0a300] hover:shadow-[0_8px_32px_rgba(245,180,0,0.35)] hover:-translate-y-0.5 transition-all duration-300"
@@ -385,27 +317,19 @@ function FallbackHero() {
             >
               Request a Quote
             </Link>
-          </motion.div>
-
-
-
+          </div>
         </div>
       </div>
 
       {/* Bottom progress line decoration */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.2, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#F5B400] via-[#F5B400]/50 to-transparent origin-left"
-      />
+      <div className="absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#F5B400] via-[#F5B400]/50 to-transparent origin-left" />
     </section>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
    EXPORT — picks which hero to show
-══════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════ */
 export function BannerSection({ banners }) {
   const list = Array.isArray(banners) && banners.length > 0 ? banners : [];
   if (list.length === 0) return <FallbackHero />;

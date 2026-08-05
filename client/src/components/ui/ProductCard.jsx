@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import { ProtectedImage } from "@/components/ui/ProtectedImage";
 import { ArrowUpRight } from "lucide-react";
@@ -16,7 +17,7 @@ const TAG_BADGE = {
  * Universal product card — home sliders, /products catalog, related products.
  * compactOnMobile: use in sliders so 2 cards fit in one row on small mobile.
  */
-export function ProductCard({ product, showBadge = false, index = 0, compactOnMobile = false }) {
+export const ProductCard = memo(function ProductCard({ product, showBadge = false, index = 0, compactOnMobile = false }) {
   const imageUrl = product.images?.[0]?.url;
   const category = product.categories?.[0]?.name;
   const badge = showBadge && product.featureTag && TAG_BADGE[product.featureTag];
@@ -78,4 +79,4 @@ export function ProductCard({ product, showBadge = false, index = 0, compactOnMo
       </div>
     </Link>
   );
-}
+});
