@@ -89,10 +89,10 @@ function BannerSlider({ banners }) {
 
   return (
     <section
-      className={`relative w-full flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300 min-h-[480px] sm:min-h-[560px] md:min-h-[640px] ${
+      className={`relative w-full flex items-center overflow-hidden bg-[#0A0A0A] transition-all duration-300 min-h-[480px] sm:min-h-[560px] md:h-screen md:min-h-screen ${
         isSingleBanner
-          ? "aspect-[4/5] sm:aspect-[16/6] md:aspect-[1920/900]"
-          : "aspect-[4/5] md:aspect-[1920/900]"
+          ? "aspect-[4/5] sm:aspect-[16/6] md:aspect-none"
+          : "aspect-[4/5] md:aspect-none"
       }`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -296,7 +296,7 @@ function FallbackHero() {
 
   return (
     <section
-      className="relative w-full aspect-[4/5] md:aspect-[1920/900] min-h-[480px] sm:min-h-[560px] md:min-h-[640px] flex items-center overflow-hidden bg-[#0A0A0A]"
+      className="relative w-full aspect-[4/5] sm:aspect-[16/6] md:aspect-none min-h-[480px] sm:min-h-[560px] md:h-screen md:min-h-screen flex items-center overflow-hidden bg-[#0A0A0A]"
       onMouseMove={handleMouseMove}
     >
       {/* Desktop bg image */}
