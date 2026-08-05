@@ -24,6 +24,7 @@ export function ProductCard({ product, showBadge = false, index = 0, compactOnMo
   return (
     <Link
       href={`/product/${product.slug}`}
+      prefetch={true}
       className="group flex flex-col rounded bg-white border border-gray-100 overflow-hidden hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] hover:-translate-y-1 transition-all duration-300"
       style={{ animationDelay: `${index * 55}ms` }}
     >

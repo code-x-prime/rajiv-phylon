@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
 const defaultOptions = {
@@ -161,17 +163,30 @@ export async function getProductsHighDemand(opts = {}) {
   return res.data || [];
 }
 
-export async function getProductBySlug(slug) {
+export const getProductBySlug = cache(async (slug) => {
+  if (!slug) return null;
   const res = await fetchApi(`/products/${slug}`);
   return res.data;
-}
+});
 
-export async function getRelatedProducts(currentProductId, categoryIds = [], limit = 8) {
-  const products = await getProducts();
-  return products
-    .filter((p) => p.id !== currentProductId && (categoryIds.length === 0 || p.categories?.some((c) => categoryIds.includes(c.id))))
+export const getRelatedProducts = cache(async (currentProductId, categoryIds = [], limit = 8) => {
+  let products = [];
+  try {
+    if (categoryIds && categoryIds.length > 0) {
+      const res = await fetchApi(`/products?categoryId=${categoryIds[0]}`);
+      products = res.data || [];
+    }
+    if (!products || products.length <= 1) {
+      const res = await fetchApi("/products/featured");
+      products = res.data || [];
+    }
+  } catch {
+    products = [];
+  }
+  return (products || [])
+    .filter((p) => p && p.id !== currentProductId)
     .slice(0, limit);
-}
+});
 
 export async function getGallery(opts = {}) {
   const params = new URLSearchParams();

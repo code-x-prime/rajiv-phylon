@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Tag, Package, Layers, Star, CheckCircle, FileText, ArrowUpRight } from "lucide-react";
@@ -113,9 +114,6 @@ export default async function ProductPage({ params }) {
   const primaryCat = categories[0] || null;
   const primarySub = subCategories[0] || null;
   const tagInfo = product.featureTag ? TAG_MAP[product.featureTag] : null;
-
-  let relatedProducts = [];
-  try { relatedProducts = await getRelatedProducts(product.id, categoryIds, 8); } catch { /* noop */ }
 
   const shortDesc = product.metaDescription
     ? decodeEntities(product.metaDescription)
@@ -335,31 +333,51 @@ export default async function ProductPage({ params }) {
         )}
 
         {/* ── RELATED PRODUCTS ─────────────────────── */}
-        {relatedProducts.length > 0 && (
-          <section className="py-10 md:py-14 bg-white border-t border-gray-100">
-            <div className="max-w-site mx-auto px-6 lg:px-10">
-              <div className="flex items-end justify-between mb-6">
-                <div>
-                  <p className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-1">More Products</p>
-                  <h2 className="font-heading text-xl md:text-2xl font-bold text-[#111111]">
-                    {primaryCat ? `More in ${primaryCat.name}` : "Related Products"}
-                  </h2>
-                </div>
-                <Link href={primaryCat ? `/category/${primaryCat.slug}` : "/products"}
-                  className="text-[13px] font-heading font-semibold text-[#F5B400] hover:underline underline-offset-2 hidden sm:block shrink-0">
-                  View all →
-                </Link>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-                {relatedProducts.slice(0, 8).map((p, i) => (
-                  <RelatedProductCard key={p.id} product={p} index={i} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        <Suspense fallback={<div className="py-8 bg-white border-t border-gray-100" />}>
+          <RelatedProductsSection
+            productId={product.id}
+            categoryIds={categoryIds}
+            primaryCat={primaryCat}
+          />
+        </Suspense>
 
       </div>
     </>
+  );
+}
+
+async function RelatedProductsSection({ productId, categoryIds, primaryCat }) {
+  let relatedProducts = [];
+  try {
+    relatedProducts = await getRelatedProducts(productId, categoryIds, 8);
+  } catch {
+    /* noop */
+  }
+  if (!relatedProducts || relatedProducts.length === 0) return null;
+
+  return (
+    <section className="py-10 md:py-14 bg-white border-t border-gray-100">
+      <div className="max-w-site mx-auto px-6 lg:px-10">
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <p className="text-[11px] font-heading font-bold text-[#F5B400] uppercase tracking-[0.25em] mb-1">More Products</p>
+            <h2 className="font-heading text-xl md:text-2xl font-bold text-[#111111]">
+              {primaryCat ? `More in ${primaryCat.name}` : "Related Products"}
+            </h2>
+          </div>
+          <Link
+            href={primaryCat ? `/category/${primaryCat.slug}` : "/products"}
+            className="text-[13px] font-heading font-semibold text-[#F5B400] hover:underline underline-offset-2 hidden sm:block shrink-0"
+          >
+            View all →
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+          {relatedProducts.slice(0, 8).map((p, i) => (
+            <RelatedProductCard key={p.id} product={p} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
