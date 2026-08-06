@@ -93,9 +93,21 @@ const SPEC_TEMPLATES = [
   { label: "General Product", rows: ["Material", "Color", "Size", "Brand", "Model Number", "Weight", "Packaging Type", "Country of Origin"] },
 ];
 
-const TRADE_DEFAULTS = [
-  "Payment Terms", "Supply Ability", "Delivery Time",
-  "Sample Available", "Sample Policy", "Main Export Market(s)", "Main Domestic Market",
+const DEFAULT_SPEC_PAIRS: KVPair[] = [
+  { key: "Article No.", value: "AM-15230" },
+  { key: "Product Type/Construction", value: "EVA + TPR + TPU + Paint" },
+  { key: "Size Range", value: "6-10" },
+  { key: "Gender", value: "Men's" },
+  { key: "Color", value: "Customizable" },
+  { key: "MOQ", value: "1200 Pairs" },
+  { key: "Country of Origin", value: "India" },
+];
+
+const DEFAULT_TRADE_PAIRS: KVPair[] = [
+  { key: "Payment Terms", value: "60 Days" },
+  { key: "Delivery Time", value: "15 Days" },
+  { key: "Sample Available", value: "Yes" },
+  { key: "Main Domestic Market", value: "PAN India" },
 ];
 
 /* ── CheckboxRow ──────────────────────────────────────── */
@@ -263,10 +275,8 @@ export function ProductAdd() {
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [subCategoryIds, setSubCategoryIds] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
-  const [specPairs, setSpecPairs] = useState<KVPair[]>([]);
-  const [tradePairs, setTradePairs] = useState<KVPair[]>(
-    TRADE_DEFAULTS.map((k) => ({ key: k, value: "" }))
-  );
+  const [specPairs, setSpecPairs] = useState<KVPair[]>(DEFAULT_SPEC_PAIRS);
+  const [tradePairs, setTradePairs] = useState<KVPair[]>(DEFAULT_TRADE_PAIRS);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isNewArrival, setIsNewArrival] = useState(false);
   const [isHighDemand, setIsHighDemand] = useState(false);
