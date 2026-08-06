@@ -11,3 +11,4 @@ export { HomeCta } from "./HomeCta";
 export { CoreTechnology } from "./CoreTechnology";
 export { MissionNarrative } from "./MissionNarrative";
 export { VideoCarousel } from "./VideoCarousel";
+export { FullScreenVideo } from "./FullScreenVideo";

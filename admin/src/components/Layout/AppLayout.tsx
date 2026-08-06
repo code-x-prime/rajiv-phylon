@@ -15,6 +15,7 @@ import {
   ImageIcon,
   BookOpen,
   Video,
+  Tv,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -28,6 +29,7 @@ const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/catalogue", label: "Catalogue PDF", icon: BookOpen },
   { to: "/banners", label: "Banners", icon: ImageIcon },
+  { to: "/full-screen-video", label: "Full Screen Video", icon: Tv },
   { to: "/videos-2", label: "Videos (Scale & Trust)", icon: Video },
   { to: "/videos", label: "Videos (Core Tech)", icon: Video },
   { to: "/categories", label: "Categories", icon: FolderTree },
@@ -48,6 +50,7 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith("/gallery")) return "Gallery";
   if (pathname.startsWith("/contact")) return "Contact Inquiries";
   if (pathname.startsWith("/banners")) return "Banners";
+  if (pathname.startsWith("/full-screen-video")) return "Full Screen Video Banner";
   if (pathname.startsWith("/videos-2")) return "Videos (Scale & Trust)";
   if (pathname.startsWith("/videos")) return "Videos (Core Tech)";
   return "Admin";

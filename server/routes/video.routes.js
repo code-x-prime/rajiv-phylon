@@ -5,10 +5,17 @@ import * as videoController from "../controllers/video.controller.js";
 
 const router = Router();
 
-// Public
+// Full-Screen Single Video (Max 1.5GB) Routes
+router.get("/fullscreen", videoController.getFullScreenPublic);
+router.get("/fullscreen/admin", verifyAdmin, videoController.getFullScreenAdmin);
+router.post("/fullscreen", verifyAdmin, uploadVideo, videoController.saveFullScreenVideo);
+router.patch("/fullscreen/toggle-active", verifyAdmin, videoController.toggleFullScreenActive);
+router.delete("/fullscreen", verifyAdmin, videoController.removeFullScreenVideo);
+
+// Carousel Videos Routes
 router.get("/", videoController.getPublic);
 
-// Admin
+// Admin Carousel Videos
 router.get("/all", verifyAdmin, videoController.getAll);
 router.post("/", verifyAdmin, uploadVideo, videoController.create);
 router.put("/:id", verifyAdmin, uploadVideo, videoController.update);

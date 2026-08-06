@@ -248,6 +248,26 @@ export const videosApi = {
   delete: (id: string) => api.delete<ApiResponse<null>>(`/videos/${id}`).then(unwrap),
 };
 
+export const fullScreenVideoApi = {
+  getAdmin: () => api.get<ApiResponse<Video | null>>("/videos/fullscreen/admin").then(unwrap).then((r) => r.data ?? null),
+  getPublic: () => api.get<ApiResponse<Video | null>>("/videos/fullscreen").then(unwrap).then((r) => r.data ?? null),
+  save: (data: { title?: string; description?: string; isActive?: boolean }, videoFile?: File, onProgress?: (pct: number) => void) => {
+    const form = new FormData();
+    if (data.title) form.append("title", data.title);
+    if (data.description !== undefined) form.append("description", data.description ?? "");
+    if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
+    if (videoFile) form.append("video", videoFile);
+    return api.post<ApiResponse<Video>>("/videos/fullscreen", form, {
+      headers: { "Content-Type": undefined },
+      onUploadProgress: (e) => {
+        if (e.total && onProgress) onProgress(Math.round((e.loaded * 100) / e.total));
+      },
+    }).then(unwrap);
+  },
+  toggleActive: () => api.patch<ApiResponse<Video>>("/videos/fullscreen/toggle-active").then(unwrap),
+  delete: () => api.delete<ApiResponse<null>>("/videos/fullscreen").then(unwrap),
+};
+
 // Gallery
 export type GalleryItem = { id: string; image: string; imageUrl?: string; title: string | null };
 

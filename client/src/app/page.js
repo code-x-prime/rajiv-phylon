@@ -16,6 +16,7 @@ const CompanyStats = dynamic(() => import("@/components/home").then(m => m.Compa
 const CoreTechnology = dynamic(() => import("@/components/home").then(m => m.CoreTechnology), { ssr: true });
 const ClientLogos = dynamic(() => import("@/components/home").then(m => m.ClientLogos), { ssr: true });
 const VideoCarousel = dynamic(() => import("@/components/home").then(m => m.VideoCarousel), { ssr: false });
+const FullScreenVideo = dynamic(() => import("@/components/home").then(m => m.FullScreenVideo), { ssr: false });
 const AboutSection = dynamic(() => import("@/components/home").then(m => m.AboutSection), { ssr: true });
 const MissionNarrative = dynamic(() => import("@/components/home").then(m => m.MissionNarrative), { ssr: true });
 const WhyChooseUs = dynamic(() => import("@/components/home").then(m => m.WhyChooseUs), { ssr: true });
@@ -40,6 +41,8 @@ export default function HomePage() {
       <CoreTechnology />
 
       <VideoCarousel section="1" />
+
+      <FullScreenVideo />
 
       <ClientLogos />
 

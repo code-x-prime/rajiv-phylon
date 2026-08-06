@@ -16,6 +16,7 @@ import { Contact } from "@/pages/Contact";
 import { Banners } from "@/pages/Banners";
 import { CataloguePage } from "@/pages/Catalogue";
 import { Videos } from "@/pages/Videos";
+import { FullScreenVideo } from "@/pages/FullScreenVideo";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ function App() {
               <Route path="banners" element={<Banners />} />
               <Route path="videos" element={<Videos section="1" />} />
               <Route path="videos-2" element={<Videos section="2" />} />
+              <Route path="full-screen-video" element={<FullScreenVideo />} />
               <Route path="catalogue" element={<CataloguePage />} />
               <Route path="categories" element={<Categories />} />
               <Route path="subcategories" element={<SubCategories />} />
