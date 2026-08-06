@@ -20,20 +20,35 @@ function mapVideo(v) {
 /** GET videos (public) – active only, sorted by order */
 export const getPublic = asyncHandler(async (req, res) => {
     const section = String(req.query.section || "1");
-    const videos = await prisma.video.findMany({
-        where: { isActive: true, section },
-        orderBy: { order: "asc" },
-    });
+    let videos = [];
+    try {
+        videos = await prisma.video.findMany({
+            where: { isActive: true, section },
+            orderBy: { order: "asc" },
+        });
+    } catch {
+        const all = await prisma.video.findMany({
+            where: { isActive: true },
+            orderBy: { order: "asc" },
+        });
+        videos = all.filter((v) => (v.section || "1") === section);
+    }
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Success"));
 });
 
 /** GET all videos (admin) */
 export const getAll = asyncHandler(async (req, res) => {
     const section = String(req.query.section || "1");
-    const videos = await prisma.video.findMany({
-        where: { section },
-        orderBy: { order: "asc" },
-    });
+    let videos = [];
+    try {
+        videos = await prisma.video.findMany({
+            where: { section },
+            orderBy: { order: "asc" },
+        });
+    } catch {
+        const all = await prisma.video.findMany({ orderBy: { order: "asc" } });
+        videos = all.filter((v) => (v.section || "1") === section);
+    }
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Success"));
 });
 
@@ -52,9 +67,16 @@ export const create = asyncHandler(async (req, res) => {
 
     const videoUrl = await uploadFile(videoFile, "videos");
 
-    const video = await prisma.video.create({
-        data: { title, description, videoUrl, isActive, order, section },
-    });
+    let video;
+    try {
+        video = await prisma.video.create({
+            data: { title, description, videoUrl, isActive, order, section },
+        });
+    } catch {
+        video = await prisma.video.create({
+            data: { title, description, videoUrl, isActive, order },
+        });
+    }
 
     res.status(201).json(new ApiResponsive(201, mapVideo(video), "Video created"));
 });
@@ -93,7 +115,13 @@ export const update = asyncHandler(async (req, res) => {
         data.videoUrl = await uploadFile(videoFile, "videos");
     }
 
-    const updated = await prisma.video.update({ where: { id }, data });
+    let updated;
+    try {
+        updated = await prisma.video.update({ where: { id }, data });
+    } catch {
+        delete data.section;
+        updated = await prisma.video.update({ where: { id }, data });
+    }
     res.status(200).json(new ApiResponsive(200, mapVideo(updated), "Updated"));
 });
 
@@ -109,7 +137,13 @@ export const reorder = asyncHandler(async (req, res) => {
             prisma.video.updateMany({ where: { id }, data: { order: index } })
         )
     );
-    const videos = await prisma.video.findMany({ where: { section }, orderBy: { order: "asc" } });
+    let videos = [];
+    try {
+        videos = await prisma.video.findMany({ where: { section }, orderBy: { order: "asc" } });
+    } catch {
+        const all = await prisma.video.findMany({ orderBy: { order: "asc" } });
+        videos = all.filter((v) => (v.section || "1") === section);
+    }
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Reordered"));
 });
 
@@ -138,10 +172,15 @@ export const remove = asyncHandler(async (req, res) => {
     await prisma.video.delete({ where: { id } });
 
     // Auto-reorder: gap hatao — remaining videos ko compact karo
-    const remaining = await prisma.video.findMany({
-        where: { section: video.section || "1" },
-        orderBy: { order: "asc" }
-    });
+    let remaining = [];
+    try {
+        remaining = await prisma.video.findMany({
+            where: { section: video.section || "1" },
+            orderBy: { order: "asc" }
+        });
+    } catch {
+        remaining = await prisma.video.findMany({ orderBy: { order: "asc" } });
+    }
     await Promise.all(
         remaining.map((v, index) =>
             prisma.video.updateMany({ where: { id: v.id }, data: { order: index } })
@@ -157,17 +196,29 @@ export const remove = asyncHandler(async (req, res) => {
 
 /** GET full-screen video (public) */
 export const getFullScreenPublic = asyncHandler(async (req, res) => {
-    const video = await prisma.video.findFirst({
-        where: { section: "fullscreen", isActive: true },
-    });
+    let video = null;
+    try {
+        video = await prisma.video.findFirst({
+            where: { section: "fullscreen", isActive: true },
+        });
+    } catch {
+        const all = await prisma.video.findMany({ where: { isActive: true } });
+        video = all.find((v) => v.section === "fullscreen") || null;
+    }
     res.status(200).json(new ApiResponsive(200, video ? mapVideo(video) : null, "Success"));
 });
 
 /** GET full-screen video (admin) */
 export const getFullScreenAdmin = asyncHandler(async (req, res) => {
-    const video = await prisma.video.findFirst({
-        where: { section: "fullscreen" },
-    });
+    let video = null;
+    try {
+        video = await prisma.video.findFirst({
+            where: { section: "fullscreen" },
+        });
+    } catch {
+        const all = await prisma.video.findMany();
+        video = all.find((v) => v.section === "fullscreen") || null;
+    }
     res.status(200).json(new ApiResponsive(200, video ? mapVideo(video) : null, "Success"));
 });
 
@@ -178,9 +229,15 @@ export const saveFullScreenVideo = asyncHandler(async (req, res) => {
     const description = (req.body.description || "").trim() || null;
     const isActive = req.body.isActive !== "false" && req.body.isActive !== false;
 
-    const existing = await prisma.video.findFirst({
-        where: { section: "fullscreen" },
-    });
+    let existing = null;
+    try {
+        existing = await prisma.video.findFirst({
+            where: { section: "fullscreen" },
+        });
+    } catch {
+        const all = await prisma.video.findMany();
+        existing = all.find((v) => v.section === "fullscreen") || null;
+    }
 
     let videoUrl = existing?.videoUrl;
 
@@ -201,14 +258,31 @@ export const saveFullScreenVideo = asyncHandler(async (req, res) => {
 
     let video;
     if (existing) {
-        video = await prisma.video.update({
-            where: { id: existing.id },
-            data: { title, description, videoUrl, isActive, section: "fullscreen" },
-        });
+        let updateData = { title, description, videoUrl, isActive, section: "fullscreen" };
+        try {
+            video = await prisma.video.update({
+                where: { id: existing.id },
+                data: updateData,
+            });
+        } catch {
+            delete updateData.section;
+            video = await prisma.video.update({
+                where: { id: existing.id },
+                data: updateData,
+            });
+        }
     } else {
-        video = await prisma.video.create({
-            data: { title, description, videoUrl, isActive, section: "fullscreen" },
-        });
+        let createData = { title, description, videoUrl, isActive, section: "fullscreen" };
+        try {
+            video = await prisma.video.create({
+                data: createData,
+            });
+        } catch {
+            delete createData.section;
+            video = await prisma.video.create({
+                data: createData,
+            });
+        }
     }
 
     res.status(200).json(new ApiResponsive(200, mapVideo(video), "Full-screen video saved"));
@@ -216,9 +290,15 @@ export const saveFullScreenVideo = asyncHandler(async (req, res) => {
 
 /** PATCH toggle full-screen video active status */
 export const toggleFullScreenActive = asyncHandler(async (req, res) => {
-    const video = await prisma.video.findFirst({
-        where: { section: "fullscreen" },
-    });
+    let video = null;
+    try {
+        video = await prisma.video.findFirst({
+            where: { section: "fullscreen" },
+        });
+    } catch {
+        const all = await prisma.video.findMany();
+        video = all.find((v) => v.section === "fullscreen") || null;
+    }
     if (!video) throw new ApiError(404, "No full-screen video found");
 
     const updated = await prisma.video.update({
@@ -230,9 +310,15 @@ export const toggleFullScreenActive = asyncHandler(async (req, res) => {
 
 /** DELETE full-screen video (admin) – delete from R2 and database */
 export const removeFullScreenVideo = asyncHandler(async (req, res) => {
-    const video = await prisma.video.findFirst({
-        where: { section: "fullscreen" },
-    });
+    let video = null;
+    try {
+        video = await prisma.video.findFirst({
+            where: { section: "fullscreen" },
+        });
+    } catch {
+        const all = await prisma.video.findMany();
+        video = all.find((v) => v.section === "fullscreen") || null;
+    }
     if (!video) throw new ApiError(404, "No full-screen video found");
 
     try {
