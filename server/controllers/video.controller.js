@@ -150,3 +150,97 @@ export const remove = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponsive(200, null, "Deleted"));
 });
+
+// =============================================
+// Full-Screen Single Video (Max 1.5GB) Handlers
+// =============================================
+
+/** GET full-screen video (public) */
+export const getFullScreenPublic = asyncHandler(async (req, res) => {
+    const video = await prisma.video.findFirst({
+        where: { section: "fullscreen", isActive: true },
+    });
+    res.status(200).json(new ApiResponsive(200, video ? mapVideo(video) : null, "Success"));
+});
+
+/** GET full-screen video (admin) */
+export const getFullScreenAdmin = asyncHandler(async (req, res) => {
+    const video = await prisma.video.findFirst({
+        where: { section: "fullscreen" },
+    });
+    res.status(200).json(new ApiResponsive(200, video ? mapVideo(video) : null, "Success"));
+});
+
+/** POST upload / replace full-screen video (admin) */
+export const saveFullScreenVideo = asyncHandler(async (req, res) => {
+    const videoFile = req.file;
+    const title = (req.body.title || "").trim();
+    const description = (req.body.description || "").trim() || null;
+    const isActive = req.body.isActive !== "false" && req.body.isActive !== false;
+
+    const existing = await prisma.video.findFirst({
+        where: { section: "fullscreen" },
+    });
+
+    let videoUrl = existing?.videoUrl;
+
+    if (videoFile) {
+        if (existing?.videoUrl) {
+            try {
+                await deleteFileByUrl(existing.videoUrl);
+            } catch (e) {
+                console.warn("R2 delete old full-screen video:", e);
+            }
+        }
+        videoUrl = await uploadFile(videoFile, "videos/fullscreen");
+    }
+
+    if (!videoUrl) {
+        throw new ApiError(400, "Video file is required");
+    }
+
+    let video;
+    if (existing) {
+        video = await prisma.video.update({
+            where: { id: existing.id },
+            data: { title, description, videoUrl, isActive, section: "fullscreen" },
+        });
+    } else {
+        video = await prisma.video.create({
+            data: { title, description, videoUrl, isActive, section: "fullscreen" },
+        });
+    }
+
+    res.status(200).json(new ApiResponsive(200, mapVideo(video), "Full-screen video saved"));
+});
+
+/** PATCH toggle full-screen video active status */
+export const toggleFullScreenActive = asyncHandler(async (req, res) => {
+    const video = await prisma.video.findFirst({
+        where: { section: "fullscreen" },
+    });
+    if (!video) throw new ApiError(404, "No full-screen video found");
+
+    const updated = await prisma.video.update({
+        where: { id: video.id },
+        data: { isActive: !video.isActive },
+    });
+    res.status(200).json(new ApiResponsive(200, mapVideo(updated), "Status updated"));
+});
+
+/** DELETE full-screen video (admin) – delete from R2 and database */
+export const removeFullScreenVideo = asyncHandler(async (req, res) => {
+    const video = await prisma.video.findFirst({
+        where: { section: "fullscreen" },
+    });
+    if (!video) throw new ApiError(404, "No full-screen video found");
+
+    try {
+        await deleteFileByUrl(video.videoUrl);
+    } catch (e) {
+        console.warn("R2 delete full-screen video error:", e);
+    }
+
+    await prisma.video.delete({ where: { id: video.id } });
+    res.status(200).json(new ApiResponsive(200, null, "Full-screen video deleted permanently from R2 and database"));
+});
