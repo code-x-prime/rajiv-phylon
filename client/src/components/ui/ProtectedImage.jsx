@@ -6,7 +6,7 @@ import Image from "next/image";
  * Wraps Next/Image and blocks right-click save and drag.
  * Adds lazy loading by default for better performance.
  */
-export function ProtectedImage({ wrapperClassName = "", className, onContextMenu, onDragStart, loading, priority, ...imageProps }) {
+export function ProtectedImage({ wrapperClassName = "", className, onContextMenu, onDragStart, loading, priority, unoptimized = true, ...imageProps }) {
   return (
     <div
       className={`select-none ${wrapperClassName}`.trim()}
@@ -17,6 +17,7 @@ export function ProtectedImage({ wrapperClassName = "", className, onContextMenu
     >
       <Image
         {...imageProps}
+        unoptimized={unoptimized}
         priority={priority}
         loading={priority ? undefined : (loading ?? "lazy")}
         className={className}

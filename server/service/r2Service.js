@@ -16,8 +16,16 @@ const R2_PUBLIC_URL = (process.env.R2_PUBLIC_URL || "").replace(/\/$/, "");
  */
 export const getPublicUrl = (key) => {
     if (!key) return null;
-    if (key.startsWith("http://") || key.startsWith("https://")) return key;
-    return R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/${key}` : null;
+    let url = key;
+    if (key.startsWith("http://")) {
+        url = key.replace("http://", "https://");
+    }
+    if (url.startsWith("https://")) return url;
+    if (R2_PUBLIC_URL) {
+        let baseUrl = R2_PUBLIC_URL.replace("http://", "https://");
+        return `${baseUrl}/${key}`;
+    }
+    return null;
 };
 
 /**

@@ -365,9 +365,20 @@ export const getAll = asyncHandler(async (req, res) => {
 });
 
 export const getOne = asyncHandler(async (req, res) => {
-    const { slug } = req.params;
-    const product = await prisma.product.findUnique({
-        where: { slug, status: "PUBLISHED" },
+    let { slug } = req.params;
+    if (!slug) throw new ApiError(400, "Slug is required");
+    slug = decodeURIComponent(slug).trim();
+
+    const product = await prisma.product.findFirst({
+        where: {
+            OR: [
+                { slug: slug },
+                { slug: slug.toLowerCase() },
+                { slug: slug.toUpperCase() },
+                { id: slug },
+            ],
+            isActive: true,
+        },
         include: {
             images: { orderBy: { position: "asc" } },
             productCategories: { include: { category: true } },
@@ -484,12 +495,23 @@ function mapProductResponse(product) {
     if (!product) return product;
     const categories = (product.productCategories || []).map((pc) => pc.category).filter(Boolean);
     const subCategories = (product.productSubCategories || []).map((ps) => ps.subCategory).filter(Boolean);
-    const images = (product.images || []).map((img) => ({
-        ...img,
-        url: img.url?.startsWith("http") ? img.url : getPublicUrl(img.url) || img.url,
-    }));
-    const resolvedOgImage = product.ogImage
-        ? (product.ogImage.startsWith("http") ? product.ogImage : getPublicUrl(product.ogImage) || product.ogImage)
+    const images = (product.images || []).map((img) => {
+        let rawUrl = img.url;
+        if (rawUrl && rawUrl.startsWith("http://")) {
+            rawUrl = rawUrl.replace("http://", "https://");
+        }
+        const resolvedUrl = rawUrl?.startsWith("http") ? rawUrl : getPublicUrl(rawUrl) || rawUrl;
+        return {
+            ...img,
+            url: resolvedUrl,
+        };
+    });
+    let ogUrl = product.ogImage;
+    if (ogUrl && ogUrl.startsWith("http://")) {
+        ogUrl = ogUrl.replace("http://", "https://");
+    }
+    const resolvedOgImage = ogUrl
+        ? (ogUrl.startsWith("http") ? ogUrl : getPublicUrl(ogUrl) || ogUrl)
         : (images[0] ? images[0].url : null);
     const parseOrNull = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
     return {
