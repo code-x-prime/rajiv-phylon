@@ -20,6 +20,13 @@ export const uploadSingle = multer({
     fileFilter: imageFilter,
 }).single("image");
 
+/** Any single image upload (field name agnostic for text editors) */
+export const uploadAnyImage = multer({
+    storage,
+    limits: { fileSize: 20 * 1024 * 1024 },
+    fileFilter: imageFilter,
+}).any();
+
 /** Multiple images (field name: images, max 4 for products) */
 export const uploadMultiple = (maxCount = 4) =>
     multer({

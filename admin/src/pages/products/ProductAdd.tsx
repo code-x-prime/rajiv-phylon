@@ -45,11 +45,31 @@ const JODIT_CONFIG = {
     insertImageAsBase64URI: false,
     url: `${API_BASE}/products/upload-description-image`,
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("admin_token") || ""}`,
+    },
     filesVariableName: "image",
     format: "json",
     isSuccess: (resp: any) => resp?.success === true,
     getMessage: (resp: any) => resp?.message || "Upload failed",
-    processFileName: () => "image",
+    process: (resp: any) => {
+      const imgUrl = resp?.url || resp?.data?.url || (resp?.files && resp?.files[0]) || "";
+      return {
+        files: [imgUrl],
+        path: "",
+        baseurl: "",
+        error: resp?.success ? 0 : 1,
+        msg: resp?.message || "",
+      };
+    },
+    defaultHandlerSuccess: function (this: any, data: any) {
+      const files = data.files || [];
+      if (files.length) {
+        for (let i = 0; i < files.length; i += 1) {
+          this.selection.insertImage(files[i]);
+        }
+      }
+    },
   },
   style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "15px", lineHeight: 1.7 },
 };
