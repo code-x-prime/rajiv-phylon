@@ -20,7 +20,8 @@ const TAG_BADGE = {
 export const ProductCard = memo(function ProductCard({ product, showBadge = false, index = 0, compactOnMobile = false }) {
   const imageUrl = product.images?.[0]?.url;
   const category = product.categories?.[0]?.name;
-  const badge = showBadge && product.featureTag && TAG_BADGE[product.featureTag];
+  const effectiveTag = product.featureTag || (product.isNewArrival ? "NEW_ARRIVAL" : product.isFeatured ? "BEST_SELLER" : product.isHighDemand ? "TRENDING" : null);
+  const badge = effectiveTag && TAG_BADGE[effectiveTag];
 
   return (
     <Link

@@ -278,7 +278,7 @@ export function ProductAdd() {
   const [specPairs, setSpecPairs] = useState<KVPair[]>(DEFAULT_SPEC_PAIRS);
   const [tradePairs, setTradePairs] = useState<KVPair[]>(DEFAULT_TRADE_PAIRS);
   const [isFeatured, setIsFeatured] = useState(false);
-  const [isNewArrival, setIsNewArrival] = useState(false);
+  const [isNewArrival, setIsNewArrival] = useState(true);
   const [isHighDemand, setIsHighDemand] = useState(false);
   const [showOnHome, setShowOnHome] = useState(false);
   const [isActive, setIsActive] = useState(true);

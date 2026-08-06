@@ -77,9 +77,14 @@ export const create = asyncHandler(async (req, res) => {
     const files = req.files || [];
     if (files.length > 4) throw new ApiError(400, "Maximum 4 images per product");
 
+    const isNewArrival = req.body.isNewArrival === true || req.body.isNewArrival === "true";
+    const isFeatured = req.body.isFeatured === true || req.body.isFeatured === "true";
+    const isHighDemand = req.body.isHighDemand === true || req.body.isHighDemand === "true";
+
     const featureTag = ["NEW_ARRIVAL", "TRENDING", "BEST_SELLER"].includes(String(req.body.featureTag || "").toUpperCase())
         ? String(req.body.featureTag).toUpperCase()
-        : null;
+        : (isNewArrival ? "NEW_ARRIVAL" : isFeatured ? "BEST_SELLER" : isHighDemand ? "TRENDING" : null);
+
     const product = await prisma.product.create({
         data: {
             name: name.trim(),
@@ -89,9 +94,9 @@ export const create = asyncHandler(async (req, res) => {
             specifications: parseJsonField(req.body.specifications),
             tradeInfo: parseJsonField(req.body.tradeInfo),
             featureTag,
-            isFeatured: req.body.isFeatured === true || req.body.isFeatured === "true",
-            isNewArrival: req.body.isNewArrival === true || req.body.isNewArrival === "true",
-            isHighDemand: req.body.isHighDemand === true || req.body.isHighDemand === "true",
+            isFeatured,
+            isNewArrival,
+            isHighDemand,
             showOnHome: req.body.showOnHome === true || req.body.showOnHome === "true",
             isActive: req.body.isActive !== false && req.body.isActive !== "false",
             status: ["DRAFT", "PUBLISHED"].includes(String(req.body.status || "").toUpperCase())
@@ -522,7 +527,7 @@ function mapProductResponse(product) {
         moq: product.moq || null,
         specifications: parseOrNull(product.specifications),
         tradeInfo: parseOrNull(product.tradeInfo),
-        featureTag: product.featureTag || null,
+        featureTag: product.featureTag || (product.isNewArrival ? "NEW_ARRIVAL" : product.isFeatured ? "BEST_SELLER" : product.isHighDemand ? "TRENDING" : null),
         isFeatured: product.isFeatured ?? false,
         isNewArrival: product.isNewArrival ?? false,
         isHighDemand: product.isHighDemand ?? false,
