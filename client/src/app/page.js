@@ -38,11 +38,13 @@ export default function HomePage() {
 
       <VideoCarousel section="2" />
 
+      <FullScreenVideo />
+
       <CoreTechnology />
 
       <VideoCarousel section="1" />
 
-      <FullScreenVideo />
+
 
       <ClientLogos />
 
