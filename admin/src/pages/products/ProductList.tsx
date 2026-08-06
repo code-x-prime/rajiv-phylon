@@ -23,7 +23,7 @@ export function ProductList() {
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [statusFilter, setStatusFilter] = useState<"all" | "DRAFT" | "PUBLISHED">("all");
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name-asc" | "name-desc">("newest");
+  const [sortBy, setSortBy] = useState<"custom" | "newest" | "oldest" | "name-asc" | "name-desc">("custom");
   const [showReorderModal, setShowReorderModal] = useState(false);
 
   const { data: list = [], isLoading } = useQuery({
@@ -46,10 +46,10 @@ export function ProductList() {
     : list.filter((p) => (p.status || "PUBLISHED") === statusFilter);
 
   const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === "custom") return (a.order ?? 0) - (b.order ?? 0);
     if (sortBy === "name-asc") return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     if (sortBy === "name-desc") return b.name.localeCompare(a.name, undefined, { sensitivity: "base" });
     if (sortBy === "oldest") return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
-    // Default: Newest first (createdAt desc)
     return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
   });
 
@@ -66,13 +66,12 @@ export function ProductList() {
         );
       },
     },
-    { id: "name", header: "Name", sortKey: "name" as const, cell: (row: Product) => row.name },
+    { id: "name", header: "Name", cell: (row: Product) => row.name },
     { id: "category", header: "Categories", cell: (row: Product) => (row.categories?.length ? row.categories.map((c) => c.name).join(", ") : "—") },
     { id: "subcategory", header: "SubCategories", cell: (row: Product) => (row.subCategories?.length ? row.subCategories.map((s) => s.name).join(", ") : "—") },
     {
       id: "status",
       header: "Status",
-      sortKey: "status" as const,
       cell: (row: Product) => {
         const isDraft = (row.status || "PUBLISHED") === "DRAFT";
         return (
@@ -85,7 +84,6 @@ export function ProductList() {
     {
       id: "createdAt",
       header: "Created Date",
-      sortKey: "createdAt" as const,
       cell: (row: Product) => (row.createdAt ? new Date(row.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—"),
     },
   ];
@@ -120,7 +118,8 @@ export function ProductList() {
               onChange={(e) => setSortBy(e.target.value as any)}
               className="border border-border rounded px-3 py-1 bg-card text-foreground text-sm font-medium focus:ring-primary focus:border-primary"
             >
-              <option value="newest">🔥 Newest First (Default)</option>
+              <option value="custom">🎯 Custom Position Order</option>
+              <option value="newest">🔥 Newest First</option>
               <option value="oldest">⏳ Oldest First</option>
               <option value="name-asc">🔤 Name (A → Z)</option>
               <option value="name-desc">🔤 Name (Z → A)</option>
@@ -138,7 +137,6 @@ export function ProductList() {
         onEdit={(row) => navigate(`/products/edit/${row.id}`)}
         onDelete={(row) => setDeleteTarget(row)}
         isLoading={isLoading}
-        initialSortKey="createdAt"
       />
 
       {/* Delete confirm */}
