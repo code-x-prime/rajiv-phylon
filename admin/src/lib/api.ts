@@ -84,6 +84,7 @@ export type Product = {
   slug: string;
   description: string | null;
   moq?: string | null;
+  order?: number;
   specifications?: Record<string, string> | null;
   tradeInfo?: Record<string, string> | null;
   featureTag?: ProductFeatureTag;
@@ -193,6 +194,7 @@ export const productsApi = {
   deleteImage: (productId: string, imageId: string) => api.delete<ApiResponse<null>>(`/products/${productId}/images/${imageId}`).then(unwrap),
   bulkAssignCategories: (productIds: string[], categoryIds: string[], subCategoryIds?: string[]) =>
     api.post<ApiResponse<{ updated: number }>>("/products/bulk-assign-categories", { productIds, categoryIds, subCategoryIds }).then(unwrap),
+  reorder: (orderedIds: string[]) => api.patch<ApiResponse<null>>("/products/reorder", { orderedIds }).then(unwrap),
 };
 
 // Videos

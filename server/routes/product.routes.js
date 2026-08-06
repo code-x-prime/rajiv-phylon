@@ -39,6 +39,7 @@ router.post("/upload-description-image", verifyAdmin, (req, res, next) => {
         }
     });
 });
+router.patch("/reorder", verifyAdmin, asyncHandler(productController.reorder));
 router.put("/:id", verifyAdmin, uploadMultiple(4), asyncHandler(productController.update));
 router.delete("/:id", verifyAdmin, asyncHandler(productController.remove));
 router.delete("/:id/images/:imageId", verifyAdmin, asyncHandler(productController.removeImage));

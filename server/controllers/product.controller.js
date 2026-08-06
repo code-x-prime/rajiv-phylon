@@ -357,16 +357,43 @@ export const getAll = asyncHandler(async (req, res) => {
         where.productSubCategories = { some: { subCategoryId: { in: subCategoryIds } } };
     }
 
-    const products = await prisma.product.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        include: {
-            images: { orderBy: { position: "asc" } },
-            productCategories: { include: { category: true } },
-            productSubCategories: { include: { subCategory: true } },
-        },
-    });
+    let products = [];
+    try {
+        products = await prisma.product.findMany({
+            where,
+            orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+            include: {
+                images: { orderBy: { position: "asc" } },
+                productCategories: { include: { category: true } },
+                productSubCategories: { include: { subCategory: true } },
+            },
+        });
+    } catch {
+        products = await prisma.product.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
+            include: {
+                images: { orderBy: { position: "asc" } },
+                productCategories: { include: { category: true } },
+                productSubCategories: { include: { subCategory: true } },
+            },
+        });
+    }
     res.status(200).json(new ApiResponsive(200, products.map(mapProductResponse), "Success"));
+});
+
+/** PATCH reorder products – body: { orderedIds: string[] } */
+export const reorder = asyncHandler(async (req, res) => {
+    const { orderedIds } = req.body;
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+        throw new ApiError(400, "orderedIds array is required");
+    }
+    await Promise.all(
+        orderedIds.map((id, index) =>
+            prisma.product.updateMany({ where: { id }, data: { order: index } }).catch(() => {})
+        )
+    );
+    res.status(200).json(new ApiResponsive(200, null, "Products reordered successfully"));
 });
 
 export const getOne = asyncHandler(async (req, res) => {
@@ -525,6 +552,7 @@ function mapProductResponse(product) {
         slug: product.slug,
         description: product.description,
         moq: product.moq || null,
+        order: product.order ?? 0,
         specifications: parseOrNull(product.specifications),
         tradeInfo: parseOrNull(product.tradeInfo),
         featureTag: product.featureTag || (product.isNewArrival ? "NEW_ARRIVAL" : product.isFeatured ? "BEST_SELLER" : product.isHighDemand ? "TRENDING" : null),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import JoditEditor from "jodit-react";
@@ -13,66 +13,6 @@ import { ChevronDown, ChevronRight, Plus, Trash2, Wand2 } from "lucide-react";
 
 /* ── Jodit config ─────────────────────────────────────── */
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-
-const JODIT_CONFIG = {
-  height: 450,
-  minHeight: 350,
-  width: "100%",
-  toolbar: true,
-  toolbarButtonSize: "middle" as const,
-  toolbarSticky: false,
-  showCharsCounter: true,
-  showWordsCounter: true,
-  showXPathInStatusbar: false,
-  allowResizeX: false,
-  allowResizeY: true,
-  resizeMinHeight: 350,
-  buttons: [
-    "source", "|",
-    "bold", "italic", "underline", "strikethrough", "|",
-    "superscript", "subscript", "|",
-    "ul", "ol", "|",
-    "font", "fontsize", "brush", "|",
-    "align", "indent", "outdent", "|",
-    "link", "image", "table", "hr", "|",
-    "undo", "redo", "|",
-    "eraser", "copyformat", "|",
-    "paragraph", "lineHeight",
-  ],
-  pasteFromWordRemoveFontStyles: true,
-  pasteFromWordRemoveStyles: true,
-  uploader: {
-    insertImageAsBase64URI: false,
-    url: `${API_BASE}/products/upload-description-image`,
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("admin_token") || ""}`,
-    },
-    filesVariableName: "image",
-    format: "json",
-    isSuccess: (resp: any) => resp?.success === true,
-    getMessage: (resp: any) => resp?.message || "Upload failed",
-    process: (resp: any) => {
-      const imgUrl = resp?.url || resp?.data?.url || (resp?.files && resp?.files[0]) || "";
-      return {
-        files: [imgUrl],
-        path: "",
-        baseurl: "",
-        error: resp?.success ? 0 : 1,
-        msg: resp?.message || "",
-      };
-    },
-    defaultHandlerSuccess: function (this: any, data: any) {
-      const files = data.files || [];
-      if (files.length) {
-        for (let i = 0; i < files.length; i += 1) {
-          this.selection.insertImage(files[i]);
-        }
-      }
-    },
-  },
-  style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "15px", lineHeight: 1.7 },
-};
 
 /* ── MOQ presets ──────────────────────────────────────── */
 const MOQ_PRESETS = [
@@ -331,6 +271,61 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
   const [metaKeywords, setMetaKeywords] = useState(initial.metaKeywords);
   const [seoAuto, setSeoAuto] = useState(initial.seoAuto);
 
+  const joditConfig = useMemo(
+    () => ({
+      height: 450,
+      minHeight: 350,
+      width: "100%",
+      toolbar: true,
+      toolbarButtonSize: "middle" as const,
+      toolbarSticky: false,
+      showCharsCounter: true,
+      showWordsCounter: true,
+      showXPathInStatusbar: false,
+      allowResizeX: false,
+      allowResizeY: true,
+      resizeMinHeight: 350,
+      buttons: [
+        "source", "|",
+        "bold", "italic", "underline", "strikethrough", "|",
+        "superscript", "subscript", "|",
+        "ul", "ol", "|",
+        "font", "fontsize", "brush", "|",
+        "align", "indent", "outdent", "|",
+        "link", "image", "table", "hr", "|",
+        "undo", "redo", "|",
+        "eraser", "copyformat", "|",
+        "paragraph", "lineHeight",
+      ],
+      pasteFromWordRemoveFontStyles: true,
+      pasteFromWordRemoveStyles: true,
+      uploader: {
+        insertImageAsBase64URI: false,
+        url: `${API_BASE}/products/upload-description-image`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_token") || ""}`,
+        },
+        filesVariableName: "image",
+        format: "json",
+        isSuccess: (resp: any) => resp?.success === true,
+        getMessage: (resp: any) => resp?.message || "Upload failed",
+        process: (resp: any) => {
+          const imgUrl = resp?.url || resp?.data?.url || (resp?.files && resp?.files[0]) || "";
+          return {
+            files: imgUrl ? [imgUrl] : [],
+            path: "",
+            baseurl: "",
+            error: resp?.success ? 0 : 1,
+            msg: resp?.message || "",
+          };
+        },
+      },
+      style: { fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "15px", lineHeight: 1.7 },
+    }),
+    []
+  );
+
   const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: () => categoriesApi.getAll() });
   const { data: subCategories = [] } = useQuery({
     queryKey: ["subcategories", categoryIds],
@@ -452,7 +447,7 @@ function ProductEditForm({ product, id }: { product: Product; id: string }) {
           <h2 className="font-semibold text-base border-b border-border pb-3">Product Description</h2>
           <p className="text-xs text-muted-foreground">Full rich text editor — write about product features, uses, and benefits.</p>
           <div className="w-full border border-border overflow-hidden rounded">
-            <JoditEditor value={description} onChange={(v) => setDescription(v)} onBlur={(v) => setDescription(v)} config={JODIT_CONFIG} />
+            <JoditEditor value={description} onChange={(v) => setDescription(v)} onBlur={(v) => setDescription(v)} config={joditConfig} />
           </div>
         </section>
 
