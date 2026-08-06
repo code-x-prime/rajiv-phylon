@@ -120,7 +120,12 @@ function VideoCard({ video, isVisible }) {
   );
 }
 
-export function VideoCarousel() {
+export function VideoCarousel({
+  section = "1",
+  overline = section === "2" ? "Highlights" : "Our Work",
+  title = section === "2" ? "Featured Videos" : "See Quality In Action",
+  description = section === "2" ? "Explore our product demonstrations and technology highlights" : "Watch our manufacturing process and product showcases"
+}) {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -172,7 +177,7 @@ export function VideoCarousel() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/videos`);
+        const res = await fetch(`${API_BASE}/videos?section=${section}`);
         const data = await res.json();
         if (!cancelled) setVideos(data.data || []);
       } catch {
@@ -182,7 +187,7 @@ export function VideoCarousel() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [section]);
 
   if (loading) {
     return (
@@ -215,13 +220,17 @@ export function VideoCarousel() {
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-8"
         >
-          <p className="type-overline text-[#F5B400] mb-3">Our Work</p>
-          <h2 className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-[#111111] tracking-[-0.02em]">
-            See Quality In Action
-          </h2>
-          <p className="text-[16px] text-gray-500 font-body mt-3">
-            Watch our manufacturing process and product showcases
-          </p>
+          {overline && <p className="type-overline text-[#F5B400] mb-3">{overline}</p>}
+          {title && (
+            <h2 className="font-display font-medium text-[clamp(1.5rem,3vw,2.25rem)] text-[#111111] tracking-[-0.02em]">
+              {title}
+            </h2>
+          )}
+          {description && (
+            <p className="text-[16px] text-gray-500 font-body mt-3">
+              {description}
+            </p>
+          )}
         </motion.div>
 
         {/* Carousel */}

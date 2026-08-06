@@ -22,21 +22,21 @@ function formatFileSize(bytes?: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function Videos() {
+export function Videos({ section = "1" }: { section?: string }) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const { data: videos = [], isLoading } = useQuery({
-    queryKey: ["admin-videos"],
-    queryFn: videosApi.getAll,
+    queryKey: ["admin-videos", section],
+    queryFn: () => videosApi.getAll(section),
   });
 
   const reorderMutation = useMutation({
-    mutationFn: (orderedIds: string[]) => videosApi.reorder(orderedIds),
+    mutationFn: (orderedIds: string[]) => videosApi.reorder(orderedIds, section),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-videos", section] });
       toast.success("Order updated");
     },
     onError: () => toast.error("Failed to reorder"),
@@ -45,7 +45,7 @@ export function Videos() {
   const toggleMutation = useMutation({
     mutationFn: (id: string) => videosApi.toggleActive(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-videos", section] });
       toast.success("Status updated");
     },
     onError: () => toast.error("Failed to update status"),
@@ -54,7 +54,7 @@ export function Videos() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => videosApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-videos", section] });
       toast.success("Video deleted");
       setDeleteId(null);
     },
@@ -92,9 +92,13 @@ export function Videos() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Videos</h2>
+          <h2 className="text-2xl font-bold">
+            {section === "2" ? "Videos (Scale & Trust)" : "Videos (Core Technology)"}
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage home page carousel videos (max 2GB each)
+            {section === "2"
+              ? "Manage carousel videos shown below Scale & Trust section on homepage (max 2GB each)"
+              : "Manage carousel videos shown below Core Technology section on homepage (max 2GB each)"}
           </p>
         </div>
         <Button onClick={() => { setShowAdd(true); setEditingId(null); }} className="gap-2">
@@ -107,6 +111,7 @@ export function Videos() {
       {(showAdd || editingId) && (
         <VideoForm
           video={editingId ? videos.find((v) => v.id === editingId) : undefined}
+          section={section}
           onSuccess={() => { setShowAdd(false); setEditingId(null); }}
           onCancel={() => { setShowAdd(false); setEditingId(null); }}
         />
@@ -232,7 +237,7 @@ export function Videos() {
 }
 
 // Video Form (Add / Edit)
-function VideoForm({ video, onSuccess, onCancel }: { video?: Video; onSuccess: () => void; onCancel: () => void }) {
+function VideoForm({ video, section = "1", onSuccess, onCancel }: { video?: Video; section?: string; onSuccess: () => void; onCancel: () => void }) {
   const queryClient = useQueryClient();
   const [title, setTitle] = useState(video?.title ?? "");
   const [description, setDescription] = useState(video?.description ?? "");
@@ -246,9 +251,9 @@ function VideoForm({ video, onSuccess, onCancel }: { video?: Video; onSuccess: (
   const isEdit = !!video;
 
   const createMutation = useMutation({
-    mutationFn: () => videosApi.create({ title, description, isActive }, videoFile!, (p) => setProgress(p)),
+    mutationFn: () => videosApi.create({ title, description, isActive, section }, videoFile!, (p) => setProgress(p)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-videos", section] });
       toast.success("Video uploaded");
       onSuccess();
     },
@@ -259,9 +264,9 @@ function VideoForm({ video, onSuccess, onCancel }: { video?: Video; onSuccess: (
   });
 
   const updateMutation = useMutation({
-    mutationFn: () => videosApi.update(video!.id, { title, description, isActive }, videoFile ?? undefined, (p) => setProgress(p)),
+    mutationFn: () => videosApi.update(video!.id, { title, description, isActive, section }, videoFile ?? undefined, (p) => setProgress(p)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-videos", section] });
       toast.success("Video updated");
       onSuccess();
     },

@@ -40,7 +40,8 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="banners" element={<Banners />} />
-              <Route path="videos" element={<Videos />} />
+              <Route path="videos" element={<Videos section="1" />} />
+              <Route path="videos-2" element={<Videos section="2" />} />
               <Route path="catalogue" element={<CataloguePage />} />
               <Route path="categories" element={<Categories />} />
               <Route path="subcategories" element={<SubCategories />} />

@@ -35,9 +35,11 @@ export default function HomePage() {
 
       <CompanyStats />
 
-      <VideoCarousel />
+      <VideoCarousel section="2" />
 
       <CoreTechnology />
+
+      <VideoCarousel section="1" />
 
       <ClientLogos />
 

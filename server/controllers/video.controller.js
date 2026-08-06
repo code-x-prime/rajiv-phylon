@@ -19,8 +19,9 @@ function mapVideo(v) {
 
 /** GET videos (public) – active only, sorted by order */
 export const getPublic = asyncHandler(async (req, res) => {
+    const section = String(req.query.section || "1");
     const videos = await prisma.video.findMany({
-        where: { isActive: true },
+        where: { isActive: true, section },
         orderBy: { order: "asc" },
     });
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Success"));
@@ -28,7 +29,9 @@ export const getPublic = asyncHandler(async (req, res) => {
 
 /** GET all videos (admin) */
 export const getAll = asyncHandler(async (req, res) => {
+    const section = String(req.query.section || "1");
     const videos = await prisma.video.findMany({
+        where: { section },
         orderBy: { order: "asc" },
     });
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Success"));
@@ -45,11 +48,12 @@ export const create = asyncHandler(async (req, res) => {
     const description = (req.body.description || "").trim() || null;
     const isActive = req.body.isActive !== "false" && req.body.isActive !== false;
     const order = parseInt(req.body.order, 10) || 0;
+    const section = String(req.body.section || req.query.section || "1").trim();
 
     const videoUrl = await uploadFile(videoFile, "videos");
 
     const video = await prisma.video.create({
-        data: { title, description, videoUrl, isActive, order },
+        data: { title, description, videoUrl, isActive, order, section },
     });
 
     res.status(201).json(new ApiResponsive(201, mapVideo(video), "Video created"));
@@ -69,12 +73,14 @@ export const update = asyncHandler(async (req, res) => {
     const order = req.body.order !== undefined && req.body.order !== ""
         ? parseInt(req.body.order, 10)
         : undefined;
+    const section = req.body.section ? String(req.body.section).trim() : undefined;
 
     const data = {};
     if (title) data.title = title;
     if (description !== undefined) data.description = description;
     if (typeof isActive === "boolean") data.isActive = isActive;
     if (order !== undefined && !isNaN(order)) data.order = order;
+    if (section) data.section = section;
 
     // Replace video file if new one uploaded
     const videoFile = req.file;
@@ -91,9 +97,10 @@ export const update = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponsive(200, mapVideo(updated), "Updated"));
 });
 
-/** PATCH reorder videos – body: { orderedIds: string[] } */
+/** PATCH reorder videos – body: { orderedIds: string[], section?: string } */
 export const reorder = asyncHandler(async (req, res) => {
-    const { orderedIds } = req.body;
+    const { orderedIds, section: secParam } = req.body;
+    const section = String(secParam || req.query.section || "1");
     if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
         throw new ApiError(400, "orderedIds array is required");
     }
@@ -102,7 +109,7 @@ export const reorder = asyncHandler(async (req, res) => {
             prisma.video.updateMany({ where: { id }, data: { order: index } })
         )
     );
-    const videos = await prisma.video.findMany({ orderBy: { order: "asc" } });
+    const videos = await prisma.video.findMany({ where: { section }, orderBy: { order: "asc" } });
     res.status(200).json(new ApiResponsive(200, videos.map(mapVideo), "Reordered"));
 });
 
@@ -131,7 +138,10 @@ export const remove = asyncHandler(async (req, res) => {
     await prisma.video.delete({ where: { id } });
 
     // Auto-reorder: gap hatao — remaining videos ko compact karo
-    const remaining = await prisma.video.findMany({ orderBy: { order: "asc" } });
+    const remaining = await prisma.video.findMany({
+        where: { section: video.section || "1" },
+        orderBy: { order: "asc" }
+    });
     await Promise.all(
         remaining.map((v, index) =>
             prisma.video.updateMany({ where: { id: v.id }, data: { order: index } })

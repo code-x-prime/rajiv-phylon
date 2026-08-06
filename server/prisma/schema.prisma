@@ -236,6 +236,7 @@ model Video {
   description String?  @db.Text
   videoUrl    String   @db.Text  // R2 public URL
   thumbnail   String?  @db.Text  // Optional thumbnail URL
+  section     String   @default("1")
   isActive    Boolean  @default(true)
   order       Int      @default(0)
   createdAt   DateTime @default(now())

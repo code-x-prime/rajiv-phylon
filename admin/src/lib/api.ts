@@ -204,21 +204,23 @@ export type Video = {
   videoUrlResolved?: string | null;
   thumbnail?: string | null;
   thumbnailResolved?: string | null;
+  section?: string;
   isActive: boolean;
   order: number;
   createdAt: string;
 };
 
 export const videosApi = {
-  getAll: () => api.get<ApiResponse<Video[]>>("/videos/all").then(unwrap).then((r) => r.data ?? []),
-  getActive: () => api.get<ApiResponse<Video[]>>("/videos").then(unwrap).then((r) => r.data ?? []),
-  create: (data: { title: string; description?: string; isActive?: boolean; order?: number }, videoFile: File, onProgress?: (pct: number) => void) => {
+  getAll: (section = "1") => api.get<ApiResponse<Video[]>>(`/videos/all?section=${section}`).then(unwrap).then((r) => r.data ?? []),
+  getActive: (section = "1") => api.get<ApiResponse<Video[]>>(`/videos?section=${section}`).then(unwrap).then((r) => r.data ?? []),
+  create: (data: { title: string; description?: string; isActive?: boolean; order?: number; section?: string }, videoFile: File, onProgress?: (pct: number) => void) => {
     const form = new FormData();
     form.append("video", videoFile);
     form.append("title", data.title);
     if (data.description) form.append("description", data.description);
     if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
     if (data.order !== undefined) form.append("order", String(data.order));
+    if (data.section) form.append("section", data.section);
     return api.post<ApiResponse<Video>>("/videos", form, {
       headers: { "Content-Type": undefined },
       onUploadProgress: (e) => {
@@ -226,12 +228,13 @@ export const videosApi = {
       },
     }).then(unwrap);
   },
-  update: (id: string, data: { title?: string; description?: string; isActive?: boolean; order?: number }, videoFile?: File, onProgress?: (pct: number) => void) => {
+  update: (id: string, data: { title?: string; description?: string; isActive?: boolean; order?: number; section?: string }, videoFile?: File, onProgress?: (pct: number) => void) => {
     const form = new FormData();
     if (data.title) form.append("title", data.title);
     if (data.description !== undefined) form.append("description", data.description ?? "");
     if (data.isActive !== undefined) form.append("isActive", String(data.isActive));
     if (data.order !== undefined) form.append("order", String(data.order));
+    if (data.section) form.append("section", data.section);
     if (videoFile) form.append("video", videoFile);
     return api.put<ApiResponse<Video>>(`/videos/${id}`, form, {
       headers: { "Content-Type": undefined },
@@ -240,7 +243,7 @@ export const videosApi = {
       },
     }).then(unwrap);
   },
-  reorder: (orderedIds: string[]) => api.patch<ApiResponse<Video[]>>("/videos/reorder", { orderedIds }).then(unwrap),
+  reorder: (orderedIds: string[], section = "1") => api.patch<ApiResponse<Video[]>>("/videos/reorder", { orderedIds, section }).then(unwrap),
   toggleActive: (id: string) => api.patch<ApiResponse<Video>>(`/videos/${id}/toggle-active`).then(unwrap),
   delete: (id: string) => api.delete<ApiResponse<null>>(`/videos/${id}`).then(unwrap),
 };

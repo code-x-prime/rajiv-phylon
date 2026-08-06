@@ -28,7 +28,8 @@ const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/catalogue", label: "Catalogue PDF", icon: BookOpen },
   { to: "/banners", label: "Banners", icon: ImageIcon },
-  { to: "/videos", label: "Videos", icon: Video },
+  { to: "/videos-2", label: "Videos (Scale & Trust)", icon: Video },
+  { to: "/videos", label: "Videos (Core Tech)", icon: Video },
   { to: "/categories", label: "Categories", icon: FolderTree },
   { to: "/subcategories", label: "SubCategories", icon: Layers },
   { to: "/products", label: "Products", icon: Package },
@@ -47,7 +48,8 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith("/gallery")) return "Gallery";
   if (pathname.startsWith("/contact")) return "Contact Inquiries";
   if (pathname.startsWith("/banners")) return "Banners";
-  if (pathname.startsWith("/videos")) return "Videos";
+  if (pathname.startsWith("/videos-2")) return "Videos (Scale & Trust)";
+  if (pathname.startsWith("/videos")) return "Videos (Core Tech)";
   return "Admin";
 }
 
@@ -125,7 +127,7 @@ export function AppLayout() {
               onClick={() => setSidebarOpen(false)}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors",
-                pathname === to || (to !== "/" && pathname.startsWith(to))
+                (to === "/videos" ? pathname === "/videos" : (pathname === to || (to !== "/" && pathname.startsWith(to))))
                   ? "bg-primary text-primary-foreground"
                   : "text-foreground hover:bg-muted",
                 sidebarCollapsed && "justify-center px-0"
